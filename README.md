@@ -2,7 +2,6 @@
 
 rdrizzle (@Aisoipheo)
 
----
 
 ## Useful links
 
