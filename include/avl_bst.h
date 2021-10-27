@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 13:30:06 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/10/27 12:07:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/10/27 15:51:27 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_avl_iter	avl_begin(t_avl_tree *tree);
 t_avl_iter	avl_end(t_avl_tree *tree);
 t_avl_iter	avl_next(t_avl_iter it);
 void		*avl_get_val(t_avl_iter it);
-void		_avl_balance(t_avl_node *node);
+void		_avl_balance(t_avl_tree *tree, t_avl_node *node, t_avl_node *child);
+void		_avl_increase_heights(t_avl_tree *tree, t_avl_node *new_node);
 
 #endif

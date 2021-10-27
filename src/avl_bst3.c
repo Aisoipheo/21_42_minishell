@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 16:31:35 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/10/27 12:25:21 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/10/27 15:50:53 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	_avl_rotate_left(t_avl_node *r, t_avl_node *p)
 	r->__weight = 0;
 }
 
-static void _avl_rotate_right(t_avl_node *r, t_avl_node *p)
+static void	_avl_rotate_right(t_avl_node *r, t_avl_node *p)
 {
 	t_avl_node	*t;
 
@@ -64,46 +64,87 @@ static void _avl_rotate_right(t_avl_node *r, t_avl_node *p)
 	r->__weight = 0;
 }
 
-void	_avl_balance(t_avl_node *node)
+static void _avl_rotate_rightLeft(t_avl_node *r, t_avl_node *p)
 {
+	t_avl_node	*y;
+	t_avl_node	*t2;
+	t_avl_node	*t3;
+
+	y = p->left;
+	t2 = y->left;
+	t3 = y->right;
+	p->left = t3;
+	if (!t3)
+		t3->parent = p;
+	r->right = t2;
+	if (!t2)
+		t2->parent = r;
+	y->parent = r->parent;
+	y->left = r;
+	y->right = p;
+	p->parent = y;
+	r->parent = y;
+	r->__weight = 0;
+	p->__weight = 0;
+	if (y->__weight > 0)
+		r->__weight = -1;
+	if (y->__weight < 0)
+		p->__weight = 1;
+	y->__weight = 0;
+}
+
+static void	_avl_rotate_leftRight(t_avl_node *r, t_avl_node *p)
+{
+	t_avl_node	*y;
+	t_avl_node	*t2;
+	t_avl_node	*t3;
+
+	y = p->left;
+	t2 = y->left;
+	t3 = y->right;
+	p->left = t2;
+	if (!t2)
+		t2->parent = p;
+	r->right = t3;
+	if (!t3)
+		t3->parent = r;
+	y->parent = r->parent;
+	y->left = p;
+	y->right = r;
+	p->parent = y;
+	r->parent = y;
+	r->__weight = 0;
+	p->__weight = 0;
+	if (y->__weight > 0)
+		p->__weight = -1;
+	if (y->__weight < 0)
+		r->__weight = 1;
+	y->__weight = 0;
+}
+
+void	_avl_balance(t_avl_tree *tree, t_avl_node *node, t_avl_node *child)
+{
+	t_avl_node	*parent;
+
+	parent = node->parent;
 	if (node->__weight == 2)
 	{
-
+		if (child->__weight < 0)
+			_avl_rotate_rightLeft(node, child);
+		else
+			_avl_rotate_left(node, child);
 	}
 	if (node->__weight == -2)
 	{
-
-	}
-}
-
-int	avl_insert(t_avl_tree *tree, void *data)
-{
-	int			cmp;
-	t_avl_node	*ptr;
-	t_avl_node	*tmp;
-
-	tmp = _avl_new_node(data);
-	if (!tmp)
-		return (1);
-	++tree->size;
-	if (!tree->root)
-	{
-		tree->root = tmp;
-		return (0);
-	}
-	ptr = tree->root;
-	while(1)
-	{
-		cmp = tree->compr(ptr->data, data);
-		if (cmp < 0)
-		{
-			if (ptr->right)
-				ptr = ptr->right;
-			else
-				break ;
-		}
+		if (child->__weight > 0)
+			_avl_rotate_leftRight(node, child);
 		else
-			ptr = ptr->left;
+			_avl_rotate_right(node, child);
 	}
-	return (0);
+	if (parent && parent->right == node)
+		parent->right = node->parent;
+	if (parent && parent->left == node)
+		parent->left = node->parent;
+	if (!parent)
+		tree->root = node->parent;
 }
