@@ -1,5 +1,7 @@
+.DS_Store
 *.txt
 obj
 *.dSYM
 minishell
 *.sh
+a.out

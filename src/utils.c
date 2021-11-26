@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:56:16 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/10/09 15:06:42 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/11/08 12:14:39 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ char	**ft_strsplit(const char *s, const char *d)
 			return (_ft_strdestroy2(ret));
 		i = 0;
 		while (*s && !ft_strcontains(d, *s))
-			ret[j][i++] = s;
+			ret[j][i++] = *s++;
 		ret[j][i] = '\0';
 	}
 	ret[j] = NULL;

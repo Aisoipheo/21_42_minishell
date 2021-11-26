@@ -4,7 +4,16 @@ HDRS_DIR			= ./include
 SRCS_DIR			= ./src
 OBJS_DIR			= ./obj
 
-C_FILES				= main.c
+C_FILES				= main.c\
+					linked_list.c\
+					linked_list2.c\
+					environment.c\
+					norm_hacks.c\
+					utils.c\
+					utils2.c\
+					utils3.c\
+					lexer.c\
+					lexer2.c
 
 SRCS				= $(addprefix $(SRCS_DIR)/, $(C_FILES))
 OBJS				= $(addprefix $(OBJS_DIR)/, $(C_FILES:.c=.o))
@@ -36,7 +45,7 @@ $(OBJS_DIR)/%.o : $(SRCS_DIR)/%.c Makefile
 $(OBJS_DIR) :
 	$(MKDIR) $(MKDIRFLAGS) $(OBJS_DIR)
 
-$(NAME) : $(SRCS) $(OBJS_DIR) $(OBJS) $(DEPENDENCIES) Makefile
+$(NAME) : $(SRCS) $(OBJS_DIR) $(OBJS) Makefile
 	$(CC) $(LFLAGS) -o $@ $(OBJS)
 
 all : $(NAME)

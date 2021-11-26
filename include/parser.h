@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer.h                                        :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/11 12:57:56 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/10/11 14:11:06 by rdrizzle         ###   ########.fr       */
+/*   Created: 2021/11/26 11:22:42 by rdrizzle          #+#    #+#             */
+/*   Updated: 2021/11/26 11:23:09 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOKENIZER_H
-# define TOKENIZER_H
+#ifndef PARSER_H
+# define PARSER_H
 
 #endif
