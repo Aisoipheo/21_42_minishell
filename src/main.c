@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 10:57:43 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/11/26 12:45:53 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ const char	*_lx_get_name(int type)
 {
 	static const char *names[LX_NCONST] =
 	{
+		[LX_SEP] = "SEP",
 		[LX_WORD] = "WORD",
 		[LX_IF_AND] = "&&",
 		[LX_IF_OR] = "||",
@@ -82,7 +83,7 @@ int	main(int argc, char *argv[], char *envp[])
 	while(1)
 	{
 		t_llist *tokens = llist_new(_int_cmpr, NULL, free);
-		line = _ft_readline("promt > ");
+		line = _ft_readline("prompt > ");
 		lx_lexer(tokens, line);
 		printf("TOKENS OK\n");
 		for (t_ll_elem *h = tokens->head; h != NULL; h = h->next)

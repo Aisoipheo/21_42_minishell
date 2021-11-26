@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 12:54:16 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 11:09:32 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/11/26 12:09:11 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int	lx_lexer(t_llist *tokens, const char *line)
 	i = 0;
 	while (line && line[i])
 	{
+		if (line[i] && ft_isspace(line[i]))
+			llist_push(tokens, (int *)LX_SEP, NULL);
 		while (line[i] && ft_isspace(line[i]))
 			++i;
 		if (line[i] == '\'' || line[i] == '\"')

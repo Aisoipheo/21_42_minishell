@@ -6,13 +6,27 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:40:35 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 10:37:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/11/26 12:31:25 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
 #include "linked_list.h"
+
+static void	_llist_destroy_elem(t_llist *list, t_ll_elem *elem, t_ll_elem *prev)
+{
+	if (prev)
+		prev->next = elem->next;
+	else
+		list->head = elem->next;
+	if (NULL != list->key_dstr)
+		list->key_dstr(elem->key);
+	if (NULL != list->val_dstr)
+		list->val_dstr(elem->val);
+	free(elem);
+	--(list->size);
+}
 
 int	llist_del(t_llist *list, const void *key)
 {
@@ -29,12 +43,7 @@ int	llist_del(t_llist *list, const void *key)
 	{
 		if (list->key_cmpr(key, ptr->key) == 0)
 		{
-			if (prev)
-				prev->next = ptr->next;
-			list->key_dstr(ptr->key);
-			list->val_dstr(ptr->val);
-			free(ptr);
-			--(list->size);
+			_llist_destroy_elem(list, ptr, prev);
 			return (0);
 		}
 		prev = ptr;
