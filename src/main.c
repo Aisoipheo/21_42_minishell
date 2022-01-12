@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 12:45:53 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:32:13 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include "minishell.h"
 #include "utils.h"
 #include "lexer.h"
+#include "errno.h"
+#include "parser.h"
 
 
 static char	*_ft_readline(const char *prompt)
@@ -30,26 +32,15 @@ static char	*_ft_readline(const char *prompt)
 	return (line);
 }
 
-static int _ft_cmpr(const void *a, const void *b)
+static int	_ft_init(t_info *info, char *envp[])
 {
-	return (ft_strcmp((const char *)a, (const char *)b));
-}
-
-static int	_ft_init(t_llist *list, char *envp[])
-{
-	ft_parse_envp(list, envp);
+	errno = 0;
+	info->envp_list = llist_new(llist_str_kcmp, free, free);
+	ft_parse_envp(info->envp_list, envp);
 	return (0);
 }
 
-static int _int_cmpr(const void *a, const void *b)
-{
-	if ((int)a == (int)b)
-		return (0);
-	if ((int)a < (int)b)
-		return (-1);
-	return (1);
-}
-
+//debug only
 const char	*_lx_get_name(int type)
 {
 	static const char *names[LX_NCONST] =
@@ -74,22 +65,26 @@ const char	*_lx_get_name(int type)
 int	main(int argc, char *argv[], char *envp[])
 {
 	char	*line;
-	t_llist	*list;
+	t_info	info;
+	t_llist	*tokens;
 
 	(void)argc;
 	(void)argv;
-	list = llist_new(_ft_cmpr,free,free);
-	_ft_init(list, envp);
+	_ft_init(&info, envp);
 	while(1)
 	{
-		t_llist *tokens = llist_new(_int_cmpr, NULL, free);
+		tokens = llist_new(llist_int_kcmp, NULL, free);
 		line = _ft_readline("prompt > ");
-		lx_lexer(tokens, line);
-		printf("TOKENS OK\n");
-		for (t_ll_elem *h = tokens->head; h != NULL; h = h->next)
-			printf("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
-		llist_free(tokens);
-		free(line);
+		if (line && *line)
+		{
+			lx_lexer(tokens, line);
+			printf("[main.c] TOKENS OK\n");
+			for (t_ll_elem *h = tokens->head; h != NULL; h = h->next)
+				printf("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
+			prs_parse(tokens, &info);
+			llist_free(tokens);
+			free(line);
+		}
 	}
 	rl_clear_history();
 	return (0);

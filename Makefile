@@ -7,13 +7,17 @@ OBJS_DIR			= ./obj
 C_FILES				= main.c\
 					linked_list.c\
 					linked_list2.c\
+					linked_list3.c\
 					environment.c\
 					norm_hacks.c\
 					utils.c\
 					utils2.c\
 					utils3.c\
 					lexer.c\
-					lexer2.c
+					lexer2.c\
+					parser.c\
+					parser2.c\
+					parser3.c
 
 SRCS				= $(addprefix $(SRCS_DIR)/, $(C_FILES))
 OBJS				= $(addprefix $(OBJS_DIR)/, $(C_FILES:.c=.o))

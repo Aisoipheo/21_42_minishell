@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 16:03:06 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/10/13 16:28:06 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/12/08 13:43:24 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ int	ft_strslice(const char *s, const char *delim, char **a, char **b)
 	return (1);
 }
 
-char	*ft_strjoin2(const char *s1, const char *s2, char d)
+char	*ft_strjoin2(const char *s1, const char *s2, char d, char isd)
 {
-	const int	size = ft_strlen(s1) + ft_strlen(s2) + 2;
+	const int	size = ft_strlen(s1) + ft_strlen(s2) + 1 + isd != 0;
 	char		*str;
 	int			i;
 
@@ -93,7 +93,8 @@ char	*ft_strjoin2(const char *s1, const char *s2, char d)
 	i = 0;
 	while (s1 && *s1)
 		str[i++] = *s1++;
-	str[i] = d;
+	if (isd)
+		str[i] = d;
 	while (s2 && *s2)
 		str[i++] = *s2++;
 	str[i] = '\0';

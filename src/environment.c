@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:22:18 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 10:38:12 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:32:56 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	**ft_compose_envp(t_llist *env)
 	envp[i] = NULL;
 	while (i--)
 	{
-		envp[i] = ft_strjoin2(ptr->key, ptr->val, '=');
+		envp[i] = ft_strjoin2(ptr->key, ptr->val, '=', 1);
 		if (!envp[i])
 			return (_ft_strdestroy2(envp));
 		ptr = ptr->next;

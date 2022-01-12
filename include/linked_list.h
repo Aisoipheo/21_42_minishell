@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:00:46 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/20 10:17:22 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/12/06 13:32:26 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,8 @@ int			llist_set(t_llist *list, void *key, void *new_val);
 int			llist_push(t_llist *list, void *key, void *val);
 int			llist_del(t_llist *list, const void *key);
 void		*llist_getval(t_llist *list, const void *key);
+
+int			llist_int_kcmp(const void *k1, const void *k2);
+int			llist_str_kcmp(const void *k1, const void *k2);
 
 #endif

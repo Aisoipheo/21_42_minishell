@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   linked_list3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/26 11:22:42 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/12/06 12:06:51 by rdrizzle         ###   ########.fr       */
+/*   Created: 2021/12/06 13:27:42 by rdrizzle          #+#    #+#             */
+/*   Updated: 2021/12/06 13:32:39 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_H
-# define PARSER_H
+#include "utils.h"
 
-# define PRS_SIMPLE		0b00100000
-# define PRS_PIPELINE	0b10000000
-# define PRS_SUBSHELL	0b01000000
+int	llist_int_kcmp(const void *k1, const void *k2)
+{
+	if ((int)k1 == (int)k2)
+		return (0);
+	if ((int)k1 < (int)k2)
+		return (-1);
+	return (1);
+}
 
-# include "linked_list.h"
-# include "minishell.h"
-
-int	prs_parse(t_llist *tokens, t_info *info);
-t_llist	*_prs_expand(t_llist *group, t_info *info);
-int	_prs_logexec(t_llist *groups, t_info *info);
-
-#endif
+int	llist_str_kcmp(const void *k1, const void *k2)
+{
+	return (ft_strcmp((const char *)k1, (const char *)k2));
+}

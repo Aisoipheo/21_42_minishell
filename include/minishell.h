@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/20 10:07:46 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2021/12/06 10:55:59 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ typedef struct s_info
 {
 	char		**envp;
 	char		envp_f;
-	int			status;
 	t_llist		*envp_list;
 }	t_info;
 
