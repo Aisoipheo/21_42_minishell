@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/12/09 10:32:13 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/01/19 18:51:23 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ static int	_ft_init(t_info *info, char *envp[])
 {
 	errno = 0;
 	info->envp_list = llist_new(llist_str_kcmp, free, free);
-	ft_parse_envp(info->envp_list, envp);
+	if (info->envp_list == NULL)
+		return (ft_error(1, "minishell: ft_init", 1));
+	if (ft_parse_envp(info->envp_list, envp))
+		return (1);
 	return (0);
 }
 
@@ -70,22 +73,25 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
-	_ft_init(&info, envp);
+	if (_ft_init(&info, envp))
+		return (EXIT_FAILURE);
 	while(1)
 	{
 		tokens = llist_new(llist_int_kcmp, NULL, free);
 		line = _ft_readline("prompt > ");
 		if (line && *line)
 		{
-			lx_lexer(tokens, line);
-			printf("[main.c] TOKENS OK\n");
-			for (t_ll_elem *h = tokens->head; h != NULL; h = h->next)
-				printf("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
-			prs_parse(tokens, &info);
+			if (lx_lexer(tokens, line) == 0)
+			{
+				printf("[main.c] TOKENS OK\n");
+				for (t_ll_elem *h = tokens->head; h != NULL; h = h->next)
+					printf("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
+				prs_parse(tokens, &info);
+			}
 			llist_free(tokens);
 			free(line);
 		}
 	}
 	rl_clear_history();
-	return (0);
+	return (EXIT_SUCCESS);
 }

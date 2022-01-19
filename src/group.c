@@ -1,33 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   linked_list3.c                                     :+:      :+:    :+:   */
+/*   group.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/06 13:27:42 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/13 13:43:28 by rdrizzle         ###   ########.fr       */
+/*   Created: 2022/01/13 13:38:12 by rdrizzle          #+#    #+#             */
+/*   Updated: 2022/01/13 16:29:41 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
+#include <stdlib.h>
+
+#include "minishell.h"
 #include "linked_list.h"
 
-int	llist_int_kcmp(const void *k1, const void *k2)
+t_group	*ft_group_new(int type)
 {
-	if ((int)k1 == (int)k2)
-		return (0);
-	if ((int)k1 < (int)k2)
-		return (-1);
-	return (1);
+	t_group		*g;
+
+	g = (t_group *)malloc(sizeof(t_group));
+	if (!g)
+		return (NULL);
+	g->type = type;
+	g->cmds = llist_new(NULL, llist_free_wrapper, free);
+	if (NULL == g->cmds)
+	{
+		free(g);
+		return (NULL);
+	}
+	return (g);
 }
 
-int	llist_str_kcmp(const void *k1, const void *k2)
+void	ft_group_free(void *group)
 {
-	return (ft_strcmp((const char *)k1, (const char *)k2));
-}
-
-void	llist_free_wrapper(void *llist)
-{
-	llist_free((t_llist *)llist);
+	llist_free(((t_group *)group)->cmds);
+	free(group);
 }

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 12:54:16 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 12:09:11 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/01/19 18:07:41 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,35 +27,54 @@ int	_lx_is_special(const char c)
 		|| c == ')');
 }
 
-static int	_lx_error(const char *msg)
+// static int	_lx_error(const char *msg)
+// {
+// 	write(STDERR_FILENO, msg, ft_strlen(msg));
+// 	return (1);
+// }
+
+static int	_lx_handle_char(t_llist *tokens, const char *line, unsigned long *i)
 {
-	write(STDERR_FILENO, msg, ft_strlen(msg));
-	return (1);
+	unsigned long	t;
+
+	if (line[*i] == '\'' || line[*i] == '\"')
+	{
+		if (_lx_case_quotes(tokens, line, *i, &t))
+			return (ft_error(1, "minishell: lx_lexer", 1));
+		if (t == 0)
+			return (ft_error(1, "minishell: lexer: unclosed single or"
+					" double quotes", 0));
+		*i += t + 1;
+	}
+	else if (line[*i] && _lx_is_special(line[*i]))
+	{
+		if (_lx_case_metachar(tokens, line, *i, &t))
+			return (1);
+		*i += t + 1;
+	}
+	else if (line[*i])
+	{
+		if (_lx_case_word(tokens, line, *i, &t))
+			return (ft_error(1, "minishell: lx_lexer", 1));
+		*i += t;
+	}
+	return (0);
 }
 
 int	lx_lexer(t_llist *tokens, const char *line)
 {
 	unsigned long	i;
-	unsigned long	t;
 
 	i = 0;
 	while (line && line[i])
 	{
-		if (line[i] && ft_isspace(line[i]))
-			llist_push(tokens, (int *)LX_SEP, NULL);
+		if (line[i] && ft_isspace(line[i]) && llist_push(tokens,
+				(int *)LX_SEP, NULL))
+			return (ft_error(1, "minishell: lx_lexer", 1));
 		while (line[i] && ft_isspace(line[i]))
 			++i;
-		if (line[i] == '\'' || line[i] == '\"')
-		{
-			t = _lx_case_quotes(tokens, line, i);
-			if (t == 0)
-				return (_lx_error("unclosed quote\n"));
-			i += t + 1;
-		}
-		else if (line[i] && _lx_is_special(line[i]))
-			i += _lx_case_metachar(tokens, line, i) + 1;
-		else if (line[i])
-			i += _lx_case_word(tokens, line, i);
+		if (_lx_handle_char(tokens, line, &i))
+			return (1);
 	}
 	return (0);
 }

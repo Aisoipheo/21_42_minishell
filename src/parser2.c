@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/12/13 17:14:28 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:21:32 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,18 +245,18 @@ static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 	if (_prs_expandable((*ptr)->key))
 	{
 		printf("[parser2.c] PRS_HANDLE_TOKEN TRY EXPAND TOKEN <%s>\n", (char *)(*ptr)->val);
-		str = llist_new(llist_int_kcmp, NULL, NULL);
-		llist_push(str, (*ptr)->key, (*ptr)->val);
+		str = llist_new(llist_int_kcmp, NULL, NULL); //danger malloc zone
+		llist_push(str, (*ptr)->key, (*ptr)->val); //danger malloc zone
 		while((*ptr)->next && _prs_expandable(((t_ll_elem *)(*ptr)->next)->key))
 		{
 			(*ptr) = (*ptr)->next;
-			llist_push(str, (*ptr)->key, (*ptr)->val);
+			llist_push(str, (*ptr)->key, (*ptr)->val); //danger malloc zone
 		}
-		word = _prs_field_expansion(str, info);
+		word = _prs_field_expansion(str, info); // danger malloc zone
 		printf("[parser2.c] PRS_HANDLE_TOKEN EXPANDED WORD <%s>\n", word);
 		words = _prs_asterisk_expansion(word, info);
 		if (NULL == words)
-			llist_push(expanded, (void *)LX_WORD, word);
+			llist_push(expanded, (void *)LX_WORD, word); //danger malloc zone
 		else
 		{
 			free(word);
@@ -278,18 +278,30 @@ static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 	return (0);
 }
 
+static int	_prs_handle_subsh_token(t_ll_elem *ptr, t_llist *expanded)
+{
+	if (_prs_expandable(ptr->key))
+		return (llist_push(expanded, ptr->key, ft_strcpy((char *)ptr->val)));
+	return (llist_push(expanded, ptr->key, ptr->val));
+}
 
 t_llist	*_prs_expand(t_llist *group, t_info *info)
 {
-
+	int			_shlvl;
 	t_llist		*expanded;
 	t_ll_elem	*ptr;
 
 	ptr = group->head;
 	expanded = llist_new(llist_int_kcmp, NULL, free);
+	_shlvl = 0;
 	while(NULL != expanded && NULL != ptr)
 	{
-		if (_prs_handle_token(&ptr, expanded, info))
+		_shlvl += ((int)ptr->key == LX_PARN_L) + (-1) * ((int)ptr->key == LX_PARN_R);
+		if (_shlvl > 0 && _prs_handle_subsh_token(ptr, expanded))
+		{
+			llist_free(expanded);
+			return (NULL);
+		} else if (_shlvl == 0 && _prs_handle_token(&ptr, expanded, info))
 		{
 			llist_free(expanded);
 			return (NULL);

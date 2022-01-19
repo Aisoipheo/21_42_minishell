@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:54:47 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/12/09 10:32:43 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/01/12 13:35:00 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ char	*ft_substr(const char *s, unsigned long begin, unsigned long count);
 int		ft_isalnum(char c);
 void	*ft_free_char2dem(char **arr, int m);
 char	**ft_malloc_char2dem(int m, int n);
+int		ft_error(int ret, const char *msg, char liberr);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 12:57:56 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 12:06:51 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:37:46 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@
 # include "linked_list.h"
 
 int				_lx_is_special(const char c);
-unsigned long	_lx_case_word(t_llist *tokens, const char *line,
-					unsigned long i);
-unsigned long	_lx_case_metachar(t_llist *tokens, const char *line,
-					unsigned long i);
-unsigned long	_lx_case_quotes(t_llist *tokens, const char *line,
-					unsigned long i);
+int				_lx_case_word(t_llist *tokens, const char *line,
+					unsigned long i, unsigned long *t);
+int				_lx_case_metachar(t_llist *tokens, const char *line,
+					unsigned long i, unsigned long *t);
+int				_lx_case_quotes(t_llist *tokens, const char *line,
+					unsigned long i, unsigned long *t);
 int				lx_lexer(t_llist *tokens, const char *line);
 
 #endif

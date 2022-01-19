@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 10:34:11 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 10:58:32 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/01/19 17:43:55 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,12 @@ static int	_lx_get_type(const char *line, unsigned long i)
 		return (LX_PARN_L);
 	if (line[i] == ')')
 		return (LX_PARN_R);
-	return (-1);
+	return (LX_NCONST);
 }
 
-static unsigned int	_lx_find_quote(const char *line, char c)
+static unsigned long	_lx_find_quote(const char *line, char c)
 {
-	unsigned int	i;
+	unsigned long	i;
 
 	i = 1;
 	while (line[i])
@@ -54,41 +54,54 @@ static unsigned int	_lx_find_quote(const char *line, char c)
 	return (0);
 }
 
-unsigned long	_lx_case_quotes(t_llist *tokens, const char *line,
-									unsigned long i)
+int	_lx_case_quotes(t_llist *tokens, const char *line,
+									unsigned long i, unsigned long *t)
 {
-	unsigned long	t;
+	char			*sstr;
 
-	t = _lx_find_quote(line + i, line[i]);
-	if (t == 0)
-		return (t);
-	llist_push(tokens, nh_trop(line[i] == '\'', (int *)LX_FIELD,
-			(int *)LX_EXP_FIELD),
-		ft_substr(line, i + 1, t - 1));
-	return (t);
+	*t = _lx_find_quote(line + i, line[i]);
+	if (*t == 0)
+		return (*t);
+	sstr = ft_substr(line, i + 1, *t - 1);
+	if (sstr == NULL)
+		return (1);
+	if (llist_push(tokens, nh_trop(line[i] == '\'', (int *)LX_FIELD,
+				(int *)LX_EXP_FIELD), sstr))
+	{
+		free(sstr);
+		return (1);
+	}
+	return (0);
 }
 
-unsigned long	_lx_case_metachar(t_llist *tokens, const char *line,
-									unsigned long i)
+int	_lx_case_metachar(t_llist *tokens, const char *line,
+									unsigned long i, unsigned long *t)
 {
-	unsigned long	t;
-
-	t = _lx_get_type(line, i);
-	llist_push(tokens, (void *)t, NULL);
-	return (t == LX_REDIR_APPEND || t == LX_REDIR_SOURCE
-		|| t == LX_IF_AND || t == LX_IF_OR);
+	*t = _lx_get_type(line, i);
+	if (*t == LX_NCONST)
+		return (ft_error(1,
+				"minishell: lx_case_metachar: error type of metachar", 0));
+	if (llist_push(tokens, (void *)(*t), NULL))
+		return (ft_error(1, "minishell: lx_case_metachar", 1));
+	*t = (*t == LX_REDIR_APPEND || *t == LX_REDIR_SOURCE
+			|| *t == LX_IF_AND || *t == LX_IF_OR);
+	return (0);
 }
 
-unsigned long	_lx_case_word(t_llist *tokens, const char *line,
-								unsigned long i)
+int	_lx_case_word(t_llist *tokens, const char *line,
+								unsigned long i, unsigned long *t)
 {
-	unsigned long	t;
+	char			*sstr;
 
-	t = 0;
-	while (line[i + t] && !ft_isspace(line[i + t])
-		&& !_lx_is_special(line[i + t]) && line[i + t] != '\''
-		&& line[i + t] != '\"')
-		++t;
-	llist_push(tokens, (void *)LX_WORD, ft_substr(line, i, t));
-	return (t);
+	*t = 0;
+	while (line[i + *t] && !ft_isspace(line[i + *t])
+		&& !_lx_is_special(line[i + *t]) && line[i + *t] != '\''
+		&& line[i + *t] != '\"')
+		++(*t);
+	sstr = ft_substr(line, i, *t);
+	if (sstr == NULL)
+		return (1);
+	if (llist_push(tokens, (void *)LX_WORD, sstr))
+		return (1);
+	return (0);
 }

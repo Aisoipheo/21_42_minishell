@@ -13,11 +13,13 @@ C_FILES				= main.c\
 					utils.c\
 					utils2.c\
 					utils3.c\
+					utils4.c\
 					lexer.c\
 					lexer2.c\
 					parser.c\
 					parser2.c\
-					parser3.c
+					parser3.c\
+					group.c
 
 SRCS				= $(addprefix $(SRCS_DIR)/, $(C_FILES))
 OBJS				= $(addprefix $(OBJS_DIR)/, $(C_FILES:.c=.o))
