@@ -1,6 +1,7 @@
 ## Authors
 
 rdrizzle (@Aisoipheo)
+Oksana (@baldiozh)
 
 
 ## Useful links
