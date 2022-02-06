@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/19 15:15:04 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/01/22 15:14:24 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static int	_prs_handle_token2(t_ll_elem **c, t_cmd_info *info)
 
 static int	_prs_handle_token(t_ll_elem **c, t_cmd_info *info, t_llist *args)
 {
-	if (NULL == (*c))
+	if (NULL == (*c)) //might delete later
 		return (ft_error(1, "ur bad >:(", 0));
 	if ((int)(*c)->key == LX_PARN_L || (int)(*c)->key == LX_PARN_R)
 	{
@@ -88,16 +88,16 @@ static int	_prs_handle_token(t_ll_elem **c, t_cmd_info *info, t_llist *args)
 		info->flags |= CMD_SUBSHELL;
 		if ((info->_shlvl == 1 && (int)(*c)->key == LX_PARN_L)
 			|| (info->_shlvl == 0 && (int)(*c)->key == LX_PARN_R))
-			return (0); //consume first and last ()
+			return (0);
 	}
 	//if (info->_shlvl > 0 && llist_push(args, (*c)->key, (*c)->val))
 	//	return (ft_error(1, "minishell: _prs_handle_token", 1)); //malloc err or smth
 	if ((int)(*c)->key == LX_SEP)
-		return (0); //skip spaces
+		return (0);
 	if ((info->flags & CMD_SUBSHELL) && info->_shlvl == 0 && (int)(*c)->key == LX_WORD)
-		return (ft_error(1, "minishell: unexpected token after subshell command", 0)); //unexpected token
+		return (ft_error(1, "minishell: unexpected token after `(subshell)'", 0));
 	if (((int)(*c)->key == LX_WORD || info->_shlvl > 0) && llist_push(args, (*c)->key, (*c)->val))
-		return (ft_error(1, "minishell: _prs_handle_token", 1)); //malloc err or smthing
+		return (ft_error(1, "minishell: _prs_handle_token", 1));
 	if (info->_shlvl > 0)
 		return (0);
 	return (_prs_handle_token2(c, info));
@@ -111,7 +111,7 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	info = malloc(sizeof(t_cmd_info));
 	args = llist_new(NULL, NULL, NULL);
 	if (!info || !args)
-		return (1); // malloc error
+		return (ft_error(1, "minishell: _prs_group_cmd", 1));
 	info->in_file = NULL;
 	info->out_file = NULL;
 	info->flags = 0;
@@ -125,9 +125,14 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 		printf("[parser3.c] PRS_GROUP_CMD NEXT TOKEN IS %p\n", h);
 	}
 	printf("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
-	if ((h == NULL || (int)h->key == LX_PIPE)
-		&& (llist_push(cmds, args, info) == 0))
+	if ((args->size == 0 && info->out_file == NULL && info->in_file == NULL))
+		return (ft_error(1, "minishell: parse error near `|'", 0));
+	if (h == NULL || (int)h->key == LX_PIPE)
+	{
+		if (llist_push(cmds, args, info))
+			return (ft_error(1, "minishell: _prs_group_cmd", 1));
 		return (0);
+	}
 	printf("[parser3.c] PRS_GROUP_CMD free %p %p\n", args, info);
 	llist_free(args);
 	free(info);
@@ -145,6 +150,8 @@ int	_prs_group_pipe(t_llist *expanded, t_llist *cmds)
 			return (1);
 		while (curr != NULL && (int)curr->key != LX_PIPE)
 			curr = curr->next;
+		if (curr && curr->next == NULL)
+			return (ft_error(1, "minishell: parse error near `|'", 0));
 		if (curr)
 			curr = curr->next;
 	}
@@ -205,6 +212,7 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		}
 		printf("[parser3.c] PRS_HANDLE_GROUP free %p\n", expanded);
 		llist_free(expanded);
+		ft_group_free(cmds);
 	}
 	return (0);
 }
