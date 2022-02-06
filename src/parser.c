@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:23:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/19 17:55:45 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/01/22 14:38:55 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	_prs_check_syntax(t_llist *groups)
 	while (NULL != ptr)
 	{
 		if (expected == 0 && _prs_is_delim_token(ptr->key))
-			return (ft_error(1, "minishell: syntax error near token `||' or `&&'", 0)); // syntax error near token (ptr->key)
+			return (ft_error(1, "minishell: syntax error near token `||' or `&&'", 0));
 		else
 			expected = 1;
 		if (expected == 1 && _prs_is_delim_token(ptr->key))
@@ -67,7 +67,7 @@ static int	_prs_check_syntax(t_llist *groups)
 		ptr = ptr->next;
 	}
 	if (expected == 0)
-		return (ft_error(1, "minishell: syntax error near token `||' or `&&'", 0)); // syntax error near token (w/e mode there is)
+		return (ft_error(1, "minishell: syntax error near token `||' or `&&'", 0));
 	return (0);
 }
 
