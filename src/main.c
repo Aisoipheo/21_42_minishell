@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/19 18:51:23 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/18 19:53:26 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static int	_ft_init(t_info *info, char *envp[])
 		return (ft_error(1, "minishell: ft_init", 1));
 	if (ft_parse_envp(info->envp_list, envp))
 		return (1);
+	signal(SIGTERM, handler_term);
 	return (0);
 }
 
@@ -77,8 +78,10 @@ int	main(int argc, char *argv[], char *envp[])
 		return (EXIT_FAILURE);
 	while(1)
 	{
+		signal(SIGINT, handler);
+		signal(SIGQUIT, SIG_IGN);
 		tokens = llist_new(llist_int_kcmp, NULL, free);
-		line = _ft_readline("prompt > ");
+		line = _ft_readline("minishell$: ");
 		if (line && *line)
 		{
 			if (lx_lexer(tokens, line) == 0)
@@ -91,6 +94,8 @@ int	main(int argc, char *argv[], char *envp[])
 			llist_free(tokens);
 			free(line);
 		}
+		if (!line)
+			handler_term();
 	}
 	rl_clear_history();
 	return (EXIT_SUCCESS);
