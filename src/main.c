@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/18 19:53:26 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/19 18:39:19 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int	main(int argc, char *argv[], char *envp[])
 					printf("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
 				prs_parse(tokens, &info);
 			}
+			//
 			llist_free(tokens);
 			free(line);
 		}

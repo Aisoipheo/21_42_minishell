@@ -1,22 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   destroy.c                                          :+:      :+:    :+:   */
+/*   pipeline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/17 20:26:04 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/19 20:25:02 by gmckinle         ###   ########.fr       */
+/*   Created: 2022/02/19 20:36:53 by gmckinle          #+#    #+#             */
+/*   Updated: 2022/02/19 21:12:39 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "utils.h"
+#include "parser.h"
 
-int	destroy(t_group *cmds, t_info *info)
+void	pipeline(t_group *cmds, t_info *info)
 {
-	
-
-	rl_clear_history();
-	return (0);
+	;
 }

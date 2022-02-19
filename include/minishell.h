@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/18 19:53:05 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/19 21:12:47 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,14 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 
 # define CMD_APPEND 0b001
 # define CMD_INSOURCE 0b010
 # define CMD_SUBSHELL 0b100
 
-int	g_var;
+// int	g_exit = 0;
 
 typedef struct s_info
 {
@@ -58,7 +60,12 @@ char		**ft_compose_envp(t_llist *list);
 /* ============ /Environment ============ */
 
 void	handler(int sig);
-void	handler_term();
+void	handler_term(t_group *cmds, t_info *info);
+
+pid_t	executing(t_group *cmds, t_info *info);
+void	pipeline(t_group *cmds, t_info *info);
+
+int		destroy(t_group *cmds, t_info *info);
 
 /* ============ Built-ins ============ */
 // int			ft_builtin_env(t_var_list *env);

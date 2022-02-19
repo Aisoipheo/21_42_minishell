@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/19 15:15:04 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/19 20:30:15 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,8 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		if (_prs_prepare_group(expanded, cmds))
 			return (-1);
 		printf("[parser3.c] GROUP READY\n");
+		executing(cmds, info);
+		//exept of this block of code
 		for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
 		{
 			t_cmd_info *cmd_info = (t_cmd_info *)h->val;
@@ -203,9 +205,11 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 			for (t_ll_elem *arg = ((t_llist *)h->key)->head; arg != NULL; arg = arg->next)
 				printf("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
 		}
+		//
 		printf("[parser3.c] PRS_HANDLE_GROUP free %p\n", expanded);
 		llist_free(expanded);
 	}
+
 	return (0);
 }
 
