@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/19 18:39:19 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/20 17:12:45 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static int	_ft_init(t_info *info, char *envp[])
 		return (ft_error(1, "minishell: ft_init", 1));
 	if (ft_parse_envp(info->envp_list, envp))
 		return (1);
-	signal(SIGTERM, handler_term);
 	return (0);
 }
 
@@ -96,7 +95,7 @@ int	main(int argc, char *argv[], char *envp[])
 			free(line);
 		}
 		if (!line)
-			handler_term();
+			handler_term(&info);
 	}
 	rl_clear_history();
 	return (EXIT_SUCCESS);

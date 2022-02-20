@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/19 20:30:15 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/20 19:40:26 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,19 +159,19 @@ int	_prs_prepare_group(t_llist *expanded, t_group *cmds)
 }
 
 //debug only
-static long long convert(int n) {
-  long long bin = 0;
-  int rem, i = 1;
+// static long long convert(int n) {
+//   long long bin = 0;
+//   int rem, i = 1;
 
-  while (n!=0) {
-    rem = n % 2;
-    n /= 2;
-    bin += rem * i;
-    i *= 10;
-  }
+//   while (n!=0) {
+//     rem = n % 2;
+//     n /= 2;
+//     bin += rem * i;
+//     i *= 10;
+//   }
 
-  return bin;
-}
+//   return bin;
+// }
 
 pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 {
@@ -190,7 +190,7 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		if (_prs_prepare_group(expanded, cmds))
 			return (-1);
 		printf("[parser3.c] GROUP READY\n");
-		executing(cmds, info);
+		executor(cmds, info);
 		//exept of this block of code
 		for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
 		{

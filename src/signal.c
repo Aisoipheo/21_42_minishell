@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 19:02:12 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/19 20:25:27 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/20 17:13:14 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ void	handler(int sig)
 	// g_error = 1;
 }
 
-void	handler_term(t_group *cmds, t_info *info)
+void	handler_term(t_info *info)
 {
-
+	(void)info;
 	write(1, "minishell$ exit\n", ft_strlen("minishell$ exit\n"));
 	rl_redisplay();
-	destroy(cmds, info);
+	//destroy(cmds, info);
 	exit(EXIT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/19 21:12:47 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/20 17:44:31 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,18 @@ void		ft_group_free(void *group);
 /* ============ Environment ============ */
 int			ft_parse_envp(t_llist *list, char *envp[]);
 char		**ft_compose_envp(t_llist *list);
-/* ============ /Environment ============ */
+/* ============ /Environqment ============ */
 
 void	handler(int sig);
-void	handler_term(t_group *cmds, t_info *info);
+void	handler_term(t_info *info);
 
-pid_t	executing(t_group *cmds, t_info *info);
+pid_t	executor(t_group *cmds, t_info *info);
 void	pipeline(t_group *cmds, t_info *info);
+int		subshell_();
 
+int		ft_strncmp(const char *str1, const char *str2, size_t n);
 int		destroy(t_group *cmds, t_info *info);
+
 
 /* ============ Built-ins ============ */
 // int			ft_builtin_env(t_var_list *env);
