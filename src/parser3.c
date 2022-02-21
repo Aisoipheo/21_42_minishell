@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/22 15:14:24 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/07 11:12:18 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,7 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		{
 			t_cmd_info *cmd_info = (t_cmd_info *)h->val;
 			printf(" ======c> llist at %p\n", h);
+			printf(" TYPE: %lld\n", convert(type));
 			printf(" *** INFO ***\n");
 			convert((int)cmd_info->flags);
 			printf("flags: %.5d\n", cmd_info->flags/* */);
