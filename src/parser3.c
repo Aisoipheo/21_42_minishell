@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/21 18:56:38 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/21 20:04:52 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,9 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 {
 	t_llist	*expanded;
 	t_group *cmds;
+	pid_t	pid;
 
+	pid = -1;
 	expanded = _prs_expand(group, info);
 	if (expanded)
 	{
@@ -197,7 +199,7 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		if (_prs_prepare_group(expanded, cmds))
 			return (-1);
 		printf("[parser3.c] GROUP READY\n");
-		executor(cmds, info);
+		pid = executor(cmds, info);
 		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
 		// {
 		// 	t_cmd_info *cmd_info = (t_cmd_info *)h->val;
