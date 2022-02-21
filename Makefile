@@ -19,7 +19,12 @@ C_FILES				= main.c\
 					parser.c\
 					parser2.c\
 					parser3.c\
-					group.c
+					group.c\
+					signal.c\
+					utils_libft.c\
+					executor.c\
+					pipeline.c\
+					subshell.c
 
 SRCS				= $(addprefix $(SRCS_DIR)/, $(C_FILES))
 OBJS				= $(addprefix $(OBJS_DIR)/, $(C_FILES:.c=.o))

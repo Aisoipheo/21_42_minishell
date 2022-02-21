@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/15 15:47:03 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/21 18:21:07 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,39 @@
 # define MINISHELL_H
 
 # include "linked_list.h"
+# include "linked_list.h"
+# include <signal.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 
 # define CMD_APPEND 0b001
 # define CMD_INSOURCE 0b010
 # define CMD_SUBSHELL 0b100
 
+// int	g_exit = 0;
+
+// f1(char **ar, function_ptr *f) {
+// 	ar[0] = "echo";
+// 	f[0] = &ft_echo;
+// 	ar[1] = "cd";
+// 	f[1] = &ft_cd;
+// 	f2()
+// }
+
+typedef int (*builtin_ptr)(t_llist *, t_info *); //(t_llist *)elems->key)
+
 typedef struct s_info
 {
-	char		**envp;
-	char		envp_f;
-	t_llist		*envp_list;
+	char			**envp;
+	char			envp_f;
+	char			*reserved_words[7];
+	builtin_ptr		*f_ptrs[7];
+	t_llist			*envp_list;
 }	t_info;
 
 typedef struct s_cmd_info
@@ -46,7 +69,18 @@ void		ft_group_free(void *group);
 /* ============ Environment ============ */
 int			ft_parse_envp(t_llist *list, char *envp[]);
 char		**ft_compose_envp(t_llist *list);
-/* ============ /Environment ============ */
+/* ============ /Environqment ============ */
+
+void	handler(int sig);
+void	handler_term(t_info *info);
+
+pid_t	executor(t_group *cmds, t_info *info);
+void	pipeline(t_group *cmds, t_info *info);
+int		subshell_();
+
+int		ft_strncmp(const char *str1, const char *str2, size_t n);
+int		destroy(t_group *cmds, t_info *info);
+
 
 /* ============ Built-ins ============ */
 // int			ft_builtin_env(t_var_list *env);

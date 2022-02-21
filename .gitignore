@@ -5,3 +5,5 @@ obj
 minishell
 *.sh
 a.out
+.vscode
+
