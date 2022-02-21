@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/20 17:44:31 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/21 18:21:07 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,23 @@
 
 // int	g_exit = 0;
 
+// f1(char **ar, function_ptr *f) {
+// 	ar[0] = "echo";
+// 	f[0] = &ft_echo;
+// 	ar[1] = "cd";
+// 	f[1] = &ft_cd;
+// 	f2()
+// }
+
+typedef int (*builtin_ptr)(t_llist *, t_info *); //(t_llist *)elems->key)
+
 typedef struct s_info
 {
-	char		**envp;
-	char		envp_f;
-	t_llist		*envp_list;
+	char			**envp;
+	char			envp_f;
+	char			*reserved_words[7];
+	builtin_ptr		*f_ptrs[7];
+	t_llist			*envp_list;
 }	t_info;
 
 typedef struct s_cmd_info

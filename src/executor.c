@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/20 20:02:43 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/21 18:21:55 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ft_echo()
 	printf("echo\n");
 }
 
-int	check_if_builtins(t_group *cmds)
+int	check_if_builtins(t_group *cmds, t_info *info)
 {
 	t_ll_elem *elems;
 	elems = cmds->cmds->head;
@@ -69,34 +69,15 @@ int	check_if_builtins(t_group *cmds)
 	int N = 7;
 	while (i < N)
 	{
-		if (ft_strcmp(((t_llist *)elems->key)->head->val, reserved_words[i]))
+		if (ft_strcmp(((t_llist *)elems->key)->head->val, info->reserved_words[i]))
 		{
-			f_ptrs[i](param1, param2);
+			(*info->f_ptrs[i])((t_llist *)elems->key, info);
 			return (1);
 		}
-		i++; 
+		i++;
 	}
 	return (0);
 }
-
-typedef int (*function_ptr)(char **, t_info *);
-char **reserved_words[7] = {"echo", "cd", "pwd", "export", "unset", "env", "exit"};
-function_ptr *f_ptrs[7] = {&ft_echo, &ft_cd, &ft_pwd, &ft_export, &ft_unset, &ft_env, &ft_exit};
-
-// f1(char **ar, function_ptr *f) {
-// 	ar[0] = "echo";
-// 	f[0] = &ft_echo;
-// 	ar[1] = "cd";
-// 	f[1] = &ft_cd;
-// 	ar[2] = "cd";
-// 	f[2] = &ft_cd;
-// 	ar[3] = "cd";
-// 	f[3] = &ft_cd;
-// 	ar[1] = "cd";
-// 	f[1] = &ft_cd;
-// 	f2()
-// }
-
 
 pid_t	executor(t_group *cmds, t_info *info)
 {
