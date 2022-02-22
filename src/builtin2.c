@@ -6,18 +6,20 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/22 17:16:44 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/22 18:35:05 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "utils.h"
 
-static int	ft_export_print(t_llist *args, t_info *info) {
+static int	ft_export_print(t_llist *args, t_info *info)
+{
 	t_ll_elem	*ptr;
 
 	ptr = info->envp_list->head;
-	while (ptr) {
+	while (ptr)
+	{
 		if (write(STDOUT_FILENO, "declare -x ", 11) == -1)
 			return (ft_error(-1, "minishell: export: write", 1));
 		if (write(STDOUT_FILENO, ptr->key, ft_strlen((char *)ptr->key)) == -1)
@@ -33,7 +35,8 @@ static int	ft_export_print(t_llist *args, t_info *info) {
 	return (0);
 }
 
-int			ft_export(t_llist *args, t_info *info) {
+int	ft_export(t_llist *args, t_info *info)
+{
 	t_ll_elem	*ptr;
 	char		*a;
 	char		*b;
@@ -42,7 +45,8 @@ int			ft_export(t_llist *args, t_info *info) {
 	if (args->size == 1)
 		return (ft_export_print(args, info));
 	ptr = ptr->next;
-	while (ptr) {
+	while (ptr)
+	{
 		if (ft_strslice((char *)ptr->val, "=", &a, &b))
 			return (ft_error(-1, "minishell: export: parse", 1));
 		if (llist_set(info->envp_list, a, b))
@@ -53,8 +57,27 @@ int			ft_export(t_llist *args, t_info *info) {
 	return (0);
 }
 
+int	ft_unset(t_llist *args, t_info *info)
+{
+	t_ll_elem	*arg;
+
+	arg = args->head;
+	if (arg->next)
+	{
+		arg = arg->next;
+		while (arg)
+		{
+			llist_del(info->envp_list, arg->val);
+			arg = arg->next;
+		}
+	}
+	info->envp_f = 1;
+	return (0);
+}
+
 #include <stdio.h>
-int			ft_exit(t_llist *args, t_info *info) {
+int	ft_exit(t_llist *args, t_info *info)
+{
 	printf("Fake Exit\n");
 	return (0);
 }

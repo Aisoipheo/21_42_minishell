@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/23 16:44:13 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/22 18:17:03 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <limits.h>
 
 #include "lexer.h"
 #include "parser.h"
@@ -316,8 +317,11 @@ t_llist *_prs_asterisk_expansion_pwd(const char *word, t_info *info)
 	DIR				*dir;
 	struct dirent	*dirf;
 	t_llist			*words;
+	char			pwd[PATH_MAX];
 
-	dir = opendir(llist_getval(info->envp_list, "PWD"));
+	if (getcwd(pwd, PATH_MAX) == NULL)
+		return (NULL);
+	dir = opendir(pwd);
 	words = llist_new(llist_int_kcmp, NULL, NULL);
 	if (NULL == dir || NULL == words)
 	{
