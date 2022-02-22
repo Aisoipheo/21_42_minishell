@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/21 18:21:07 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/21 20:32:46 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 // 	f2()
 // }
 
-typedef int (*builtin_ptr)(t_llist *, t_info *); //(t_llist *)elems->key)
+//(t_llist *)elems->key)
 
 typedef struct s_info
 {
@@ -49,6 +49,7 @@ typedef struct s_info
 	t_llist			*envp_list;
 }	t_info;
 
+typedef int (*builtin_ptr)(t_llist *, t_info *);
 typedef struct s_cmd_info
 {
 	char	*in_file;
@@ -75,7 +76,7 @@ void	handler(int sig);
 void	handler_term(t_info *info);
 
 pid_t	executor(t_group *cmds, t_info *info);
-void	pipeline(t_group *cmds, t_info *info);
+pid_t	pipeline(t_group *cmds, t_info *info);
 int		subshell_();
 
 int		ft_strncmp(const char *str1, const char *str2, size_t n);

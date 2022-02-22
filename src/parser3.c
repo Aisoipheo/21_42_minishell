@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/07 11:12:18 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/21 20:04:52 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,9 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 {
 	t_llist	*expanded;
 	t_group *cmds;
+	pid_t	pid;
 
+	pid = -1;
 	expanded = _prs_expand(group, info);
 	if (expanded)
 	{
@@ -197,20 +199,21 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		if (_prs_prepare_group(expanded, cmds))
 			return (-1);
 		printf("[parser3.c] GROUP READY\n");
-		for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
-		{
-			t_cmd_info *cmd_info = (t_cmd_info *)h->val;
-			printf(" ======c> llist at %p\n", h);
-			printf(" TYPE: %lld\n", convert(type));
-			printf(" *** INFO ***\n");
-			convert((int)cmd_info->flags);
-			printf("flags: %.5d\n", cmd_info->flags/* */);
-			printf("in: %s\n", cmd_info->in_file);
-			printf("out: %s\n", cmd_info->out_file);
-			printf("\n *** ARGS ***\n");
-			for (t_ll_elem *arg = ((t_llist *)h->key)->head; arg != NULL; arg = arg->next)
-				printf("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
-		}
+		pid = executor(cmds, info);
+		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
+		// {
+		// 	t_cmd_info *cmd_info = (t_cmd_info *)h->val;
+		// 	printf(" ======c> llist at %p\n", h);
+		// 	printf(" TYPE: %lld\n", convert(type));
+		// 	printf(" *** INFO ***\n");
+		// 	convert((int)cmd_info->flags);
+		// 	printf("flags: %.5d\n", cmd_info->flags/* */);
+		// 	printf("in: %s\n", cmd_info->in_file);
+		// 	printf("out: %s\n", cmd_info->out_file);
+		// 	printf("\n *** ARGS ***\n");
+		// 	for (t_ll_elem *arg = ((t_llist *)h->key)->head; arg != NULL; arg = arg->next)
+		// 		printf("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
+		// }
 		printf("[parser3.c] PRS_HANDLE_GROUP free %p\n", expanded);
 		llist_free(expanded);
 		ft_group_free(cmds);
