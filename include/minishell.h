@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/21 20:32:46 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/22 14:56:52 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "linked_list.h"
 # include "linked_list.h"
 # include <signal.h>
 # include <stdlib.h>
@@ -84,7 +83,13 @@ int		destroy(t_group *cmds, t_info *info);
 
 
 /* ============ Built-ins ============ */
-// int			ft_builtin_env(t_var_list *env);
+int			ft_echo(t_llist *args, t_info *info);
+int			ft_cd(t_llist *args, t_info *info);
+int			ft_pwd(t_llist *args, t_info *info);
+int			ft_export(t_llist *args, t_info *info);
+int			ft_unset(t_llist *args, t_info *info);
+int			ft_env(t_llist *args, t_info *info);
+int			ft_exit(t_llist *args, t_info *info);
 /* ============ /Built-ins ============ */
 
 #endif

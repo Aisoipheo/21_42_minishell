@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:40:35 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/26 12:31:25 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/22 17:23:08 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,16 @@ void	*llist_getval(t_llist *list, const void *key)
 		ptr = ptr->next;
 	}
 	return (NULL);
+}
+
+int	llist_haskey(t_llist *list, const void *key) {
+	t_ll_elem	*ptr;
+
+	ptr = list->head;
+	while (ptr) {
+		if (list->key_cmpr(ptr->key, key) == 0)
+			return (1);
+		ptr = ptr->next;
+	}
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:00:46 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/13 13:44:09 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/22 17:21:00 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void		llist_free(t_llist *list);
 int			llist_set(t_llist *list, void *key, void *new_val);
 int			llist_push(t_llist *list, void *key, void *val);
 int			llist_del(t_llist *list, const void *key);
+int			llist_haskey(t_llist *list, const void *key);
 void		*llist_getval(t_llist *list, const void *key);
 void		llist_free_wrapper(void *llist);
 

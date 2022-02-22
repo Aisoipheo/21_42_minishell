@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/21 20:35:04 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/22 14:54:21 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,40 +25,6 @@
 */
 
 int	forking();
-void ft_cd()
-{
-	printf("echo\n");
-}
-
-void ft_pwd()
-{
-	printf("echo\n");
-}
-
-void ft_export()
-{
-	printf("echo\n");
-}
-
-void ft_unset()
-{
-	printf("echo\n");
-}
-
-void ft_env()
-{
-	printf("echo\n");
-}
-
-void ft_exit()
-{
-	printf("echo\n");
-}
-
-void	ft_echo()
-{
-	printf("echo\n");
-}
 
 int	check_if_builtins(t_group *cmds, t_info *info)
 {
