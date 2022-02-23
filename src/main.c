@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 14:28:40 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 21:53:19 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,13 @@ static int	_ft_init(t_info *info, char *envp[])
 	info->envp_f = 0;
 	info->exit_f = 1;
 	info->envp_list = llist_new(llist_str_kcmp, free, free);
+	info->reserved_words[0] = "echo";
+	info->reserved_words[1] = "cd";
+	info->reserved_words[2] = "pwd";
+	info->reserved_words[3] = "export";
+	info->reserved_words[4] = "unset";
+	info->reserved_words[5] = "env";
+	info->reserved_words[6] = "exit";
 	if (info->envp_list == NULL)
 		return (ft_error(1, "minishell: ft_init", 1));
 	if (ft_parse_envp(info->envp_list, envp))
