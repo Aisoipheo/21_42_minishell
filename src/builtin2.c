@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 13:55:40 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 19:46:16 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 static int	ft_export_print(t_llist *args, t_info *info)
 {
+	(void)info;
+	(void)args;
 	t_ll_elem	*ptr;
 
 	ptr = info->envp_list->head;
@@ -77,6 +79,8 @@ int	ft_unset(t_llist *args, t_info *info)
 
 int	ft_exit(t_llist *args, t_info *info)
 {
+	(void)info;
+	(void)args;
 	info->exit_f = 0;
 	return (0);
 }

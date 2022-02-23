@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:54:25 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/22 18:33:26 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 19:45:57 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,29 @@
 
 int	ft_echo(t_llist *args, t_info *info)
 {
-	t_ll_elem	*arg;
-	char		is_n;
+	// t_ll_elem	*arg;
+	// char		is_n;
 
 	(void)info;
-	arg = args->head;
-	if (args->size > 1)
-	{
-		arg = arg->next;
-		is_n = ft_strcmp(arg->val, "-n") == 0;
-		if (is_n)
-			arg = arg->next;
-		while (arg)
-		{
-			if (write(STDOUT_FILENO, arg->val, ft_strlen((char *)arg->val))
-				== -1)
-				return (ft_error(-1, "minishell: echo", 1));
-			arg = arg->next;
-		}
-	}
-	if (!is_n)
-		if (write(STDOUT_FILENO, "\n", 1) == -1)
-			return (ft_error(-1, "minishell: echo", 1));
+	(void)args;
+	// arg = args->head;
+	// if (args->size > 1)
+	// {
+	// 	arg = arg->next;
+	// 	is_n = ft_strcmp(arg->val, "-n") == 0;
+	// 	if (is_n)
+	// 		arg = arg->next;
+	// 	while (arg)
+	// 	{
+	// 		if (write(STDOUT_FILENO, arg->val, ft_strlen((char *)arg->val))
+	// 			== -1)
+	// 			return (ft_error(-1, "minishell: echo", 1));
+	// 		arg = arg->next;
+	// 	}
+	// }
+	// if (!is_n)
+	// 	if (write(STDOUT_FILENO, "\n", 1) == -1)
+	// 		return (ft_error(-1, "minishell: echo", 1));
 	return (0);
 }
 
@@ -75,6 +76,7 @@ int	ft_pwd(t_llist *args, t_info *info)
 	char			pwd[PATH_MAX];
 	unsigned int	i;
 
+	(void)info;
 	(void)args;
 	getcwd(pwd, PATH_MAX);
 	i = 0;
@@ -91,6 +93,7 @@ int	ft_env(t_llist *args, t_info *info)
 {
 	t_ll_elem	*ptr;
 
+	(void)args;
 	ptr = info->envp_list->head;
 	while (ptr)
 	{
