@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 13:54:32 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:28:40 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,13 @@ int	main(int argc, char *argv[], char *envp[])
 					printf("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
 				prs_parse(tokens, &info);
 			}
-			llist_free(tokens);
 			free(line);
 			printf("[main.c] *** END OF WORK ***\n");
+		} else if (line == NULL) {
+			info.exit_f = 0;
+			write(STDOUT_FILENO, "exit\n", 5);
 		}
+		llist_free(tokens);
 	}
 	rl_clear_history();
 	return (EXIT_SUCCESS);
