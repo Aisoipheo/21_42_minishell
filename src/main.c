@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/22 14:30:05 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 13:54:32 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ static char	*_ft_readline(const char *prompt)
 static int	_ft_init(t_info *info, char *envp[])
 {
 	errno = 0;
+	info->envp_f = 0;
+	info->exit_f = 1;
 	info->envp_list = llist_new(llist_str_kcmp, free, free);
 	if (info->envp_list == NULL)
 		return (ft_error(1, "minishell: ft_init", 1));
@@ -75,7 +77,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	if (_ft_init(&info, envp))
 		return (EXIT_FAILURE);
-	while(1)
+	while(info.exit_f)
 	{
 		tokens = llist_new(llist_int_kcmp, NULL, free);
 		line = _ft_readline("prompt > ");

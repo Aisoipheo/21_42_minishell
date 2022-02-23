@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/22 18:35:05 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 13:55:40 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,8 @@ int	ft_unset(t_llist *args, t_info *info)
 	return (0);
 }
 
-#include <stdio.h>
 int	ft_exit(t_llist *args, t_info *info)
 {
-	printf("Fake Exit\n");
+	info->exit_f = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/22 14:56:52 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 13:54:12 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@
 
 typedef struct s_info
 {
-	char			**envp;
+	char			exit_f;
 	char			envp_f;
+	char			**envp;
 	char			*reserved_words[7];
 	builtin_ptr		*f_ptrs[7];
 	t_llist			*envp_list;
