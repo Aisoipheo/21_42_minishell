@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 13:54:12 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 21:53:48 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@
 
 //(t_llist *)elems->key)
 
-typedef struct s_info
+typedef struct s_info t_info;
+typedef int (*builtin_ptr)(t_llist *, t_info *);
+
+struct s_info
 {
 	char			exit_f;
 	char			envp_f;
@@ -47,9 +50,9 @@ typedef struct s_info
 	char			*reserved_words[7];
 	builtin_ptr		*f_ptrs[7];
 	t_llist			*envp_list;
-}	t_info;
+};
 
-typedef int (*builtin_ptr)(t_llist *, t_info *);
+
 typedef struct s_cmd_info
 {
 	char	*in_file;
@@ -77,9 +80,10 @@ void	handler_term(t_info *info);
 
 pid_t	executor(t_group *cmds, t_info *info);
 pid_t	pipeline(t_group *cmds, t_info *info);
-int		subshell_();
+int		ft_subshell(t_group *cmds, t_info *info);
 
 int		ft_strncmp(const char *str1, const char *str2, size_t n);
+char	*ft_strjoin(char const *s1, char const *s2);
 int		destroy(t_group *cmds, t_info *info);
 
 

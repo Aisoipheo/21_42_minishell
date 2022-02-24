@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/22 18:17:03 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/23 17:28:20 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ int	_prs_asterisk_pattern_matches(const char *pattern, const char *str)
 	return (i);
 }
 
-t_llist *_prs_asterisk_expansion_pwd(const char *word, t_info *info)
+t_llist *_prs_asterisk_expansion_pwd(const char *word)
 {
 	DIR				*dir;
 	struct dirent	*dirf;
@@ -380,14 +380,14 @@ t_llist *_prs_asterisk_expansion_pwd(const char *word, t_info *info)
 // 	return (words);
 // }
 
-t_llist *_prs_asterisk_expansion(const char *word, t_info *info)
+t_llist *_prs_asterisk_expansion(const char *word)
 {
 	if (!ft_strcontains(word, '*'))
 		return (NULL);
 	if (ft_strcontains(word, '/'))
 		return (NULL);
 	// 	return (_prs_asterisk_expansion_path(word));
-	return (_prs_asterisk_expansion_pwd(word, info));
+	return (_prs_asterisk_expansion_pwd(word));
 }
 
 static int	_prs_expandable(void *key)
@@ -419,7 +419,7 @@ static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 		_prs_field_expansion(str, info, &word);
 		// word = _prs_field_expansion(str, info); // danger malloc zone
 		printf("[parser2.c] PRS_HANDLE_TOKEN EXPANDED WORD <%s>\n", word);
-		words = _prs_asterisk_expansion(word, info);
+		words = _prs_asterisk_expansion(word);
 		if (NULL == words)
 			llist_push(expanded, (void *)LX_WORD, word); //danger malloc zone
 		else
