@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/23 22:57:09 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/26 19:00:34 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	check_if_builtins(t_group *cmds, t_info *info)
 
 	while (i < 7)
 	{
-		if (ft_strcmp(((t_llist *)elems->key)->head->val, info->reserved_words[i]) == 0) //does weird shit - trash in reserved words
+		if (ft_strcmp(((t_llist *)elems->key)->head->val, info->reserved_words[i]) == 0)
 		{
 			printf("BUILTIN [%s]\n", ((t_llist *)elems->key)->head->val);
 			printf("RESERVED [%s]\n", info->reserved_words[i]);
@@ -49,75 +49,73 @@ int	check_if_builtins(t_group *cmds, t_info *info)
 	return (i);
 }
 
-char	*ft_scroll_envp(t_info *info, int i)
+int	ft_acces(t_group *cmds, t_info *info, char *path, char **filepath)
 {
-	t_info	*elems;
-	char	*tmp;
-
-	elems = info;
-	while ((t_llist *)elems->envp_list->head->val)
-	{
-		if (ft_strncmp((t_llist *)elems->envp_list->head->val, "PATH", 4) == 0)
-			break ;
-		tmp = (t_llist *)elems->envp_list->head->val;
-		elems = elems->envp_list->head->next;
-	}
-	return (tmp);
-}
-
-char	*ft_finding_path(t_group *cmds, t_info *info)
-{
-	char	*en_var;
-	char	**path;
+	char	**filepaths;
 	char	*to_free;
-	int		i;
 	t_ll_elem	*elems;
 
-	i = ft_scroll_envp(info->envp_list, 0);
-	en_var = ft_substr(info->envp[i], 5, 166);
-	printf("EN_VAR [%s]\n", en_var);
-	printf("!!![%s]!!!\n", info->envp[i]);
-	path = ft_strsplit(en_var, ":");
+	int	i = 0;
+	(void)info;
+	// printf("!!!\n");
+	filepaths = ft_strsplit(path, ":");
+	// printf("filepaths[i] = [%s]\n", filepaths[i]);
 	elems = cmds->cmds->head;
-	free(en_var);
-	i = 0;
-	while (path[i] != NULL)
+	while (filepaths[i] != NULL)
 	{
-		to_free = ft_strjoin(path[i], "/");
-		free(path[i]);
-		path[i] = ft_strjoin(to_free, ((t_llist *)elems->key)->head->val);
+		to_free = filepaths[i];
+		filepaths[i] = ft_strjoin2(filepaths[i], ((t_llist *)elems->key)->head->val, '/', 1);
+		// printf("filepaths[i] = [%s]\n", filepaths[i]);
 		free(to_free);
-		if ((access(path[i], X_OK)) == 0)
+		if (!(*filepaths))
+			return(ft_error(1, "malloc error for paths[i]", 1));
+		if ((access(filepaths[i], X_OK)) == 0)
 		{
-			for (int j = 0; path[j] != NULL; j++) {
-				if (j != i)
-					free(path[j]);
-			}
-			free(path);
-			return (path[i]);
+			*filepath = filepaths[i];
+			// for (int j = 0; paths[j] != NULL; j++) {
+			// 	if (j != i)
+			// 		free(paths[j]);
+			// }
+			// *path = path;
+			// free(path);
+			return (0);
 		}
 		i++;
 	}
-	for (int j = 0; path[j] != NULL; j++) {
-		free(path[j]);
-	}
-	printf("!! !! !! \n");
-	free(path);
-	return (NULL);
+	ft_free_char2dem(filepaths, i);
+	return (1);
 }
 
-int	ft_common(t_group *cmds, t_info *info)
+// int search_val(char *ret) 0 success 1 error
+
+int	ft_execve(t_group *cmds, t_info *info)
 {
 	t_ll_elem	*elems;
 	char		*path;
+	char		*filepath = NULL;
 
 	(void)info;
-	printf("COMMON!!!!!!!\n");
+	printf("EXECVE!!!!!!!\n");
+	path = llist_getval(info->envp_list, "PATH");
+	if (!path)
+		ft_error(1, "PATH not set", 1);
 	elems = cmds->cmds->head;
-	path = ft_finding_path(cmds, info);
-	// printf("PATH !!![%s]!!!\n", path);
-	// printf("ARG in execve !!![%s]!!!\n", ((t_llist *)elems->key)->head->val);
-	// execve(path, ((t_llist *)elems->key)->head->val, info->envp);
+	ft_acces(cmds, info, path, &filepath);
+	printf("PATH !!![%s]!!!\n", path);
+	printf("ARG in execve !!![%s]!!!\n", ((t_llist *)elems->key)->head->val);
+	printf("FILEPATH in execve !!![%s]!!!\n", filepath);
+	if (info->envp_f) {
+		
+		free(info->envp);
+		info->envp = ft_compose_envp(info->envp_list);
+		info->envp_f = 0;
+	}
+	char ** args = malloc(sizeof(char *) * 2);
+	args[0] = ".";
+	args[1] = NULL;
+	//for(char **it = argv; *it != NULL; ++it)
+	//	printf("%s\n", *it);
+	execve(filepath, args, envparr);
 	return (0);
 }
 
@@ -148,6 +146,5 @@ pid_t	executor(t_group *cmds, t_info *info)
 		return (ft_subshell(cmds, info));
 	if (builtin_index < 7)
 		return ((*info->f_ptrs[builtin_index])(cmds->cmds->head->key, info)); // проверка на билтин ВСЕ ОК
-	// ft_common(cmds, info);
-	return (ft_common(cmds, info));
+	return (ft_execve(cmds, info));
 }

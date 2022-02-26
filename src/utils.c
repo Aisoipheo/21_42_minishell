@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:56:16 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/11/08 12:14:39 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/26 18:37:29 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,24 +53,20 @@ static int	_ft_wlen(const char *s, const char *delim)
 	len = 0;
 	if (s)
 	{
-		while (*s)
-		{
-			while (*s && ft_strcontains(delim, *s))
-				++s;
-			while (s[len] && !ft_strcontains(delim, s[len]))
-				++len;
-		}
+		while (*s && ft_strcontains(delim, *s))
+			++s;
+		while (s[len] && !ft_strcontains(delim, s[len]))
+			++len;
 	}
 	return (len);
 }
 
-char	**_ft_strdestroy2(char **str2)
+char	**_ft_strdestroy2(char **str2, int j)
 {
-	int		j;
-
-	j = 0;
-	while (str2[j])
-		free(str2[j++]);
+	int		i;
+	i = 0;
+	while (i < j)
+		free(str2[i++]);
 	free(str2);
 	return (NULL);
 }
@@ -92,11 +88,11 @@ char	**ft_strsplit(const char *s, const char *d)
 		if (*s)
 			ret[j] = (char *)malloc(sizeof(char) * (_ft_wlen(s, d) + 1));
 		if (*s && !ret[j])
-			return (_ft_strdestroy2(ret));
+			return (_ft_strdestroy2(ret, j));
 		i = 0;
 		while (*s && !ft_strcontains(d, *s))
 			ret[j][i++] = *s++;
-		ret[j][i] = '\0';
+		ret[j++][i] = '\0';
 	}
 	ret[j] = NULL;
 	return (ret);

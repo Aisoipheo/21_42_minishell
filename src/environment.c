@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:22:18 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/19 18:49:34 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/26 18:31:39 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	**ft_compose_envp(t_llist *env)
 	{
 		envp[i] = ft_strjoin2(ptr->key, ptr->val, '=', 1);
 		if (!envp[i])
-			return (_ft_strdestroy2(envp));
+			return (_ft_strdestroy2(envp, i));
 		ptr = ptr->next;
 	}
 	return (envp);
