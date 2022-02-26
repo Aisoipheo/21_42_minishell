@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 21:53:19 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/26 17:46:52 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include "minishell.h"
 #include "utils.h"
 #include "lexer.h"
-#include "errno.h"
 #include "parser.h"
 
 
@@ -32,25 +31,6 @@ static char	*_ft_readline(const char *prompt)
 	return (line);
 }
 
-static int	_ft_init(t_info *info, char *envp[])
-{
-	errno = 0;
-	info->envp_f = 0;
-	info->exit_f = 1;
-	info->envp_list = llist_new(llist_str_kcmp, free, free);
-	info->reserved_words[0] = "echo";
-	info->reserved_words[1] = "cd";
-	info->reserved_words[2] = "pwd";
-	info->reserved_words[3] = "export";
-	info->reserved_words[4] = "unset";
-	info->reserved_words[5] = "env";
-	info->reserved_words[6] = "exit";
-	if (info->envp_list == NULL)
-		return (ft_error(1, "minishell: ft_init", 1));
-	if (ft_parse_envp(info->envp_list, envp))
-		return (1);
-	return (0);
-}
 
 //debug only
 const char	*_lx_get_name(int type)
@@ -105,6 +85,6 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		llist_free(tokens);
 	}
-	rl_clear_history();
+	ft_destroy(&info);
 	return (EXIT_SUCCESS);
 }

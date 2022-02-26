@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 21:53:48 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/26 17:46:36 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,9 @@ int		ft_subshell(t_group *cmds, t_info *info);
 
 int		ft_strncmp(const char *str1, const char *str2, size_t n);
 char	*ft_strjoin(char const *s1, char const *s2);
-int		destroy(t_group *cmds, t_info *info);
+
+int		ft_init(t_info *info, char *envp[]);
+int		ft_destroy(t_info *info);
 
 
 /* ============ Built-ins ============ */
