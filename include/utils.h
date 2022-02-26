@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:54:47 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/12 13:35:00 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/26 18:31:10 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	**ft_strsplit(const char *s, const char *delim);
 int		ft_strcontains(const char *s, const char c);
 int		ft_strslice(const char *s, const char *delim, char **a, char **b);
-char	**_ft_strdestroy2(char **str2);
+char	**_ft_strdestroy2(char **str2, int j);
 char	*ft_strjoin2(const char *s1, const char *s2, char d, char isd);
 int		ft_isspace(char c);
 char	*ft_substr(const char *s, unsigned long begin, unsigned long count);

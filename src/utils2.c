@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 16:03:06 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/22 17:15:53 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/26 18:39:00 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*ft_strjoin2(const char *s1, const char *s2, char d, char isd)
 	while (s1 && *s1)
 		str[i++] = *s1++;
 	if (isd)
-		str[i] = d;
+		str[i++] = d;
 	while (s2 && *s2)
 		str[i++] = *s2++;
 	str[i] = '\0';
