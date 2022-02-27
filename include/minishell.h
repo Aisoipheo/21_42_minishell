@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/26 17:46:36 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/27 19:56:37 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <fcntl.h>
 
 # define CMD_APPEND 0b001
 # define CMD_INSOURCE 0b010
 # define CMD_SUBSHELL 0b100
 
-// int	g_exit = 0;
+static int	g_exit = 0;
 
 // f1(char **ar, function_ptr *f) {
 // 	ar[0] = "echo";
@@ -48,7 +49,7 @@ struct s_info
 	char			envp_f;
 	char			**envp;
 	char			*reserved_words[7];
-	builtin_ptr		*f_ptrs[7];
+	builtin_ptr		f_ptrs[7];
 	t_llist			*envp_list;
 };
 
@@ -81,6 +82,7 @@ void	handler_term(t_info *info);
 pid_t	executor(t_group *cmds, t_info *info);
 pid_t	pipeline(t_group *cmds, t_info *info);
 int		ft_subshell(t_group *cmds, t_info *info);
+int	create_heredoc(t_cmd_info *c_info);
 
 int		ft_strncmp(const char *str1, const char *str2, size_t n);
 char	*ft_strjoin(char const *s1, char const *s2);

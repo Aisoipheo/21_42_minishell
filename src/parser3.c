@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 17:28:51 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/02/26 20:32:19 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,8 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 			return (-1);
 		printf("[parser3.c] GROUP READY\n");
 		pid = executor(cmds, info);
+		if (pid == -1)
+			ft_error(1, "HEHE", 1);
 		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
 		// {
 		// 	t_cmd_info *cmd_info = (t_cmd_info *)h->val;

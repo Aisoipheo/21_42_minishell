@@ -3,29 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 17:33:11 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/26 17:56:09 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/02/27 19:58:10 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "utils.h"
 #include <errno.h>
-
-int	ft_init(t_info *info, char *envp[])
-{
-	errno = 0;
-	info->envp_f = 0;
-	info->exit_f = 1;
-	info->envp_list = llist_new(llist_str_kcmp, free, free);
-	if (info->envp_list == NULL)
-		return (ft_error(1, "minishell: ft_init", 1));
-	if (ft_parse_envp(info->envp_list, envp))
-		return (1);
-	_ft_init_builtins(info);
-	return (0);
-}
 
 static void	_ft_init_builtins(t_info *info) {
 	info->reserved_words[0] = "echo";
@@ -43,3 +30,19 @@ static void	_ft_init_builtins(t_info *info) {
 	info->f_ptrs[5] = &ft_env;
 	info->f_ptrs[6] = &ft_exit;
 }
+
+int	ft_init(t_info *info, char *envp[])
+{
+	errno = 0;
+	info->envp_f = 1;
+	info->exit_f = 1;
+	info->envp = NULL;
+	info->envp_list = llist_new(llist_str_kcmp, free, free);
+	if (info->envp_list == NULL)
+		return (ft_error(1, "minishell: ft_init", 1));
+	if (ft_parse_envp(info->envp_list, envp))
+		return (1);
+	_ft_init_builtins(info);
+	return (0);
+}
+
