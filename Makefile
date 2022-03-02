@@ -35,11 +35,11 @@ SRCS				= $(addprefix $(SRCS_DIR)/, $(C_FILES))
 OBJS				= $(addprefix $(OBJS_DIR)/, $(C_FILES:.c=.o))
 DEPENDENCIES		= $(OBJS:.o=.d)
 
-RL_DIR				= /Users/$(USER)/.brew/Cellar/readline/8.1.1
+RL_DIR				= /Users/$(USER)/.brew/Cellar/readline/8.1.2
 
 CC					= gcc
-CFLAGS				= -Wall -Werror -Wextra -I$(HDRS_DIR) -I$(RL_DIR)/include/
-LFLAGS				= $(CFLAGS) -L$(RL_DIR)/lib/ -lreadline
+CFLAGS				= -g -Wall -Werror -Wextra -I$(HDRS_DIR) -I$(RL_DIR)/include/
+LFLAGS				= $(CFLAGS) -lreadline -L$(RL_DIR)/lib/
 
 AR					= ar
 ARFLAGS				= rcs

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/26 20:32:19 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/02 18:16:03 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		printf("[parser3.c] GROUP READY\n");
 		pid = executor(cmds, info);
 		if (pid == -1)
-			ft_error(1, "HEHE", 1);
+			return (1);
 		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
 		// {
 		// 	t_cmd_info *cmd_info = (t_cmd_info *)h->val;
@@ -220,7 +220,7 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		llist_free(expanded);
 		ft_group_free(cmds);
 	}
-	return (0);
+	return (pid);
 }
 
 int	_prs_logexec(t_llist *groups, t_info *info)
@@ -239,19 +239,24 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 		if (expect == 0)
 		{
 			pid = _prs_handle_group((int)ptr->key, ptr->val, info);
+			printf("REC PID: %d\n", pid);
 			printf("[parser3.c] PRS_LOGEXEC HANDLE GROUP OK\n");
 			if (pid < 0)
 				return (1);
+			if (pid > 0)
+				waitpid(pid, &sig, 0);
+			if (pid == 0)
+				g_exit = 0;
 			expect = 1;
 		}
 		else
 		{
 			mode = (int)(ptr->key);
-			if (pid > 0)
-				waitpid(pid, &sig, 0);
+			printf("PID: %d STATUS: %d\n", pid, WEXITSTATUS(sig));
 			if (pid > 0 && ((WEXITSTATUS(sig) == 0 && mode == LX_IF_OR)
 				|| (WEXITSTATUS(sig) != 0 && mode == LX_IF_AND)))
 				return (0);
+			// if pid == 0 && g_exit == 0
 			expect = 0;
 		}
 		ptr = ptr->next;

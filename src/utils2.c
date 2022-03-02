@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 16:03:06 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/26 18:39:00 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:05:58 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	ft_strslice(const char *s, const char *delim, char **a, char **b)
 
 char	*ft_strjoin2(const char *s1, const char *s2, char d, char isd)
 {
-	const int	size = ft_strlen(s1) + ft_strlen(s2) + 1 + isd != 0;
+	const int	size = ft_strlen(s1) + ft_strlen(s2) + 1 + (isd != 0);
 	char		*str;
 	int			i;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 13:31:49 by rdrizzle          #+#    #+#             */
-/*   Updated: 2021/12/08 13:25:03 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:36:38 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,16 @@ void	*ft_free_char2dem(char **arr, int m)
 {
 	int		i;
 
+	if (NULL == arr)
+		return (NULL);
 	i = 0;
+	if (m == -1)
+	{
+		while(arr[i])
+			free(arr[i++]);
+		free(arr);
+		return NULL;
+	}
 	while (i < m)
 		free(arr[i++]);
 	free(arr);

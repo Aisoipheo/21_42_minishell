@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   destroy.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 20:26:04 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/26 19:12:11 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/02 14:04:57 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <readline/readline.h>
-#include <readline/history.h>
+#include <stdio.h>
+
+#include "readline/readline.h"
+#include "readline/history.h"
 #include "minishell.h"
 #include "utils.h"
 

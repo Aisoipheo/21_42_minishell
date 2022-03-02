@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 17:33:11 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/27 19:58:10 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/02 18:13:12 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static void	_ft_init_builtins(t_info *info) {
 int	ft_init(t_info *info, char *envp[])
 {
 	errno = 0;
+	g_exit = 0;
 	info->envp_f = 1;
 	info->exit_f = 1;
 	info->envp = NULL;

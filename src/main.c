@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/26 19:16:39 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:13:16 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include "readline/readline.h"
 #include "readline/history.h"
@@ -66,6 +67,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (EXIT_FAILURE);
 	while(info.exit_f)
 	{
+		errno = 0;
 		tokens = llist_new(llist_int_kcmp, NULL, free);
 		line = _ft_readline("prompt > ");
 		if (line && *line)

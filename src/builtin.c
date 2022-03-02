@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:54:25 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 21:23:43 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:42:18 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,32 @@
 
 int	ft_echo(t_llist *args, t_info *info)
 {
-	// t_ll_elem	*arg;
-	// char		is_n;
+	t_ll_elem	*arg;
+	char		is_n;
 
 	(void)info;
-	(void)args;
-	// arg = args->head;
-	// if (args->size > 1)
-	// {
-	// 	arg = arg->next;
-	// 	is_n = ft_strcmp(arg->val, "-n") == 0;
-	// 	if (is_n)
-	// 		arg = arg->next;
-	// 	while (arg)
-	// 	{
-	// 		if (write(STDOUT_FILENO, arg->val, ft_strlen((char *)arg->val))
-	// 			== -1)
-	// 			return (ft_error(-1, "minishell: echo", 1));
-	// 		arg = arg->next;
-	// 	}
-	// }
-	// if (!is_n)
-	// 	if (write(STDOUT_FILENO, "\n", 1) == -1)
-	// 		return (ft_error(-1, "minishell: echo", 1));
+	// (void)args;
+	arg = args->head;
+	is_n = 0;
+	if (args->size > 1)
+	{
+		arg = arg->next;
+		is_n = ft_strcmp(arg->val, "-n") == 0;
+		if (is_n)
+			arg = arg->next;
+		while (arg)
+		{
+			if (write(STDOUT_FILENO, arg->val, ft_strlen((char *)arg->val))
+				== -1)
+				return (ft_error(-1, "minishell: echo", 1));
+			if (arg->next && write(STDOUT_FILENO, " ", 1) == -1)
+				return (ft_error(-1, "minishell: echo", 1));
+			arg = arg->next;
+		}
+	}
+	if (!is_n)
+		if (write(STDOUT_FILENO, "\n", 1) == -1)
+			return (ft_error(-1, "minishell: echo", 1));
 	return (0);
 }
 

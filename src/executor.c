@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/27 20:02:24 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/02 18:07:53 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <errno.h>
 #include "minishell.h"
 #include "parser.h"
 #include "utils.h"
@@ -23,8 +24,6 @@
 ◦ env with no options or arguments
 ◦ exit with no options
 */
-
-int	forking();
 
 int	check_if_builtins(t_group *cmds, t_info *info)
 {
@@ -63,22 +62,24 @@ int	ft_acces(t_group *cmds, t_info *info, char *path, char **filepath)
 	elems = cmds->cmds->head;
 	while (filepaths[i] != NULL)
 	{
+		// printf("PATH BEFORE: %s\n", filepaths[i]);
 		to_free = filepaths[i];
 		filepaths[i] = ft_strjoin2(filepaths[i], ((t_llist *)elems->key)->head->val, '/', 1);
+		printf("PATH AFTER: %s\n", filepaths[i]);
 		free(to_free);
 		if (!filepaths[i])
-			return(ft_error(1, "malloc error for paths[i]", 1));
+			return(ft_error(1, "minishell: join path", 1));
 		if ((access(filepaths[i], X_OK)) == 0)
 		{
-			*filepath = filepaths[i];
-		//free
+			*filepath = ft_strcpy(filepaths[i]);
+			printf("FILEPATH: %s\n", *filepath);
 			return (0);
 		}
 		i++;
 	}
 	ft_free_char2dem(filepaths, i);
 	*filepath = NULL;
-	return (0);
+	return (ft_error(1, "minishell: command not found", 0));
 }
 
 int	get_in_fd(t_cmd_info *c_info)
@@ -101,7 +102,7 @@ int	get_out_fd(t_cmd_info *c_info)
 
 // int search_val(char *ret) 0 success 1 error
 
-int	create_argv(t_group *cmds, char ***args)
+int	create_argv(t_group *cmds, char ***args, char *path)
 {
 	t_ll_elem	*ptr;
 	t_ll_elem	*elems;
@@ -109,18 +110,19 @@ int	create_argv(t_group *cmds, char ***args)
 
 	i = 0;
 	elems = cmds->cmds->head;
-	*args = malloc(sizeof(char *) * ((t_llist *)elems->key)->size);
+	*args = malloc(sizeof(char *) * (((t_llist *)elems->key)->size + 1));
 	if (!(*args))
-		ft_error(1, "malloc error for args", 1);
+		ft_error(1, "minishell: create_argv: malloc argv", 1);
 	ptr = ((t_llist *)elems->key)->head->next;
+	(*args)[i++] = ft_strcpy(path);
 	while (ptr)
 	{
-		*args[i] = ft_strcpy(ptr->val);
-		// printf("--- args[i] = [%s]\n", args[i]);
+		(*args)[i] = ft_strcpy(ptr->val);
+		printf("--- args[i] = [%s]\n", (*args)[i]);
 		ptr = ptr->next;
 		i++;
 	}
-	*args[i] = NULL;
+	(*args)[i] = NULL;
 	return (0);
 }
 
@@ -129,16 +131,16 @@ int	remap_fds(int in, int out)
 	if (in != 0)
 	{
 		if (dup2(in, 0) == -1)
-			ft_error(1, "dup2: mapping to (stdin)", 1);
+			ft_error(1, "minishell: dup2: mapping to (stdin)", 1);
 		if (close(in) == -1)
-			ft_error(1, "close: mapping to (stdin)", 1);
+			ft_error(1, "minishell: close: mapping to (stdin)", 1);
 	}
 	if (out != 1)
 	{
 		if (dup2(out, 1) == -1)
-			ft_error(1, "dup2: mapping to (stdin)", 1);
+			ft_error(1, "minishell: dup2: mapping to (stdin)", 1);
 		if (close(out) == -1)
-			ft_error(1, "close: mapping to (stdin)", 1);
+			ft_error(1, "minishell: close: mapping to (stdin)", 1);
 	}
 	return (0);
 }
@@ -151,33 +153,37 @@ int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 	char		*filepath = NULL;
 	char		**args;
 
+	if (info->envp_f)
+	{
+		ft_free_char2dem(info->envp, -1);
+		info->envp = ft_compose_envp(info->envp_list);
+		if (NULL == info->envp)
+			return (ft_error(-1, "minishell: ft_execve: compose_envp", 1));
+		info->envp_f = 0;
+	}
 	pid_t pid = fork();
 	if (pid == -1)
-		ft_error(-1, "fork error", 1);
-	if (pid > 0) {
-		waitpid(pid, NULL, 0);
+		ft_error(-1, "minishell: ft_execve: fork", 1);
+	if (pid > 0)
+	{
+		printf("RET PID: %d\n", pid);
 		return (pid);
 	}
-	remap_fds(in, out);
 	if (remap_fds(in, out))
 		return (-1);
 	path = llist_getval(info->envp_list, "PATH");
 	if (!path)
-		ft_error(-1, "PATH not set", 1);
+		return (ft_error(-1, "minishell: PATH not set", 0));
 	elems = cmds->cmds->head;
 	if (ft_acces(cmds, info, path, &filepath))
-		ft_error(-1, "acces error", 1);
-	if (info->envp_f) {
-		//free
-		printf("before ENVP\n");
-		info->envp = ft_compose_envp(info->envp_list);
-		printf("after ENVP\n");
-		info->envp_f = 0;
-	}
-	if (create_argv(cmds, &args))
+		return (-1);
+	if (create_argv(cmds, &args, filepath))
 		return (-1);
 	printf("execve\n");
-	return (execve(filepath, args, info->envp));
+	printf("%s\n", filepath);
+	if (execve(filepath, args, info->envp) == -1)
+		return (ft_error(-1, "minishell: execve", 1));
+	return (-1);
 }
 
 int	ft_common(t_group *cmds, t_info *info)
@@ -187,10 +193,10 @@ int	ft_common(t_group *cmds, t_info *info)
 
 	in_fd = get_in_fd(cmds->cmds->head->val);
 	if (in_fd == -1)
-		return (ft_error(-1, "in_fd error", 1));
+		return (ft_error(-1, "minishell: get_in_fd", 1));
 	out_fd = get_out_fd(cmds->cmds->head->val);
 	if (out_fd == -1)
-		return (ft_error(-1, "out_fd error", 1));
+		return (ft_error(-1, "minishell: get_out_fd", 1));
 	printf("ft_execve\n");
 	return(ft_execve(cmds, info, in_fd, out_fd)); //fd
 }

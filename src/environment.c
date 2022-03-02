@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:22:18 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/26 18:31:39 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:08:02 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,16 @@ char	**ft_compose_envp(t_llist *env)
 	envp = (char **)malloc(sizeof(char *) * (env->size + 1));
 	if (!envp)
 		return (NULL);
-	i = env->size;
+	i = 0;
 	ptr = env->head;
-	envp[i] = NULL;
-	while (i--)
+	envp[env->size] = NULL;
+	while (i < env->size)
 	{
 		envp[i] = ft_strjoin2(ptr->key, ptr->val, '=', 1);
 		if (!envp[i])
 			return (_ft_strdestroy2(envp, i));
 		ptr = ptr->next;
+		++i;
 	}
 	return (envp);
 }
