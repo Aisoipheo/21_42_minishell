@@ -29,15 +29,16 @@ C_FILES				= main.c\
 					builtin2.c\
 					destroy.c\
 					init.c\
+					heredoc.c
 
 SRCS				= $(addprefix $(SRCS_DIR)/, $(C_FILES))
 OBJS				= $(addprefix $(OBJS_DIR)/, $(C_FILES:.c=.o))
 DEPENDENCIES		= $(OBJS:.o=.d)
 
-RL_DIR				= /Users/$(USER)/.brew/Cellar/readline/8.1.2
+RL_DIR				= /Users/$(USER)/.brew/Cellar/readline/8.1.1
 
 CC					= gcc
-CFLAGS				= -Wall -Werror -Wextra -I$(HDRS_DIR) -I$(RL_DIR)/include
+CFLAGS				= -Wall -Werror -Wextra -I$(HDRS_DIR) -I$(RL_DIR)/include/
 LFLAGS				= $(CFLAGS) -L$(RL_DIR)/lib/ -lreadline
 
 AR					= ar
