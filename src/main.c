@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/02 17:13:16 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,13 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			if (lx_lexer(tokens, line) == 0)
 			{
-				printf("[main.c] TOKENS OK\n");
+				debug_log("[main.c] TOKENS OK\n");
 				for (t_ll_elem *h = tokens->head; h != NULL; h = h->next)
-					printf("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
+					debug_log("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
 				prs_parse(tokens, &info);
 			}
 			free(line);
-			printf("[main.c] *** END OF WORK ***\n");
+			debug_log("[main.c] *** END OF WORK ***\n");
 		} else if (line == NULL) {
 			info.exit_f = 0;
 			write(STDOUT_FILENO, "exit\n", 5);

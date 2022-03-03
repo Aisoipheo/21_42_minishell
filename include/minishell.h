@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/27 19:56:37 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:41:58 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+
+// DEBUG
+# define DEBUG_COLOUR "\033[1;30m"
+# define RESET_COLOUR "\033[0m"
+
+void debug_log(const char *fmt, ...);
 
 # define CMD_APPEND 0b001
 # define CMD_INSOURCE 0b010

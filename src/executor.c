@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/02 18:07:53 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	check_if_builtins(t_group *cmds, t_info *info)
 	{
 		if (ft_strcmp(((t_llist *)elems->key)->head->val, info->reserved_words[i]) == 0)
 		{
-			printf("BUILTIN [%s]\n", ((t_llist *)elems->key)->head->val);
-			printf("RESERVED [%s]\n", info->reserved_words[i]);
-			printf("ok builtin\n");
+			debug_log("BUILTIN [%s]\n", ((t_llist *)elems->key)->head->val);
+			debug_log("RESERVED [%s]\n", info->reserved_words[i]);
+			debug_log("ok builtin\n");
 			return (i);
 		}
 		i++;
@@ -62,17 +62,17 @@ int	ft_acces(t_group *cmds, t_info *info, char *path, char **filepath)
 	elems = cmds->cmds->head;
 	while (filepaths[i] != NULL)
 	{
-		// printf("PATH BEFORE: %s\n", filepaths[i]);
+		// debug_log("PATH BEFORE: %s\n", filepaths[i]);
 		to_free = filepaths[i];
 		filepaths[i] = ft_strjoin2(filepaths[i], ((t_llist *)elems->key)->head->val, '/', 1);
-		printf("PATH AFTER: %s\n", filepaths[i]);
+		debug_log("PATH AFTER: %s\n", filepaths[i]);
 		free(to_free);
 		if (!filepaths[i])
 			return(ft_error(1, "minishell: join path", 1));
 		if ((access(filepaths[i], X_OK)) == 0)
 		{
 			*filepath = ft_strcpy(filepaths[i]);
-			printf("FILEPATH: %s\n", *filepath);
+			debug_log("FILEPATH: %s\n", *filepath);
 			return (0);
 		}
 		i++;
@@ -118,7 +118,7 @@ int	create_argv(t_group *cmds, char ***args, char *path)
 	while (ptr)
 	{
 		(*args)[i] = ft_strcpy(ptr->val);
-		printf("--- args[i] = [%s]\n", (*args)[i]);
+		debug_log("--- args[i] = [%s]\n", (*args)[i]);
 		ptr = ptr->next;
 		i++;
 	}
@@ -166,7 +166,7 @@ int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 		ft_error(-1, "minishell: ft_execve: fork", 1);
 	if (pid > 0)
 	{
-		printf("RET PID: %d\n", pid);
+		debug_log("RET PID: %d\n", pid);
 		return (pid);
 	}
 	if (remap_fds(in, out))
@@ -179,8 +179,8 @@ int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 		return (-1);
 	if (create_argv(cmds, &args, filepath))
 		return (-1);
-	printf("execve\n");
-	printf("%s\n", filepath);
+	debug_log("execve\n");
+	debug_log("%s\n", filepath);
 	if (execve(filepath, args, info->envp) == -1)
 		return (ft_error(-1, "minishell: execve", 1));
 	return (-1);
@@ -197,7 +197,7 @@ int	ft_common(t_group *cmds, t_info *info)
 	out_fd = get_out_fd(cmds->cmds->head->val);
 	if (out_fd == -1)
 		return (ft_error(-1, "minishell: get_out_fd", 1));
-	printf("ft_execve\n");
+	debug_log("ft_execve\n");
 	return(ft_execve(cmds, info, in_fd, out_fd)); //fd
 }
 
@@ -229,9 +229,9 @@ pid_t	executor(t_group *cmds, t_info *info)
 {
 	int	builtin_index = 0;
 
-	// printf("!!!  !!!!\n");
+	// debug_log("!!!  !!!!\n");
 	builtin_index = check_if_builtins(cmds, info);
-	printf("---[%d]---\n", builtin_index);
+	debug_log("---[%d]---\n", builtin_index);
 	if (PRS_PIPELINE & cmds->type) // проверка на пайп ВСЕ ОК
 		return (pipeline(cmds, info));
 	if (((t_cmd_info *)cmds->cmds->head->val)->flags & CMD_SUBSHELL) // проверка на сабшелл ВСЕ ОК

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 14:24:28 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,13 +118,13 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	info->_shlvl = 0;
 	while (h && (int)h->key != LX_PIPE)
 	{
-		printf("[parser3.c] PRS_GROUP_CMD TRY HANDLE `%s | %s'\n", _lx_get_name((int)h->key), h->val);
+		debug_log("[parser3.c] PRS_GROUP_CMD TRY HANDLE `%s | %s'\n", _lx_get_name((int)h->key), h->val);
 		if (_prs_handle_token(&h, info, args))
 			break ;
 		h = _prs_next_token(h);
-		printf("[parser3.c] PRS_GROUP_CMD NEXT TOKEN IS %p\n", h);
+		debug_log("[parser3.c] PRS_GROUP_CMD NEXT TOKEN IS %p\n", h);
 	}
-	printf("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
+	debug_log("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
 	if ((args->size == 0 && info->out_file == NULL && info->in_file == NULL))
 		return (ft_error(1, "minishell: parse error near `|'", 0));
 	if (h == NULL || (int)h->key == LX_PIPE)
@@ -133,7 +133,7 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 			return (ft_error(1, "minishell: _prs_group_cmd", 1));
 		return (0);
 	}
-	printf("[parser3.c] PRS_GROUP_CMD free %p %p\n", args, info);
+	debug_log("[parser3.c] PRS_GROUP_CMD free %p %p\n", args, info);
 	llist_free(args);
 	free(info);
 	return (1);
@@ -190,33 +190,33 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 	expanded = _prs_expand(group, info);
 	if (expanded)
 	{
-		printf("[parser3.c] EXPAND OK\n");
+		debug_log("[parser3.c] EXPAND OK\n");
 		for (t_ll_elem *h = expanded->head; h != NULL; h = h->next)
-			printf("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
+			debug_log("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
 		cmds = ft_group_new(type);
 		if (NULL == cmds)
 			return (-1);
 		if (_prs_prepare_group(expanded, cmds))
 			return (-1);
-		printf("[parser3.c] GROUP READY\n");
+		debug_log("[parser3.c] GROUP READY\n");
 		pid = executor(cmds, info);
 		if (pid == -1)
 			return (1);
 		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
 		// {
 		// 	t_cmd_info *cmd_info = (t_cmd_info *)h->val;
-		// 	printf(" ======c> llist at %p\n", h);
-		// 	printf(" TYPE: %lld\n", convert(type));
-		// 	printf(" *** INFO ***\n");
+		// 	debug_log(" ======c> llist at %p\n", h);
+		// 	debug_log(" TYPE: %lld\n", convert(type));
+		// 	debug_log(" *** INFO ***\n");
 		// 	convert((int)cmd_info->flags);
-		// 	printf("flags: %.5d\n", cmd_info->flags/* */);
-		// 	printf("in: %s\n", cmd_info->in_file);
-		// 	printf("out: %s\n", cmd_info->out_file);
-		// 	printf("\n *** ARGS ***\n");
+		// 	debug_log("flags: %.5d\n", cmd_info->flags/* */);
+		// 	debug_log("in: %s\n", cmd_info->in_file);
+		// 	debug_log("out: %s\n", cmd_info->out_file);
+		// 	debug_log("\n *** ARGS ***\n");
 		// 	for (t_ll_elem *arg = ((t_llist *)h->key)->head; arg != NULL; arg = arg->next)
-		// 		printf("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
+		// 		debug_log("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
 		// }
-		printf("[parser3.c] PRS_HANDLE_GROUP free %p\n", expanded);
+		debug_log("[parser3.c] PRS_HANDLE_GROUP free %p\n", expanded);
 		llist_free(expanded);
 		ft_group_free(cmds);
 	}
@@ -235,12 +235,12 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 	ptr = groups->head;
 	while(NULL != ptr)
 	{
-		printf("[parser3.c] PRS_LOGEXEC EXPECT %d\n", expect);
+		debug_log("[parser3.c] PRS_LOGEXEC EXPECT %d\n", expect);
 		if (expect == 0)
 		{
 			pid = _prs_handle_group((int)ptr->key, ptr->val, info);
-			printf("REC PID: %d\n", pid);
-			printf("[parser3.c] PRS_LOGEXEC HANDLE GROUP OK\n");
+			debug_log("REC PID: %d\n", pid);
+			debug_log("[parser3.c] PRS_LOGEXEC HANDLE GROUP OK\n");
 			if (pid < 0)
 				return (1);
 			if (pid > 0)
@@ -252,7 +252,7 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 		else
 		{
 			mode = (int)(ptr->key);
-			printf("PID: %d STATUS: %d\n", pid, WEXITSTATUS(sig));
+			debug_log("PID: %d STATUS: %d\n", pid, WEXITSTATUS(sig));
 			if (pid > 0 && ((WEXITSTATUS(sig) == 0 && mode == LX_IF_OR)
 				|| (WEXITSTATUS(sig) != 0 && mode == LX_IF_AND)))
 				return (0);

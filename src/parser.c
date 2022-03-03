@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:23:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/26 18:03:47 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 	ptr = tokens->head;
 	while (NULL != ptr)
 	{
-		printf("[parser.c] _PRS_GROUP NEW GROUP\n");
+		debug_log("[parser.c] _PRS_GROUP NEW GROUP\n");
 		group = llist_new(NULL, NULL, NULL);
 		if (NULL == group)
 			return (ft_error(1, "minishell: _prs_group", 1));
@@ -119,12 +119,12 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 			return (1);
 		if (group->size)
 		{
-			printf("[parser.c] _PRS_GROUP COLLECTED TOKENS:\n");
+			debug_log("[parser.c] _PRS_GROUP COLLECTED TOKENS:\n");
 			for (t_ll_elem *h = group->head; h != NULL; h = h->next)
-				printf("%10d | %s\n", (int)h->key , h->val);
+				debug_log("%10d | %s\n", (int)h->key , h->val);
 		}
 		else
-			printf("[parser.c] _PRS_GROUP GROUP IS EMPTY\n");
+			debug_log("[parser.c] _PRS_GROUP GROUP IS EMPTY\n");
 		if (lvl)
 			return (ft_error(1,
 					"minishell: syntax error near token `(' or `)'", 0));
@@ -138,9 +138,9 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 		if (NULL != ptr)
 			ptr = ptr->next;
 	}
-	printf("[parser.c] _PRS_GROUP GROUPS:\n");
+	debug_log("[parser.c] _PRS_GROUP GROUPS:\n");
 	for (t_ll_elem *h = groups->head; h != NULL; h = h->next)
-		printf("%0.10lld | %p\n", convert((int)h->key), h->val);
+		debug_log("%0.10lld | %p\n", convert((int)h->key), h->val);
 	return (0);
 }
 
@@ -154,13 +154,13 @@ int	prs_parse(t_llist *tokens, t_info *info)
 		return (1); // malloc
 	if (_prs_group(groups, tokens))
 		return (1); // it brokey :c
-	printf("[parser.c] PRS_GROUP OK\n");
+	debug_log("[parser.c] PRS_GROUP OK\n");
 	if (_prs_check_syntax(groups))
 		return (1); // syntax error obv
-	printf("[parser.c] PRS_CHECK_SYNTAX OK\n");
+	debug_log("[parser.c] PRS_CHECK_SYNTAX OK\n");
 	if (_prs_logexec(groups, info))
 		return (1); // it brokey :<
-	printf("[parser.c] PRS_LOGEXEC OK\n");
+	debug_log("[parser.c] PRS_LOGEXEC OK\n");
 	llist_free(groups);
 	return (0);
 }

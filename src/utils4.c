@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 14:24:52 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:46:10 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,15 @@ int	ft_error(int ret, const char *msg, char liberr)
 	else if (errno != 0)
 		perror(invcall);
 	return (ret);
+}
+
+// DEBUG
+#include <stdarg.h>
+void	debug_log(const char *fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
+	write(STDOUT_FILENO, DEBUG_COLOUR, 8);
+	vprintf(fmt, args);
+	write(STDOUT_FILENO, RESET_COLOUR, 5);
+	va_end(args);
 }

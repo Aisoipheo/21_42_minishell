@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   subshell.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:07:58 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/23 18:01:32 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@ int	ft_subshell(t_group *cmds, t_info *info)
 {
 	(void)cmds;
 	(void)info;
-	printf("SUBSHELL\n");
+	debug_log("SUBSHELL\n");
 	return (0);
 }

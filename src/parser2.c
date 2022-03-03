@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 17:28:20 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ static int _prs_field_expansion_copy(t_llist *chunks, char *word)
 	i = 0;
 	while (h != NULL)
 	{
-		printf("[parser2.c] _PRS_FIELD_EXPANSION_COPY NEW CHUNK\n	SOURCE: <%s>\n	S: %u E: %u\n", (char *)h->val, ((t_chunk_info *)h->key)->s, ((t_chunk_info *)h->key)->e);
+		debug_log("[parser2.c] _PRS_FIELD_EXPANSION_COPY NEW CHUNK\n	SOURCE: <%s>\n	S: %u E: %u\n", (char *)h->val, ((t_chunk_info *)h->key)->s, ((t_chunk_info *)h->key)->e);
 		_i = ((t_chunk_info *)h->key)->s;
 		while (_i < ((t_chunk_info *)h->key)->e)
 			word[i++] = ((char *)h->val)[_i++];
@@ -167,14 +167,14 @@ static int _prs_field_expansion(t_llist *str, t_info *info, char **word)
 	*word = NULL;
 	if (_prs_field_expansion_prep(str, info, chunks, &size))
 		return (_prs_field_expansion_free(chunks, word));
-	printf("[parser2.c] _PRS_FILED_EXPANSION PREP OK\n		EXPECTED SIZE: %u\n", size);
+	debug_log("[parser2.c] _PRS_FILED_EXPANSION PREP OK\n		EXPECTED SIZE: %u\n", size);
 	*word = (char *)malloc(sizeof(char) * (size + 1));
 	if (*word == NULL)
 		return (ft_error(1, "minishell: _prs_field_expansion", 1));
 	(*word)[size] = '\0';
 	if (_prs_field_expansion_copy(chunks, *word))
 		return (_prs_field_expansion_free(chunks, word));
-	printf("[parser2.c] _PRS_FILED_EXPANSION COPY OK\n");
+	debug_log("[parser2.c] _PRS_FILED_EXPANSION COPY OK\n");
 	llist_free(chunks);
 	return (0);
 }
@@ -235,7 +235,7 @@ static int _prs_field_expansion(t_llist *str, t_info *info, char **word)
 // 		ptr = ptr->next;
 // 	}
 // 	s = (char *)malloc(sizeof(char) * (len + 1));
-// 	printf("[parser2.c] PRS_FIELD_EXPANSION EXPECTED WORD SIZE %d\n", len);
+// 	debug_log("[parser2.c] PRS_FIELD_EXPANSION EXPECTED WORD SIZE %d\n", len);
 // 	if (NULL == s)
 // 		return (NULL);
 // 	ptr = str->head;
@@ -325,16 +325,16 @@ t_llist *_prs_asterisk_expansion_pwd(const char *word)
 	words = llist_new(llist_int_kcmp, NULL, NULL);
 	if (NULL == dir || NULL == words)
 	{
-		printf("[parser2.c] ASTERISK_EXPANSION_PWD FAILED\n");
+		debug_log("[parser2.c] ASTERISK_EXPANSION_PWD FAILED\n");
 		return (NULL);
 	}
 	dirf = readdir(dir);
 	while (NULL != dirf)
 	{
-		printf("[parser2.c] ASTERISK_EXPANSION_PWD TRY <%s>\n", dirf->d_name);
+		debug_log("[parser2.c] ASTERISK_EXPANSION_PWD TRY <%s>\n", dirf->d_name);
 		if (((word[0] == '.' && dirf->d_name[0] == '.') || (word[0] != '.' && dirf->d_name[0] != '.')) && _prs_asterisk_pattern_matches(word, dirf->d_name))
 		{
-			printf("[parser2.c] ASTERISK_EXPANSION_PWD WORD MATCHED\n");
+			debug_log("[parser2.c] ASTERISK_EXPANSION_PWD WORD MATCHED\n");
 			llist_push(words, (void *)LX_WORD, ft_strcpy(dirf->d_name));
 		}
 		dirf = readdir(dir);
@@ -408,7 +408,7 @@ static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 
 	if (_prs_expandable((*ptr)->key))
 	{
-		printf("[parser2.c] PRS_HANDLE_TOKEN TRY EXPAND TOKEN <%s>\n", (char *)(*ptr)->val);
+		debug_log("[parser2.c] PRS_HANDLE_TOKEN TRY EXPAND TOKEN <%s>\n", (char *)(*ptr)->val);
 		str = llist_new(llist_int_kcmp, NULL, NULL); //danger malloc zone
 		llist_push(str, (*ptr)->key, (*ptr)->val); //danger malloc zone
 		while((*ptr)->next && _prs_expandable(((t_ll_elem *)(*ptr)->next)->key))
@@ -418,7 +418,7 @@ static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 		}
 		_prs_field_expansion(str, info, &word);
 		// word = _prs_field_expansion(str, info); // danger malloc zone
-		printf("[parser2.c] PRS_HANDLE_TOKEN EXPANDED WORD <%s>\n", word);
+		debug_log("[parser2.c] PRS_HANDLE_TOKEN EXPANDED WORD <%s>\n", word);
 		words = _prs_asterisk_expansion(word);
 		if (NULL == words)
 			llist_push(expanded, (void *)LX_WORD, word); //danger malloc zone
@@ -428,7 +428,7 @@ static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 			wptr = words->head;
 			while(NULL != wptr)
 			{
-				printf("[parser2.c] PRS_HANDLE_TOKEN PUSH WORD <%s>\n", (char *)wptr->val);
+				debug_log("[parser2.c] PRS_HANDLE_TOKEN PUSH WORD <%s>\n", (char *)wptr->val);
 				llist_push(expanded, (void *)LX_WORD, wptr->val);
 				if (wptr->next)
 					llist_push(expanded, (void *)LX_SEP, NULL);
