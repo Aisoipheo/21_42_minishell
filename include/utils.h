@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:54:47 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/26 18:31:10 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/03 16:38:40 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ int		ft_isalnum(char c);
 void	*ft_free_char2dem(char **arr, int m);
 char	**ft_malloc_char2dem(int m, int n);
 int		ft_error(int ret, const char *msg, char liberr);
+char	*ft_uint_to_str(unsigned int n);
 
 #endif

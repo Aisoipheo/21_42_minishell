@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 19:37:09 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,12 @@ int	ft_acces(t_group *cmds, t_info *info, char *path, char **filepath)
 	return (ft_error(1, "minishell: command not found", 0));
 }
 
-int	get_in_fd(t_cmd_info *c_info)
+int	get_in_fd(t_cmd_info *c_info, t_llist *files)
 {
 	if (!c_info->in_file)
 		return (0);
-	if(c_info->flags & CMD_INSOURCE)
-		return (create_heredoc(c_info));
+	if(c_info->flags & CMD_INSOURCE && create_heredoc(c_info, files))
+		return (-1);
 	return (open(c_info->in_file, O_RDONLY));
 }
 
@@ -128,24 +128,23 @@ int	create_argv(t_group *cmds, char ***args, char *path)
 
 int	remap_fds(int in, int out)
 {
-	if (in != 0)
+	if (in != STDIN_FILENO)
 	{
-		if (dup2(in, 0) == -1)
+		if (dup2(in, STDIN_FILENO) == -1)
 			ft_error(1, "minishell: dup2: mapping to (stdin)", 1);
 		if (close(in) == -1)
 			ft_error(1, "minishell: close: mapping to (stdin)", 1);
 	}
-	if (out != 1)
+	if (out != STDOUT_FILENO)
 	{
-		if (dup2(out, 1) == -1)
-			ft_error(1, "minishell: dup2: mapping to (stdin)", 1);
+		if (dup2(out, STDOUT_FILENO) == -1)
+			ft_error(1, "minishell: dup2: mapping to (stdout)", 1);
 		if (close(out) == -1)
-			ft_error(1, "minishell: close: mapping to (stdin)", 1);
+			ft_error(1, "minishell: close: mapping to (stdout)", 1);
 	}
 	return (0);
 }
 
-//fork then ft_common where ft_execve
 int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 {
 	t_ll_elem	*elems;
@@ -169,8 +168,10 @@ int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 		debug_log("RET PID: %d\n", pid);
 		return (pid);
 	}
+	debug_log("TRY REMAPFDS\n");
 	if (remap_fds(in, out))
 		return (-1);
+	debug_log("REMAPFDS OK\n");
 	path = llist_getval(info->envp_list, "PATH");
 	if (!path)
 		return (ft_error(-1, "minishell: PATH not set", 0));
@@ -190,15 +191,21 @@ int	ft_common(t_group *cmds, t_info *info)
 {
 	int		in_fd;
 	int		out_fd;
+	int		pid;
 
-	in_fd = get_in_fd(cmds->cmds->head->val);
+	in_fd = get_in_fd(cmds->cmds->head->val, cmds->files);
 	if (in_fd == -1)
 		return (ft_error(-1, "minishell: get_in_fd", 1));
 	out_fd = get_out_fd(cmds->cmds->head->val);
 	if (out_fd == -1)
 		return (ft_error(-1, "minishell: get_out_fd", 1));
 	debug_log("ft_execve\n");
-	return(ft_execve(cmds, info, in_fd, out_fd)); //fd
+	pid = ft_execve(cmds, info, in_fd, out_fd);
+	if (in_fd != STDIN_FILENO)
+		close(in_fd);
+	if (out_fd != STDOUT_FILENO)
+		close(out_fd);
+	return (pid);
 }
 
 // Случаи Ин и Аут:

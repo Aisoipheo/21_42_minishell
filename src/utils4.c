@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 15:46:10 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 18:13:04 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,33 @@ int	ft_error(int ret, const char *msg, char liberr)
 	else if (errno != 0)
 		perror(invcall);
 	return (ret);
+}
+
+char	*ft_uint_to_str(unsigned int n)
+{
+	char			*s;
+	unsigned int	cnt;
+	unsigned int	i;
+
+	cnt = 0;
+	i = n;
+	while(n)
+	{
+		++cnt;
+		i /= 10;
+	}
+	if (cnt == 0)
+		cnt = 1;
+	s = (char *)malloc(sizeof(char) * (cnt + 1));
+	if (NULL == s)
+		return (NULL);
+	s[cnt] = '\0';
+	while (cnt--)
+	{
+		s[cnt] = '0' + n % 10;
+		n /= 10;
+	}
+	return (s);
 }
 
 // DEBUG

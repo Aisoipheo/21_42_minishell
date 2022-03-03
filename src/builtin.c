@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:54:25 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/02 17:42:18 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 18:17:45 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	ft_pwd(t_llist *args, t_info *info)
 		++i;
 	if (i < PATH_MAX)
 		pwd[i++] = '\n';
-	if (write(STDOUT_FILENO, pwd, i) == 1)
+	if (write(STDOUT_FILENO, pwd, i) == -1)
 		return (ft_error(-1, "minishell: pwd: getcwd", 1));
 	return (0);
 }

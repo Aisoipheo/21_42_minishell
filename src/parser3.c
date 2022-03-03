@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 19:23:11 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	_prs_handle_token2(t_ll_elem **c, t_cmd_info *info)
 			info->flags &= ~CMD_APPEND;
 		*c = _prs_next_token(*c);
 		if (NULL == *c || (int)(*c)->key != LX_WORD)
-			return (ft_error(1, "minishell: parse error near token `>' or `>>'", 0)); //parse error near token `>' or `>>'
+			return (ft_error(1, "minishell: parse error near token `>' or `>>'", 0));
 		info->out_file = (*c)->val;
 		return (0);
 	}

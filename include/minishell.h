@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 15:41:58 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 19:15:32 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_cmd_info
 {
 	char	*in_file;
 	char	*out_file;
+	char	*delim;
 	int		flags;
 	int		_shlvl; //dont touch it
 }	t_cmd_info;
@@ -72,6 +73,7 @@ typedef struct s_group
 {
 	int			type;
 	t_llist		*cmds;
+	t_llist		*files;
 }	t_group;
 
 t_group		*ft_group_new(int type);
@@ -88,14 +90,13 @@ void	handler_term(t_info *info);
 pid_t	executor(t_group *cmds, t_info *info);
 pid_t	pipeline(t_group *cmds, t_info *info);
 int		ft_subshell(t_group *cmds, t_info *info);
-int	create_heredoc(t_cmd_info *c_info);
+int		create_heredoc(t_cmd_info *c_info, t_llist *files);
 
 int		ft_strncmp(const char *str1, const char *str2, size_t n);
 char	*ft_strjoin(char const *s1, char const *s2);
 
 int		ft_init(t_info *info, char *envp[]);
 int		ft_destroy(t_info *info);
-
 
 /* ============ Built-ins ============ */
 int			ft_echo(t_llist *args, t_info *info);
