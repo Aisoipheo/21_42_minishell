@@ -6,17 +6,15 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 12:37:20 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 12:39:25 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "utils.h"
 
-static int	ft_export_print(t_llist *args, t_info *info)
+static int	ft_export_print(t_info *info)
 {
-	(void)info;
-	(void)args;
 	t_ll_elem	*ptr;
 
 	ptr = info->envp_list->head;
@@ -45,7 +43,7 @@ int	ft_export(t_llist *args, t_info *info)
 
 	ptr = args->head;
 	if (args->size == 1)
-		return (ft_export_print(args, info));
+		return (ft_export_print(info));
 	ptr = ptr->next;
 	while (ptr)
 	{
