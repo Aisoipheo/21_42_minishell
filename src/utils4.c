@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/02 17:17:56 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:24:52 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ int	ft_error(int ret, const char *msg, char liberr)
 {
 	static const char	*invcall = "*** THIS SHOULD NOT OCCUR ***";
 
-	g_exit = 1;
-	(void)invcall;
 	if (msg && *msg && !liberr)
 	{
 		write(STDERR_FILENO, msg, ft_strlen(msg));
