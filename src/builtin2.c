@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/02/23 19:46:16 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/03 12:37:20 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ static int	ft_export_print(t_llist *args, t_info *info)
 			return (ft_error(-1, "minishell: export: write", 1));
 		if (write(STDOUT_FILENO, ptr->key, ft_strlen((char *)ptr->key)) == -1)
 			return (ft_error(-1, "minishell: export: write", 1));
-		if (write(STDOUT_FILENO, "=\"", 1) == -1)
+		if (write(STDOUT_FILENO, "=\"", 2) == -1)
 			return (ft_error(-1, "minishell: export: write", 1));
 		if (write(STDOUT_FILENO, ptr->val, ft_strlen((char *)ptr->val)) == -1)
 			return (ft_error(-1, "minishell: export: write", 1));
-		if (write(STDOUT_FILENO, "\"\n", 1) == -1)
+		if (write(STDOUT_FILENO, "\"\n", 2) == -1)
 			return (ft_error(-1, "minishell: export: write", 1));
 		ptr = ptr->next;
 	}
@@ -43,7 +43,7 @@ int	ft_export(t_llist *args, t_info *info)
 	char		*a;
 	char		*b;
 
-	ptr = info->envp_list->head;
+	ptr = args->head;
 	if (args->size == 1)
 		return (ft_export_print(args, info));
 	ptr = ptr->next;
