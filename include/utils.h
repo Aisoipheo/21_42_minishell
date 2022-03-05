@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:54:47 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 16:38:40 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/05 15:44:51 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,7 @@ void	*ft_free_char2dem(char **arr, int m);
 char	**ft_malloc_char2dem(int m, int n);
 int		ft_error(int ret, const char *msg, char liberr);
 char	*ft_uint_to_str(unsigned int n);
+int		ft_abs(int n);
+char	*ft_itoa(int n);
 
 #endif

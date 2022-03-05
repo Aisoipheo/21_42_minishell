@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 17:33:11 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/02 18:13:12 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/05 16:52:09 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ static void	_ft_init_builtins(t_info *info) {
 
 int	ft_init(t_info *info, char *envp[])
 {
-	errno = 0;
+	signal(SIGQUIT, SIG_IGN);
 	g_exit = 0;
 	info->envp_f = 1;
 	info->exit_f = 1;
+	info->g_exit_str = NULL;
 	info->envp = NULL;
 	info->envp_list = llist_new(llist_str_kcmp, free, free);
 	if (info->envp_list == NULL)

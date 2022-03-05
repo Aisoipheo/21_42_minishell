@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:56:16 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/02 15:50:10 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/05 15:34:15 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ char	**_ft_strdestroy2(char **str2, int j)
 	free(str2);
 	return (NULL);
 }
-
-#include <stdio.h>
 
 char	**ft_strsplit(const char *s, const char *d)
 {

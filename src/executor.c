@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/04 21:13:22 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/05 16:28:00 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,15 @@ int	ft_acces(t_group *cmds, char *path, char **filepath)
 	t_ll_elem	*elems;
 
 	int	i = 0;
-	// (void)info;
+	elems = cmds->cmds->head;
+	if (ft_strcontains(((t_llist *)elems->key)->head->val, '/'))
+	{
+		*filepath = ft_strcpy(((t_llist *)elems->key)->head->val);
+		return (0);
+	}
 	filepaths = ft_strsplit(path, ":");
 	if (!filepaths)
 		ft_error(1, "malloc error for strsplit", 1);
-	elems = cmds->cmds->head;
 	while (filepaths[i] != NULL)
 	{
 		// debug_log("PATH BEFORE: %s\n", filepaths[i]);

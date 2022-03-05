@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/03 19:32:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/05 16:56:59 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 	char	*f;
 	char	*s;
 
-	signal(SIGINT, SIG_IGN);
 	f = NULL;
 	s = ft_uint_to_str(files->size);
 	fd = -1;

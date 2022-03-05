@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 18:13:04 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/05 15:36:21 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,43 @@ int	ft_error(int ret, const char *msg, char liberr)
 	return (ret);
 }
 
+int	ft_abs(int n)
+{
+	if (n < 0)
+		return (-n);
+	return (n);
+}
+
+char	*ft_itoa(int n)
+{
+	char	*s;
+	int		cnt;
+	int		i;
+
+	cnt = 0;
+	i = n;
+	while(i)
+	{
+		++cnt;
+		i /= 10;
+	}
+	i = n < 0;
+	if (cnt == 0)
+		cnt = 1;
+	s = (char *)malloc(sizeof(char) * (cnt + 1 + i));
+	if (NULL == s)
+		return (NULL);
+	s[cnt + i] = '\0';
+	if (n < 0)
+		s[0] = '-';
+	while(cnt--)
+	{
+		s[cnt + i] = '0' + ft_abs(n % 10);
+		n /= 10;
+	}
+	return (s);
+}
+
 char	*ft_uint_to_str(unsigned int n)
 {
 	char			*s;
@@ -50,7 +87,7 @@ char	*ft_uint_to_str(unsigned int n)
 
 	cnt = 0;
 	i = n;
-	while(n)
+	while(i)
 	{
 		++cnt;
 		i /= 10;

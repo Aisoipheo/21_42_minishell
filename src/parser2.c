@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 15:40:37 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/05 15:54:57 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ t_chunk_info	*_prs_chunk_info_new(unsigned int s, unsigned int e)
 	return (ci);
 }
 
+int	_prs_update_g_exit_str(t_info *info)
+{
+	free(info->g_exit_str);
+	info->g_exit_str = ft_itoa(g_exit);
+	if (NULL == info->g_exit_str)
+		return (ft_error(1, "minishell: _prs_update_g_exit_str", 1));
+	return (0);
+}
+
 static int _prs_extract_var(const char *s, t_info *info, char **envpvar_ptr, unsigned int *j)
 {
 	unsigned int	i;
@@ -40,6 +49,14 @@ static int _prs_extract_var(const char *s, t_info *info, char **envpvar_ptr, uns
 	if (s[i] == '\0')
 	{
 		*envpvar_ptr = NULL;
+		return (0);
+	}
+	if (s[i] == '?')
+	{
+		if (_prs_update_g_exit_str(info))
+			return (1);
+		*envpvar_ptr = info->g_exit_str;
+		*j += 1;
 		return (0);
 	}
 	while (ft_isalnum(s[i]) || s[i] == '_')

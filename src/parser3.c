@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 19:23:11 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/05 16:08:56 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,10 +244,14 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 			if (pid < 0)
 				return (1);
 			if (pid > 0)
+			{
 				waitpid(pid, &sig, 0);
+				g_exit	= WEXITSTATUS(sig);
+			}
 			if (pid == 0)
 				g_exit = 0;
 			expect = 1;
+			debug_log("EXIT STATUS: %d\n", g_exit);
 		}
 		else
 		{

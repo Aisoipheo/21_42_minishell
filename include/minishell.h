@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 19:15:32 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/05 17:36:08 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void debug_log(const char *fmt, ...);
 # define CMD_INSOURCE 0b010
 # define CMD_SUBSHELL 0b100
 
-static int	g_exit = 0;
+int g_exit;
 
 // f1(char **ar, function_ptr *f) {
 // 	ar[0] = "echo";
@@ -51,12 +51,14 @@ typedef int (*builtin_ptr)(t_llist *, t_info *);
 
 struct s_info
 {
-	char			exit_f;
-	char			envp_f;
-	char			**envp;
-	char			*reserved_words[7];
-	builtin_ptr		f_ptrs[7];
-	t_llist			*envp_list;
+	volatile sig_atomic_t		c;
+	char						exit_f;
+	char						envp_f;
+	char						**envp;
+	char						*g_exit_str;
+	char						*reserved_words[7];
+	builtin_ptr					f_ptrs[7];
+	t_llist						*envp_list;
 };
 
 
@@ -107,5 +109,7 @@ int			ft_unset(t_llist *args, t_info *info);
 int			ft_env(t_llist *args, t_info *info);
 int			ft_exit(t_llist *args, t_info *info);
 /* ============ /Built-ins ============ */
+
+int			get_line(const char *prompt, char **line);
 
 #endif
