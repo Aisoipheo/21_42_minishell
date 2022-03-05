@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/03 19:37:09 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/04 21:13:22 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ int	check_if_builtins(t_group *cmds, t_info *info)
 	int			i;
 
 	i = 0;
-	(void)info;
 	elems = cmds->cmds->head;
-
 	while (i < 7)
 	{
 		if (ft_strcmp(((t_llist *)elems->key)->head->val, info->reserved_words[i]) == 0)
@@ -48,14 +46,14 @@ int	check_if_builtins(t_group *cmds, t_info *info)
 	return (i);
 }
 
-int	ft_acces(t_group *cmds, t_info *info, char *path, char **filepath)
+int	ft_acces(t_group *cmds, char *path, char **filepath)
 {
-	char	**filepaths;
-	char	*to_free;
+	char		**filepaths;
+	char		*to_free;
 	t_ll_elem	*elems;
 
 	int	i = 0;
-	(void)info;
+	// (void)info;
 	filepaths = ft_strsplit(path, ":");
 	if (!filepaths)
 		ft_error(1, "malloc error for strsplit", 1);
@@ -176,7 +174,7 @@ int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 	if (!path)
 		return (ft_error(-1, "minishell: PATH not set", 0));
 	elems = cmds->cmds->head;
-	if (ft_acces(cmds, info, path, &filepath))
+	if (ft_acces(cmds, path, &filepath))
 		return (-1);
 	if (create_argv(cmds, &args, filepath))
 		return (-1);
@@ -234,11 +232,10 @@ ft_exec(cmds, info, fd_in, fd_out);
 
 pid_t	executor(t_group *cmds, t_info *info)
 {
-	int	builtin_index = 0;
+	int	builtin_index;
 
-	// debug_log("!!!  !!!!\n");
 	builtin_index = check_if_builtins(cmds, info);
-	debug_log("---[%d]---\n", builtin_index);
+	// debug_log("---[%d]---\n", builtin_index);
 	if (PRS_PIPELINE & cmds->type) // проверка на пайп ВСЕ ОК
 		return (pipeline(cmds, info));
 	if (((t_cmd_info *)cmds->cmds->head->val)->flags & CMD_SUBSHELL) // проверка на сабшелл ВСЕ ОК

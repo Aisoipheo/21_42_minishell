@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:54:25 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/03 18:17:45 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/04 20:15:30 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	ft_echo(t_llist *args, t_info *info)
 	char		is_n;
 
 	(void)info;
-	// (void)args;
 	arg = args->head;
 	is_n = 0;
 	if (args->size > 1)
