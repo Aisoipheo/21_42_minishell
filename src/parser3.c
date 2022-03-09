@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/05 16:08:56 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/09 18:18:57 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,15 +200,13 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 			return (-1);
 		debug_log("[parser3.c] GROUP READY\n");
 		pid = executor(cmds, info);
-		if (pid == -1)
-			return (1);
 		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
 		// {
 		// 	t_cmd_info *cmd_info = (t_cmd_info *)h->val;
 		// 	debug_log(" ======c> llist at %p\n", h);
-		// 	debug_log(" TYPE: %lld\n", convert(type));
+		// 	// debug_log(" TYPE: %lld\n", convert(type));
 		// 	debug_log(" *** INFO ***\n");
-		// 	convert((int)cmd_info->flags);
+		// 	// convert((int)cmd_info->flags);
 		// 	debug_log("flags: %.5d\n", cmd_info->flags/* */);
 		// 	debug_log("in: %s\n", cmd_info->in_file);
 		// 	debug_log("out: %s\n", cmd_info->out_file);

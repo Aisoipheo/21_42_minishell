@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/05 16:28:00 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/09 18:25:14 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_acces(t_group *cmds, char *path, char **filepath)
 
 	int	i = 0;
 	elems = cmds->cmds->head;
-	if (ft_strcontains(((t_llist *)elems->key)->head->val, '/'))
+	if (ft_strcontains(((t_llist *)elems->key)->head->val, '/') || NULL == path)
 	{
 		*filepath = ft_strcpy(((t_llist *)elems->key)->head->val);
 		return (0);
@@ -84,24 +84,6 @@ int	ft_acces(t_group *cmds, char *path, char **filepath)
 	return (ft_error(1, "minishell: command not found", 0));
 }
 
-int	get_in_fd(t_cmd_info *c_info, t_llist *files)
-{
-	if (!c_info->in_file)
-		return (0);
-	if(c_info->flags & CMD_INSOURCE && create_heredoc(c_info, files))
-		return (-1);
-	return (open(c_info->in_file, O_RDONLY));
-}
-
-int	get_out_fd(t_cmd_info *c_info)
-{
-	if (!c_info->out_file)
-		return (1);
-	if (CMD_APPEND & c_info->flags)
-		return (open(c_info->out_file, O_CREAT | O_WRONLY | O_APPEND));
-	return (open(c_info->out_file, O_CREAT | O_WRONLY));
-}
-
 // int search_val(char *ret) 0 success 1 error
 
 int	create_argv(t_group *cmds, char ***args, char *path)
@@ -128,28 +110,8 @@ int	create_argv(t_group *cmds, char ***args, char *path)
 	return (0);
 }
 
-int	remap_fds(int in, int out)
-{
-	if (in != STDIN_FILENO)
-	{
-		if (dup2(in, STDIN_FILENO) == -1)
-			ft_error(1, "minishell: dup2: mapping to (stdin)", 1);
-		if (close(in) == -1)
-			ft_error(1, "minishell: close: mapping to (stdin)", 1);
-	}
-	if (out != STDOUT_FILENO)
-	{
-		if (dup2(out, STDOUT_FILENO) == -1)
-			ft_error(1, "minishell: dup2: mapping to (stdout)", 1);
-		if (close(out) == -1)
-			ft_error(1, "minishell: close: mapping to (stdout)", 1);
-	}
-	return (0);
-}
-
 int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 {
-	t_ll_elem	*elems;
 	char		*path;
 	char		*filepath = NULL;
 	char		**args;
@@ -172,21 +134,18 @@ int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 	}
 	debug_log("TRY REMAPFDS\n");
 	if (remap_fds(in, out))
-		return (-1);
+		exit(1);
 	debug_log("REMAPFDS OK\n");
 	path = llist_getval(info->envp_list, "PATH");
-	if (!path)
-		return (ft_error(-1, "minishell: PATH not set", 0));
-	elems = cmds->cmds->head;
 	if (ft_acces(cmds, path, &filepath))
-		return (-1);
+		exit(1);
 	if (create_argv(cmds, &args, filepath))
-		return (-1);
+		exit(1);
 	debug_log("execve\n");
 	debug_log("%s\n", filepath);
 	if (execve(filepath, args, info->envp) == -1)
-		return (ft_error(-1, "minishell: execve", 1));
-	return (-1);
+		exit(ft_error(1, "minishell: execve", 1));
+	return (1);
 }
 
 int	ft_common(t_group *cmds, t_info *info)

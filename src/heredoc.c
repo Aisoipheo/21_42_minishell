@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/05 16:56:59 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/09 17:47:59 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 		return (heredoc_dstr("minishell: <<: malloc", f, s, fd));
 	if (access(f, F_OK) == 0 && unlink(f) == -1)
 		return (heredoc_dstr("minishell: <<: tmp f already exists", f, s, fd));
-	fd = open(f, O_CREAT | O_WRONLY);
+	fd = open(f, O_CREAT | O_WRONLY, 0644);
 	if (fd == -1)
 		return (heredoc_dstr("minishell: <<: open", f, s, fd));
 	if (heredoc_fmanip(f, c_info, files))

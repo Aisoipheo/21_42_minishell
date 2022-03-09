@@ -14,6 +14,7 @@ C_FILES				= main.c\
 					utils2.c\
 					utils3.c\
 					utils4.c\
+					utils5.c\
 					lexer.c\
 					lexer2.c\
 					parser.c\

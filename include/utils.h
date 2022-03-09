@@ -6,12 +6,14 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:54:47 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/05 15:44:51 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/09 17:17:29 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
+
+#include "minishell.h"
 
 int		ft_strlen(const char *s);
 char	*ft_strcpy(const char *s);
@@ -30,5 +32,8 @@ int		ft_error(int ret, const char *msg, char liberr);
 char	*ft_uint_to_str(unsigned int n);
 int		ft_abs(int n);
 char	*ft_itoa(int n);
+int		remap_fds(int in, int out);
+int		get_in_fd(t_cmd_info *c_info, t_llist *files);
+int		get_out_fd(t_cmd_info *c_info);
 
 #endif

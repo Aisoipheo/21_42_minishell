@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/05 15:36:21 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/09 17:08:33 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,25 @@ char	*ft_uint_to_str(unsigned int n)
 		n /= 10;
 	}
 	return (s);
+}
+
+int	remap_fds(int in, int out)
+{
+	if (in != STDIN_FILENO)
+	{
+		if (dup2(in, STDIN_FILENO) == -1)
+			ft_error(1, "minishell: dup2: mapping to (stdin)", 1);
+		if (close(in) == -1)
+			ft_error(1, "minishell: close: mapping to (stdin)", 1);
+	}
+	if (out != STDOUT_FILENO)
+	{
+		if (dup2(out, STDOUT_FILENO) == -1)
+			ft_error(1, "minishell: dup2: mapping to (stdout)", 1);
+		if (close(out) == -1)
+			ft_error(1, "minishell: close: mapping to (stdout)", 1);
+	}
+	return (0);
 }
 
 // DEBUG
