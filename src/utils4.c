@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/09 17:08:33 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/10 17:38:55 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ char	*ft_uint_to_str(unsigned int n)
 
 int	remap_fds(int in, int out)
 {
+	debug_log("remap in: %d out %d\n", in, out);
 	if (in != STDIN_FILENO)
 	{
 		if (dup2(in, STDIN_FILENO) == -1)

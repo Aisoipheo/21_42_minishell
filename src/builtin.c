@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:54:25 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/10 14:52:57 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/10 17:06:33 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "minishell.h"
 #include "utils.h"
 
-int	ft_echo(t_llist *args, t_info *info, int fds[2])
+int	ft_echo(t_llist *args, t_info *info)
 {
 	t_ll_elem	*arg;
 	char		is_n;
@@ -30,28 +30,27 @@ int	ft_echo(t_llist *args, t_info *info, int fds[2])
 			arg = arg->next;
 		while (arg)
 		{
-			if (write(fds[1], arg->val, ft_strlen((char *)arg->val))
+			if (write(STDOUT_FILENO, arg->val, ft_strlen((char *)arg->val))
 				== -1)
 				return (ft_error(-1, "minishell: echo", 1));
-			if (arg->next && write(fds[1], " ", 1) == -1)
+			if (arg->next && write(STDOUT_FILENO, " ", 1) == -1)
 				return (ft_error(-1, "minishell: echo", 1));
 			arg = arg->next;
 		}
 	}
 	if (!is_n)
-		if (write(fds[1], "\n", 1) == -1)
+		if (write(STDOUT_FILENO, "\n", 1) == -1)
 			return (ft_error(-1, "minishell: echo", 1));
 	return (0);
 }
 
-int	ft_cd(t_llist *args, t_info *info, int fds[2])
+int	ft_cd(t_llist *args, t_info *info)
 {
 	t_ll_elem	*arg;
 	char		*path;
 	char		*pathcopy;
 	char		*pwdcopy;
 
-	(void)fds;
 	arg = args->head;
 	if (arg->next)
 		path = (char *)((t_ll_elem *)(arg->next))->val;
@@ -74,7 +73,7 @@ int	ft_cd(t_llist *args, t_info *info, int fds[2])
 	return (0);
 }
 
-int	ft_pwd(t_llist *args, t_info *info, int fds[2])
+int	ft_pwd(t_llist *args, t_info *info)
 {
 	char			pwd[PATH_MAX];
 	unsigned int	i;
@@ -87,12 +86,12 @@ int	ft_pwd(t_llist *args, t_info *info, int fds[2])
 		++i;
 	if (i < PATH_MAX)
 		pwd[i++] = '\n';
-	if (write(fds[1], pwd, i) == -1)
+	if (write(STDOUT_FILENO, pwd, i) == -1)
 		return (ft_error(-1, "minishell: pwd: getcwd", 1));
 	return (0);
 }
 
-int	ft_env(t_llist *args, t_info *info, int fds[2])
+int	ft_env(t_llist *args, t_info *info)
 {
 	t_ll_elem	*ptr;
 
@@ -100,13 +99,13 @@ int	ft_env(t_llist *args, t_info *info, int fds[2])
 	ptr = info->envp_list->head;
 	while (ptr)
 	{
-		if (write(fds[1], ptr->key, ft_strlen((char *)ptr->key)) == -1)
+		if (write(STDOUT_FILENO, ptr->key, ft_strlen((char *)ptr->key)) == -1)
 			return (ft_error(-1, "minishell: env: write", 1));
-		if (write(fds[1], "=", 1) == -1)
+		if (write(STDOUT_FILENO, "=", 1) == -1)
 			return (ft_error(-1, "minishell: env: write", 1));
-		if (write(fds[1], ptr->val, ft_strlen((char *)ptr->val)) == -1)
+		if (write(STDOUT_FILENO, ptr->val, ft_strlen((char *)ptr->val)) == -1)
 			return (ft_error(-1, "minishell: env: write", 1));
-		if (write(fds[1], "\n", 1) == -1)
+		if (write(STDOUT_FILENO, "\n", 1) == -1)
 			return (ft_error(-1, "minishell: env: write", 1));
 		ptr = ptr->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/10 14:53:25 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/10 17:32:06 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,24 +148,56 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, int fds[2])
 	return (1);
 }
 
+int	ft_execbuiltin(int idx, t_ll_elem *cmd, t_info *info, int fds[2])
+{
+	int		stdcopy[2];
+	int		ret;
+
+	stdcopy[0] = dup(STDIN_FILENO);
+	stdcopy[1] = dup(STDOUT_FILENO);
+	if (remap_fds(fds[0], fds[1]))
+	{
+		close(stdcopy[0]);
+		close(stdcopy[1]);
+		return (ft_error(1, "minishell: execbuiltin: remap fds", 1));
+	}
+	ret =  (*info->f_ptrs[idx])(cmd->key, info);
+	dup2(stdcopy[0], STDIN_FILENO);
+	dup2(stdcopy[1], STDOUT_FILENO);
+	close(stdcopy[0]);
+	close(stdcopy[1]);
+	return (ret);
+}
+
+int	ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2])
+{
+	int	i;
+
+	debug_log("CMD: %s\n", ((t_llist *)cmd->key)->head->val);
+	i = check_if_builtins(cmd, info);
+	debug_log("------[%d]------\n", i);
+	if (i == 7)
+		return (ft_execve(cmd, info, fds));
+	return (ft_execbuiltin(i, cmd, info, fds));
+}
+
 int	ft_common(t_group *cmds, t_info *info)
 {
-	int		in_fd;
-	int		out_fd;
+	int		fds[2];
 	int		pid;
 
-	in_fd = get_in_fd(cmds->cmds->head->val, cmds->files);
-	if (in_fd == -1)
+	fds[0] = get_in_fd(cmds->cmds->head->val, cmds->files);
+	if (fds[0] == -1)
 		return (ft_error(-1, "minishell: get_in_fd", 1));
-	out_fd = get_out_fd(cmds->cmds->head->val);
-	if (out_fd == -1)
+	fds[1] = get_out_fd(cmds->cmds->head->val);
+	if (fds[1] == -1)
 		return (ft_error(-1, "minishell: get_out_fd", 1));
 	debug_log("ft_execve\n");
-	pid = ft_execve(cmds, info, in_fd, out_fd);
-	if (in_fd != STDIN_FILENO)
-		close(in_fd);
-	if (out_fd != STDOUT_FILENO)
-		close(out_fd);
+	pid = ft_execcommon(cmds->cmds->head, info, fds);
+	if (fds[0] != STDIN_FILENO)
+		close(fds[0]);
+	if (fds[1] != STDOUT_FILENO)
+		close(fds[1]);
 	return (pid);
 }
 
@@ -195,16 +227,11 @@ ft_exec(cmds, info, fd_in, fd_out);
 
 pid_t	executor(t_group *cmds, t_info *info)
 {
-	int	builtin_index;
-
-	builtin_index = check_if_builtins(cmds, info);
 	// debug_log("---[%d]---\n", builtin_index);
 	if (PRS_PIPELINE & cmds->type) // проверка на пайп ВСЕ ОК
 		return (pipeline(cmds, info));
 	if (((t_cmd_info *)cmds->cmds->head->val)->flags & CMD_SUBSHELL) // проверка на сабшелл ВСЕ ОК
 		return (ft_subshell(cmds, info));
-	if (builtin_index < 7)
-		return ((*info->f_ptrs[builtin_index])(cmds->cmds->head->key, info)); // проверка на билтин ВСЕ ОК
 	return (ft_common(cmds, info));
 }
 

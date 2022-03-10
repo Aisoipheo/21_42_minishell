@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:07:58 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/09 18:07:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/10 16:43:15 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parser.h"
 #include "utils.h"
 
-static int	ft_execsubshell(t_group *cmds, t_info *info, int in, int out)
+int	ft_execsubshell(t_ll_elem *cmd, t_info *info, int fds[2])
 {
 	int		pid;
 
@@ -31,9 +31,9 @@ static int	ft_execsubshell(t_group *cmds, t_info *info, int in, int out)
 		return (-1);
 	if (pid > 0)
 		return (pid);
-	if (remap_fds(in, out))
+	if (remap_fds(fds[0], fds[1]))
 		return (-1);
-	exit(prs_parse(cmds->cmds->head->key, info));
+	exit(prs_parse(cmd->key, info));
 }
 
 int	ft_subshell(t_group *cmds, t_info *info)
@@ -47,7 +47,7 @@ int	ft_subshell(t_group *cmds, t_info *info)
 	fds[1] = get_out_fd(cmds->cmds->head->val);
 	if (fds[1] == -1)
 		return (ft_error(-1, "minishell: subshell: get_out_fd", 1));
-	pid = ft_execsubshell(cmds, info, fds[0], fds[1]);
+	pid = ft_execsubshell(cmds->cmds->head, info, fds);
 	if (fds[0] != STDIN_FILENO)
 		close(fds[0]);
 	if (fds[1] != STDOUT_FILENO)

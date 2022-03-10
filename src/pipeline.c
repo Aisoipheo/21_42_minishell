@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 20:36:53 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/10 14:59:54 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/10 17:56:45 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,22 +121,33 @@ pid_t	pipeline(t_group *cmds, t_info *info)
 	t_ll_elem	*cmd;
 
 	cmd = cmds->cmds->head;
+	pfd[0] = -1;
 	while(cmd)
 	{
 		fds[0] = get_in_fd(cmd->val, cmds->files);
 		if (fds[0] == -1)
 			return (ft_error(-1, "mininshell: pipe: get in fd", 1));
 		fds[1] = get_out_fd(cmd->val);
+		if (cmd != cmds->cmds->head && fds[0] == STDIN_FILENO)
+			fds[0] = pfd[0];
 		if (fds[1] == -1)
 			return (ft_error(-1, "minishell: pipe: get out fd", 1));
 		if (cmd->next && pipe(pfd) == -1)
 			return (ft_error(-1, "minishell: pipe: pipe", 1));
 		if (cmd->next && fds[1] == STDOUT_FILENO)
 			fds[1] = pfd[1];
-		if (cmd != cmds->cmds->head && fds[0] == STDIN_FILENO)
-			fds[0] = pfd[0];
-		pid = ft_execve()
+		if (((t_cmd_info *)cmd->val)->flags & CMD_SUBSHELL)
+			pid = ft_execsubshell(cmd, info, fds);
+		else
+			pid = ft_execcommon(cmd, info, fds);
+		close(pfd[1]);
+		if (fds[0] != pfd[0] && fds[0] != STDIN_FILENO)
+			close(fds[0]);
+		if (fds[1] != pfd[1] && fds[1] != STDOUT_FILENO)
+			close(fds[1]);
 		cmd = cmd->next;
 	}
+	if (pfd[0] != -1)
+		close(pfd[0]);
 	return (pid);
 }

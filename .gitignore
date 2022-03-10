@@ -6,4 +6,4 @@ minishell
 *.sh
 a.out
 .vscode
-
+buggyshell
