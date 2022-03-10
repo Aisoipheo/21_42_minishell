@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 20:36:53 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/04 21:13:36 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/10 14:59:54 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,35 +77,66 @@
 //  or display an error message if arguments are wrong. It will run here_doc
 //  function if the "here_doc" string is find in argv[1] */
 
+// pid_t	pipeline(t_group *cmds, t_info *info)
+// {
+// 	(void)cmds;
+// 	(void)info;
+// 	debug_log("PIPELINE\n");
+// 	// int	i;
+// 	// int	filein;
+// 	// int	fileout;
+
+// 	// if (argc >= 5)
+// 	// {
+// 	// 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
+// 	// 	{
+// 	// 		i = 3;
+// 	// 		fileout = open_file(argv[argc - 1], 0);
+// 	// 		create_heredoc(argv[2], argc);
+// 	// 	}
+// 	// 	else
+// 	// 	{
+// 	// 		i = 2;
+// 	// 		fileout = open_file(argv[argc - 1], 1);
+// 	// 		filein = open_file(argv[1], 2);
+// 	// 		dup2(filein, STDIN_FILENO);
+// 	// 	}
+// 	// 	while (i < argc - 2)
+// 	// 		child_process(argv[i++], envp);
+// 	// 	dup2(fileout, STDOUT_FILENO);
+// 	// 	execute(argv[argc - 2], envp);
+// 	// }
+// 	// usage();
+// 	return (0);
+// }
+
+
+//cmd->val == t_cmd_info	| Информация о команде
+//cmd->key == t_llist		| Аргументы команды
 pid_t	pipeline(t_group *cmds, t_info *info)
 {
-	(void)cmds;
-	(void)info;
-	debug_log("PIPELINE\n");
-	// int	i;
-	// int	filein;
-	// int	fileout;
+	int			pfd[2];
+	int			fds[2];
+	int			pid;
+	t_ll_elem	*cmd;
 
-	// if (argc >= 5)
-	// {
-	// 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-	// 	{
-	// 		i = 3;
-	// 		fileout = open_file(argv[argc - 1], 0);
-	// 		create_heredoc(argv[2], argc);
-	// 	}
-	// 	else
-	// 	{
-	// 		i = 2;
-	// 		fileout = open_file(argv[argc - 1], 1);
-	// 		filein = open_file(argv[1], 2);
-	// 		dup2(filein, STDIN_FILENO);
-	// 	}
-	// 	while (i < argc - 2)
-	// 		child_process(argv[i++], envp);
-	// 	dup2(fileout, STDOUT_FILENO);
-	// 	execute(argv[argc - 2], envp);
-	// }
-	// usage();
-	return (0);
+	cmd = cmds->cmds->head;
+	while(cmd)
+	{
+		fds[0] = get_in_fd(cmd->val, cmds->files);
+		if (fds[0] == -1)
+			return (ft_error(-1, "mininshell: pipe: get in fd", 1));
+		fds[1] = get_out_fd(cmd->val);
+		if (fds[1] == -1)
+			return (ft_error(-1, "minishell: pipe: get out fd", 1));
+		if (cmd->next && pipe(pfd) == -1)
+			return (ft_error(-1, "minishell: pipe: pipe", 1));
+		if (cmd->next && fds[1] == STDOUT_FILENO)
+			fds[1] = pfd[1];
+		if (cmd != cmds->cmds->head && fds[0] == STDIN_FILENO)
+			fds[0] = pfd[0];
+		pid = ft_execve()
+		cmd = cmd->next;
+	}
+	return (pid);
 }

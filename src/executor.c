@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/09 18:25:14 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/10 14:53:25 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,18 @@
 ◦ exit with no options
 */
 
-int	check_if_builtins(t_group *cmds, t_info *info)
+int	check_if_builtins(t_ll_elem *cmd, t_info *info)
 {
-	t_ll_elem	*elems;
+	t_llist		*elems;
 	int			i;
 
 	i = 0;
-	elems = cmds->cmds->head;
+	elems = cmd->key;
 	while (i < 7)
 	{
-		if (ft_strcmp(((t_llist *)elems->key)->head->val, info->reserved_words[i]) == 0)
+		if (ft_strcmp(elems->head->val, info->reserved_words[i]) == 0)
 		{
-			debug_log("BUILTIN [%s]\n", ((t_llist *)elems->key)->head->val);
+			debug_log("BUILTIN [%s]\n", elems->head->val);
 			debug_log("RESERVED [%s]\n", info->reserved_words[i]);
 			debug_log("ok builtin\n");
 			return (i);
@@ -46,17 +46,17 @@ int	check_if_builtins(t_group *cmds, t_info *info)
 	return (i);
 }
 
-int	ft_acces(t_group *cmds, char *path, char **filepath)
+int	ft_acces(t_ll_elem *cmd, char *path, char **filepath)
 {
 	char		**filepaths;
 	char		*to_free;
-	t_ll_elem	*elems;
+	t_llist	*elems;
 
 	int	i = 0;
-	elems = cmds->cmds->head;
-	if (ft_strcontains(((t_llist *)elems->key)->head->val, '/') || NULL == path)
+	elems = cmd->key;
+	if (ft_strcontains(elems->head->val, '/') || NULL == path)
 	{
-		*filepath = ft_strcpy(((t_llist *)elems->key)->head->val);
+		*filepath = ft_strcpy(elems->head->val);
 		return (0);
 	}
 	filepaths = ft_strsplit(path, ":");
@@ -66,7 +66,7 @@ int	ft_acces(t_group *cmds, char *path, char **filepath)
 	{
 		// debug_log("PATH BEFORE: %s\n", filepaths[i]);
 		to_free = filepaths[i];
-		filepaths[i] = ft_strjoin2(filepaths[i], ((t_llist *)elems->key)->head->val, '/', 1);
+		filepaths[i] = ft_strjoin2(filepaths[i], elems->head->val, '/', 1);
 		debug_log("PATH AFTER: %s\n", filepaths[i]);
 		free(to_free);
 		if (!filepaths[i])
@@ -86,18 +86,18 @@ int	ft_acces(t_group *cmds, char *path, char **filepath)
 
 // int search_val(char *ret) 0 success 1 error
 
-int	create_argv(t_group *cmds, char ***args, char *path)
+int	create_argv(t_ll_elem *cmd, char ***args, char *path)
 {
 	t_ll_elem	*ptr;
-	t_ll_elem	*elems;
+	t_llist		*elems;
 	int			i;
 
 	i = 0;
-	elems = cmds->cmds->head;
-	*args = malloc(sizeof(char *) * (((t_llist *)elems->key)->size + 1));
+	elems = cmd->key;
+	*args = malloc(sizeof(char *) * (elems->size + 1));
 	if (!(*args))
 		ft_error(1, "minishell: create_argv: malloc argv", 1);
-	ptr = ((t_llist *)elems->key)->head->next;
+	ptr = elems->head->next;
 	(*args)[i++] = ft_strcpy(path);
 	while (ptr)
 	{
@@ -110,7 +110,7 @@ int	create_argv(t_group *cmds, char ***args, char *path)
 	return (0);
 }
 
-int	ft_execve(t_group *cmds, t_info *info, int in, int out)
+int	ft_execve(t_ll_elem *cmd, t_info *info, int fds[2])
 {
 	char		*path;
 	char		*filepath = NULL;
@@ -133,13 +133,13 @@ int	ft_execve(t_group *cmds, t_info *info, int in, int out)
 		return (pid);
 	}
 	debug_log("TRY REMAPFDS\n");
-	if (remap_fds(in, out))
+	if (remap_fds(fds[0], fds[1]))
 		exit(1);
 	debug_log("REMAPFDS OK\n");
 	path = llist_getval(info->envp_list, "PATH");
-	if (ft_acces(cmds, path, &filepath))
+	if (ft_acces(cmd, path, &filepath))
 		exit(1);
-	if (create_argv(cmds, &args, filepath))
+	if (create_argv(cmd, &args, filepath))
 		exit(1);
 	debug_log("execve\n");
 	debug_log("%s\n", filepath);

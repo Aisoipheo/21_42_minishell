@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/05 17:36:08 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/10 14:54:03 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int g_exit;
 //(t_llist *)elems->key)
 
 typedef struct s_info t_info;
-typedef int (*builtin_ptr)(t_llist *, t_info *);
+typedef int (*builtin_ptr)(t_llist *, t_info *, int fds[2]);
 
 struct s_info
 {
@@ -92,6 +92,7 @@ void	handler_term(t_info *info);
 pid_t	executor(t_group *cmds, t_info *info);
 pid_t	pipeline(t_group *cmds, t_info *info);
 int		ft_subshell(t_group *cmds, t_info *info);
+int		ft_execve(t_ll_elem *cmd, t_info *info, int fds[2]);
 int		create_heredoc(t_cmd_info *c_info, t_llist *files);
 
 int		ft_strncmp(const char *str1, const char *str2, size_t n);
@@ -101,13 +102,13 @@ int		ft_init(t_info *info, char *envp[]);
 int		ft_destroy(t_info *info);
 
 /* ============ Built-ins ============ */
-int			ft_echo(t_llist *args, t_info *info);
-int			ft_cd(t_llist *args, t_info *info);
-int			ft_pwd(t_llist *args, t_info *info);
-int			ft_export(t_llist *args, t_info *info);
-int			ft_unset(t_llist *args, t_info *info);
-int			ft_env(t_llist *args, t_info *info);
-int			ft_exit(t_llist *args, t_info *info);
+int			ft_echo(t_llist *args, t_info *info, int fds[2]);
+int			ft_cd(t_llist *args, t_info *info, int fds[2]);
+int			ft_pwd(t_llist *args, t_info *info, int fds[2]);
+int			ft_export(t_llist *args, t_info *info, int fds[2]);
+int			ft_unset(t_llist *args, t_info *info, int fds[2]);
+int			ft_env(t_llist *args, t_info *info, int fds[2]);
+int			ft_exit(t_llist *args, t_info *info, int fds[2]);
 /* ============ /Built-ins ============ */
 
 int			get_line(const char *prompt, char **line);
