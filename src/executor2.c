@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 16:45:33 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 18:19:46 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, int fds[2])
 	char		**args;
 	pid_t		pid;
 
-	if (info->envp_f && ft_rebuiltenvp(info) == -1)
-		return (-1);
 	pid = fork();
 	if (pid == -1)
 		ft_error(-1, "minishell: ft_execve: fork", 1);
@@ -59,35 +57,38 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, int fds[2])
 
 int	ft_execbuiltin(int idx, t_ll_elem *cmd, t_info *info, int fds[2])
 {
-	int		stdcopy[2];
-	int		ret;
+	int		pid;
 
-	stdcopy[0] = dup(STDIN_FILENO);
-	stdcopy[1] = dup(STDOUT_FILENO);
-	if (remap_fds(fds[0], fds[1]))
+	pid = fork();
+	if (pid == -1)
+		ft_error(-1, "minishell: ft_execve: fork", 1);
+	if (pid > 0)
 	{
-		close(stdcopy[0]);
-		close(stdcopy[1]);
-		return (ft_error(1, "minishell: execbuiltin: remap fds", 1));
+		debug_log("RET PID: %d\n", pid);
+		return (pid);
 	}
-	ret = (*info->f_ptrs[idx])(cmd->key, info);
-	dup2(stdcopy[0], STDIN_FILENO);
-	dup2(stdcopy[1], STDOUT_FILENO);
-	close(stdcopy[0]);
-	close(stdcopy[1]);
-	return (ret);
+	debug_log("TRY REMAPFDS\n");
+	if (remap_fds(fds[0], fds[1]))
+		exit(1);
+	debug_log("REMAPFDS OK\n");
+	exit((*info->f_ptrs[idx])(cmd->key, info));
 }
 
-int	ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2])
+int	ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2], int mode)
 {
 	int	i;
 
 	debug_log("CMD: %s\n", ((t_llist *)cmd->key)->head->val);
 	i = check_if_builtins(cmd, info);
 	debug_log("------[%d]------\n", i);
+	if (info->envp_f && ft_rebuiltenvp(info) == -1)
+		return (-1);
 	if (i == 7)
 		return (ft_execve(cmd, info, fds));
-	return (ft_execbuiltin(i, cmd, info, fds));
+	if (mode)
+		return (ft_execbuiltin(i, cmd, info, fds));
+	debug_log("call from shell\n");
+	return ((*info->f_ptrs[i])(cmd->key, info));
 }
 
 pid_t	executor(t_group *cmds, t_info *info)

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/12 16:39:39 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 18:10:38 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int	ft_common(t_group *cmds, t_info *info)
 	if (fds[1] == -1)
 		return (ft_error(-1, "minishell: get_out_fd", 1));
 	debug_log("ft_execve\n");
-	pid = ft_execcommon(cmds->cmds->head, info, fds);
+	pid = ft_execcommon(cmds->cmds->head, info, fds, 0);
 	if (fds[0] != STDIN_FILENO)
 		close(fds[0]);
 	if (fds[1] != STDOUT_FILENO)

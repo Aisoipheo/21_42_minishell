@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 16:42:37 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 18:16:40 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int		ft_acces(t_ll_elem *cmd, char *path, char **filepath);
 int		create_argv(t_ll_elem *cmd, char ***args, char *path);
 int		check_if_builtins(t_ll_elem *cmd, t_info *info);
 int		ft_execsubshell(t_ll_elem *cmd, t_info *info, int fds[2]);
-int		ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2]);
+int		ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2], int mode);
 int		ft_execve(t_ll_elem *cmd, t_info *info, int fds[2]);
 int		create_heredoc(t_cmd_info *c_info, t_llist *files);
 

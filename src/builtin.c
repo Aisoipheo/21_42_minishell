@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:54:25 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 15:00:15 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 18:26:06 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ int	ft_echo(t_llist *args, t_info *info)
 
 	(void)info;
 	arg = args->head->next;
-	is_n = ft_strcmp(arg->val, "-n") == 0;
+	is_n = 0;
 	if (args->size > 1)
 	{
+		is_n = ft_strcmp(arg->val, "-n") == 0;
 		if (is_n)
 			arg = arg->next;
 		while (arg)

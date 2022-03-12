@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 20:36:53 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/12 16:06:58 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 18:10:26 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ pid_t	pipeline(t_group *cmds, t_info *info)
 		if (((t_cmd_info *)cmd->val)->flags & CMD_SUBSHELL)
 			pid = ft_execsubshell(cmd, info, fds);
 		else
-			pid = ft_execcommon(cmd, info, fds);
+			pid = ft_execcommon(cmd, info, fds, 1);
 		ft_fdmanip2(pfd, fds, cmd, to_close);
 		cmd = cmd->next;
 	}
