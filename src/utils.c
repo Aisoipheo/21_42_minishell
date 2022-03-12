@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:56:16 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/05 15:34:15 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 16:46:25 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ static int	_ft_wlen(const char *s, const char *delim)
 char	**_ft_strdestroy2(char **str2, int j)
 {
 	int		i;
+
 	i = 0;
 	while (i < j)
 		free(str2[i++]);

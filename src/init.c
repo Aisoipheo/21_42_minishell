@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 17:33:11 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/05 16:52:09 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 16:07:57 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include "utils.h"
 #include <errno.h>
 
-static void	_ft_init_builtins(t_info *info) {
+static void	_ft_init_builtins(t_info *info)
+{
 	info->reserved_words[0] = "echo";
 	info->reserved_words[1] = "cd";
 	info->reserved_words[2] = "pwd";
@@ -47,4 +48,3 @@ int	ft_init(t_info *info, char *envp[])
 	_ft_init_builtins(info);
 	return (0);
 }
-

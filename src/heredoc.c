@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/09 17:47:59 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 16:08:06 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static int	heredoc_dstr(const char *msg, char *f, char *s, int fd)
 		free(s);
 	if (fd != -1)
 		close(fd);
-	// restore handler
 	if (msg)
 		return (ft_error(1, msg, 1));
 	return (0);
@@ -63,7 +62,7 @@ int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 	char	*s;
 
 	f = NULL;
-	s = ft_uint_to_str(files->size);
+	s = ft_uitoa(files->size);
 	fd = -1;
 	if (NULL == s)
 		return (heredoc_dstr("minishell: <<: to string conversion", f, s, fd));

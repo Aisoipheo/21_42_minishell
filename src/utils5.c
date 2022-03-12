@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:16:15 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/09 17:47:25 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 15:21:25 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	get_in_fd(t_cmd_info *c_info, t_llist *files)
 {
 	if (!c_info->in_file)
 		return (0);
-	if(c_info->flags & CMD_INSOURCE && create_heredoc(c_info, files))
+	if (c_info->flags & CMD_INSOURCE && create_heredoc(c_info, files))
 		return (-1);
 	return (open(c_info->in_file, O_RDONLY, 0644));
 }

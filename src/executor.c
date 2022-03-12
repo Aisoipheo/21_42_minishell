@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/10 17:32:06 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 16:39:39 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,35 @@ int	check_if_builtins(t_ll_elem *cmd, t_info *info)
 	return (i);
 }
 
+static int	ft_iterfps(char	**fps, char	**fp, t_llist *elems)
+{
+	int		i;
+	char	*to_free;
+
+	i = 0;
+	while (fps[i] != NULL)
+	{
+		to_free = fps[i];
+		fps[i] = ft_strjoin2(fps[i], elems->head->val, '/', 1);
+		free(to_free);
+		if (!fps[i])
+			return (ft_error(1, "minishell: join path", 1));
+		if ((access(fps[i], X_OK)) == 0)
+		{
+			*fp = ft_strcpy(fps[i]);
+			ft_free_char2dem(fps, -1);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
 int	ft_acces(t_ll_elem *cmd, char *path, char **filepath)
 {
 	char		**filepaths;
-	char		*to_free;
-	t_llist	*elems;
+	t_llist		*elems;
 
-	int	i = 0;
 	elems = cmd->key;
 	if (ft_strcontains(elems->head->val, '/') || NULL == path)
 	{
@@ -62,29 +84,12 @@ int	ft_acces(t_ll_elem *cmd, char *path, char **filepath)
 	filepaths = ft_strsplit(path, ":");
 	if (!filepaths)
 		ft_error(1, "malloc error for strsplit", 1);
-	while (filepaths[i] != NULL)
-	{
-		// debug_log("PATH BEFORE: %s\n", filepaths[i]);
-		to_free = filepaths[i];
-		filepaths[i] = ft_strjoin2(filepaths[i], elems->head->val, '/', 1);
-		debug_log("PATH AFTER: %s\n", filepaths[i]);
-		free(to_free);
-		if (!filepaths[i])
-			return(ft_error(1, "minishell: join path", 1));
-		if ((access(filepaths[i], X_OK)) == 0)
-		{
-			*filepath = ft_strcpy(filepaths[i]);
-			debug_log("FILEPATH: %s\n", *filepath);
-			return (0);
-		}
-		i++;
-	}
-	ft_free_char2dem(filepaths, i);
+	if (ft_iterfps(filepaths, filepath, elems) == 0)
+		return (0);
+	ft_free_char2dem(filepaths, -1);
 	*filepath = NULL;
 	return (ft_error(1, "minishell: command not found", 0));
 }
-
-// int search_val(char *ret) 0 success 1 error
 
 int	create_argv(t_ll_elem *cmd, char ***args, char *path)
 {
@@ -108,77 +113,6 @@ int	create_argv(t_ll_elem *cmd, char ***args, char *path)
 	}
 	(*args)[i] = NULL;
 	return (0);
-}
-
-int	ft_execve(t_ll_elem *cmd, t_info *info, int fds[2])
-{
-	char		*path;
-	char		*filepath = NULL;
-	char		**args;
-
-	if (info->envp_f)
-	{
-		ft_free_char2dem(info->envp, -1);
-		info->envp = ft_compose_envp(info->envp_list);
-		if (NULL == info->envp)
-			return (ft_error(-1, "minishell: ft_execve: compose_envp", 1));
-		info->envp_f = 0;
-	}
-	pid_t pid = fork();
-	if (pid == -1)
-		ft_error(-1, "minishell: ft_execve: fork", 1);
-	if (pid > 0)
-	{
-		debug_log("RET PID: %d\n", pid);
-		return (pid);
-	}
-	debug_log("TRY REMAPFDS\n");
-	if (remap_fds(fds[0], fds[1]))
-		exit(1);
-	debug_log("REMAPFDS OK\n");
-	path = llist_getval(info->envp_list, "PATH");
-	if (ft_acces(cmd, path, &filepath))
-		exit(1);
-	if (create_argv(cmd, &args, filepath))
-		exit(1);
-	debug_log("execve\n");
-	debug_log("%s\n", filepath);
-	if (execve(filepath, args, info->envp) == -1)
-		exit(ft_error(1, "minishell: execve", 1));
-	return (1);
-}
-
-int	ft_execbuiltin(int idx, t_ll_elem *cmd, t_info *info, int fds[2])
-{
-	int		stdcopy[2];
-	int		ret;
-
-	stdcopy[0] = dup(STDIN_FILENO);
-	stdcopy[1] = dup(STDOUT_FILENO);
-	if (remap_fds(fds[0], fds[1]))
-	{
-		close(stdcopy[0]);
-		close(stdcopy[1]);
-		return (ft_error(1, "minishell: execbuiltin: remap fds", 1));
-	}
-	ret =  (*info->f_ptrs[idx])(cmd->key, info);
-	dup2(stdcopy[0], STDIN_FILENO);
-	dup2(stdcopy[1], STDOUT_FILENO);
-	close(stdcopy[0]);
-	close(stdcopy[1]);
-	return (ret);
-}
-
-int	ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2])
-{
-	int	i;
-
-	debug_log("CMD: %s\n", ((t_llist *)cmd->key)->head->val);
-	i = check_if_builtins(cmd, info);
-	debug_log("------[%d]------\n", i);
-	if (i == 7)
-		return (ft_execve(cmd, info, fds));
-	return (ft_execbuiltin(i, cmd, info, fds));
 }
 
 int	ft_common(t_group *cmds, t_info *info)
@@ -206,39 +140,9 @@ int	ft_common(t_group *cmds, t_info *info)
 //			cmd1; cmd1 < infile; cmd1 << delimiter;
 //		Аут:
 //			cmd1; cmd1 > outfile; cmd1 >> outfile;
-/*ft_common
-{
-fd_in = STDIN_FILENO;
-fd_out = STDOUT_FILENO;
-if (file_in)
-	fd_in
-if (file_out)
-	fd_out
-ft_exec(cmds, info, fd_in, fd_out);
-}
-*/
-
-/*ft_pipe
-{
-	// ebanina c файлами и пайпами
-	ft_exec(cmds, info, fd_in, fd_out)
-}
-*/
-
-pid_t	executor(t_group *cmds, t_info *info)
-{
-	// debug_log("---[%d]---\n", builtin_index);
-	if (PRS_PIPELINE & cmds->type) // проверка на пайп ВСЕ ОК
-		return (pipeline(cmds, info));
-	if (((t_cmd_info *)cmds->cmds->head->val)->flags & CMD_SUBSHELL) // проверка на сабшелл ВСЕ ОК
-		return (ft_subshell(cmds, info));
-	return (ft_common(cmds, info));
-}
-
-
 
 //is pipe? execute pipe
-//						потому что в функции пайплайна будут вызываться все последующие функции
+//	потому что в функции пайплайна будут вызываться все последующие функции
 //is sub? execute sub
 //is builtin? execute builtin
 //execute default

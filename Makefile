@@ -24,6 +24,7 @@ C_FILES				= main.c\
 					signal.c\
 					utils_libft.c\
 					executor.c\
+					executor2.c\
 					pipeline.c\
 					subshell.c\
 					builtin.c\

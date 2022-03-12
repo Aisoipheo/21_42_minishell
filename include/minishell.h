@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/10 17:05:11 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 16:42:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,39 +28,27 @@
 # define DEBUG_COLOUR "\033[1;30m"
 # define RESET_COLOUR "\033[0m"
 
-void debug_log(const char *fmt, ...);
+void	debug_log(const char *fmt, ...);
 
 # define CMD_APPEND 0b001
 # define CMD_INSOURCE 0b010
 # define CMD_SUBSHELL 0b100
 
-int g_exit;
+int						g_exit;
 
-// f1(char **ar, function_ptr *f) {
-// 	ar[0] = "echo";
-// 	f[0] = &ft_echo;
-// 	ar[1] = "cd";
-// 	f[1] = &ft_cd;
-// 	f2()
-// }
-
-//(t_llist *)elems->key)
-
-typedef struct s_info t_info;
-typedef int (*builtin_ptr)(t_llist *, t_info *);
+typedef struct s_info	t_info;
+typedef int				(*t_builtin_ptr)(t_llist *, t_info *);
 
 struct s_info
 {
-	volatile sig_atomic_t		c;
 	char						exit_f;
 	char						envp_f;
 	char						**envp;
 	char						*g_exit_str;
 	char						*reserved_words[7];
-	builtin_ptr					f_ptrs[7];
+	t_builtin_ptr				f_ptrs[7];
 	t_llist						*envp_list;
 };
-
 
 typedef struct s_cmd_info
 {
@@ -68,7 +56,7 @@ typedef struct s_cmd_info
 	char	*out_file;
 	char	*delim;
 	int		flags;
-	int		_shlvl; //dont touch it
+	int		_shlvl;
 }	t_cmd_info;
 
 typedef struct s_group
@@ -78,12 +66,12 @@ typedef struct s_group
 	t_llist		*files;
 }	t_group;
 
-t_group		*ft_group_new(int type);
-void		ft_group_free(void *group);
+t_group	*ft_group_new(int type);
+void	ft_group_free(void *group);
 
 /* ============ Environment ============ */
-int			ft_parse_envp(t_llist *list, char *envp[]);
-char		**ft_compose_envp(t_llist *list);
+int		ft_parse_envp(t_llist *list, char *envp[]);
+char	**ft_compose_envp(t_llist *list);
 /* ============ /Environqment ============ */
 
 void	handler(int sig);
@@ -91,7 +79,11 @@ void	handler_term(t_info *info);
 
 pid_t	executor(t_group *cmds, t_info *info);
 pid_t	pipeline(t_group *cmds, t_info *info);
+int		ft_common(t_group *cmds, t_info *info);
 int		ft_subshell(t_group *cmds, t_info *info);
+int		ft_acces(t_ll_elem *cmd, char *path, char **filepath);
+int		create_argv(t_ll_elem *cmd, char ***args, char *path);
+int		check_if_builtins(t_ll_elem *cmd, t_info *info);
 int		ft_execsubshell(t_ll_elem *cmd, t_info *info, int fds[2]);
 int		ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2]);
 int		ft_execve(t_ll_elem *cmd, t_info *info, int fds[2]);
@@ -104,15 +96,15 @@ int		ft_init(t_info *info, char *envp[]);
 int		ft_destroy(t_info *info);
 
 /* ============ Built-ins ============ */
-int			ft_echo(t_llist *args, t_info *info);
-int			ft_cd(t_llist *args, t_info *info);
-int			ft_pwd(t_llist *args, t_info *info);
-int			ft_export(t_llist *args, t_info *info);
-int			ft_unset(t_llist *args, t_info *info);
-int			ft_env(t_llist *args, t_info *info);
-int			ft_exit(t_llist *args, t_info *info);
+int		ft_echo(t_llist *args, t_info *info);
+int		ft_cd(t_llist *args, t_info *info);
+int		ft_pwd(t_llist *args, t_info *info);
+int		ft_export(t_llist *args, t_info *info);
+int		ft_unset(t_llist *args, t_info *info);
+int		ft_env(t_llist *args, t_info *info);
+int		ft_exit(t_llist *args, t_info *info);
 /* ============ /Built-ins ============ */
 
-int			get_line(const char *prompt, char **line);
+int		get_line(const char *prompt, char **line);
 
 #endif

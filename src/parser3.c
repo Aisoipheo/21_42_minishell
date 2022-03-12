@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/09 18:18:57 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 16:04:51 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,8 +225,8 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 {
 	t_ll_elem	*ptr;
 	int			expect;
-	int			mode;
 	int			sig;
+	int			pid2;
 	pid_t		pid;
 
 	expect = 0;
@@ -243,8 +243,13 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 				return (1);
 			if (pid > 0)
 			{
-				waitpid(pid, &sig, 0);
-				g_exit	= WEXITSTATUS(sig);
+				pid2 = 1;
+				while (pid2 > 0)
+				{
+					pid2 = waitpid(0, &sig, 0);
+					if (pid == pid2)
+						g_exit	= WEXITSTATUS(sig);
+				}
 			}
 			if (pid == 0)
 				g_exit = 0;
@@ -253,12 +258,10 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 		}
 		else
 		{
-			mode = (int)(ptr->key);
-			debug_log("PID: %d STATUS: %d\n", pid, WEXITSTATUS(sig));
-			if (pid > 0 && ((WEXITSTATUS(sig) == 0 && mode == LX_IF_OR)
-				|| (WEXITSTATUS(sig) != 0 && mode == LX_IF_AND)))
+			debug_log("PID: %d STATUS: %d MODE:%s \n", pid, g_exit, _lx_get_name((int)ptr->key));
+			if ((g_exit == 0 && ((int)ptr->key == LX_IF_OR))
+			|| (g_exit != 0 && ((int)ptr->key == LX_IF_AND)))
 				return (0);
-			// if pid == 0 && g_exit == 0
 			expect = 0;
 		}
 		ptr = ptr->next;

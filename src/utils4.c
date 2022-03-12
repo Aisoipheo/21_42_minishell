@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/10 17:38:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/12 15:33:41 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,21 +57,20 @@ char	*ft_itoa(int n)
 
 	cnt = 0;
 	i = n;
-	while(i)
+	while (i)
 	{
 		++cnt;
 		i /= 10;
 	}
 	i = n < 0;
-	if (cnt == 0)
-		cnt = 1;
+	cnt += (cnt == 0);
 	s = (char *)malloc(sizeof(char) * (cnt + 1 + i));
 	if (NULL == s)
 		return (NULL);
 	s[cnt + i] = '\0';
 	if (n < 0)
 		s[0] = '-';
-	while(cnt--)
+	while (cnt--)
 	{
 		s[cnt + i] = '0' + ft_abs(n % 10);
 		n /= 10;
@@ -79,7 +78,7 @@ char	*ft_itoa(int n)
 	return (s);
 }
 
-char	*ft_uint_to_str(unsigned int n)
+char	*ft_uitoa(unsigned int n)
 {
 	char			*s;
 	unsigned int	cnt;
@@ -87,7 +86,7 @@ char	*ft_uint_to_str(unsigned int n)
 
 	cnt = 0;
 	i = n;
-	while(i)
+	while (i)
 	{
 		++cnt;
 		i /= 10;
@@ -108,7 +107,6 @@ char	*ft_uint_to_str(unsigned int n)
 
 int	remap_fds(int in, int out)
 {
-	debug_log("remap in: %d out %d\n", in, out);
 	if (in != STDIN_FILENO)
 	{
 		if (dup2(in, STDIN_FILENO) == -1)
@@ -129,7 +127,8 @@ int	remap_fds(int in, int out)
 // DEBUG
 #include <stdarg.h>
 void	debug_log(const char *fmt, ...) {
-	va_list args;
+	va_list	args;
+
 	va_start(args, fmt);
 	write(STDOUT_FILENO, DEBUG_COLOUR, 8);
 	vprintf(fmt, args);
