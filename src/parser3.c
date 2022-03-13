@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 18:42:27 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 18:19:33 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	}
 	debug_log("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
 	if ((args->size == 0 && info->out_file == NULL && info->in_file == NULL))
-		return (ft_error(1, "minishell: parse error near `|'", 0));
+		return (ft_error(1, "minishell: empty cmd", 0));
 	if (h == NULL || (int)h->key == LX_PIPE)
 	{
 		if (llist_push(cmds, args, info))

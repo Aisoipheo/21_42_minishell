@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 16:33:29 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 17:00:17 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,10 @@ int	ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode)
 {
 	int	i;
 
-	debug_log("CMD: %s\n", ((t_llist *)cmd->key)->head->val);
+	if (((t_llist *)cmd->key)->size != 0)
+		debug_log("CMD: %s\n", ((t_llist *)cmd->key)->head->val);
+	else
+		return (0);
 	i = check_if_builtins(cmd, info);
 	debug_log("------[%d]------\n", i);
 	if (info->envp_f && ft_rebuiltenvp(info) == -1)

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 16:26:32 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 18:30:48 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,12 @@ typedef struct s_fd
 	int		pfd[2];
 	int		fds[2];
 }	t_fd;
+
+typedef struct s_expi
+{
+	unsigned int	size;
+	int				f;
+}	t_expi;
 
 t_group	*ft_group_new(int type);
 void	ft_group_free(void *group);

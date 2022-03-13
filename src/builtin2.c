@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/10 17:07:21 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 18:15:31 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ int	ft_export(t_llist *args, t_info *info)
 	{
 		if (ft_strslice((char *)ptr->val, "=", &a, &b))
 			return (ft_error(-1, "minishell: export: parse", 1));
-		if (llist_set(info->envp_list, a, b))
+		debug_log("<%s>=<%s>\n", a, b);
+		if (*a == '\0' || *b == '\0')
+			write(STDERR_FILENO, "minishell: export: not valid", 29);
+		else if (llist_set(info->envp_list, a, b))
 			return (ft_error(-1, "minishell: export: set", 1));
 		ptr = ptr->next;
 	}
