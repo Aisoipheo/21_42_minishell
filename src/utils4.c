@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 15:33:41 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 15:47:21 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ int	remap_fds(int in, int out)
 			ft_error(1, "minishell: dup2: mapping to (stdin)", 1);
 		if (close(in) == -1)
 			ft_error(1, "minishell: close: mapping to (stdin)", 1);
+		debug_log("remap close1 %d\n", in);
 	}
 	if (out != STDOUT_FILENO)
 	{
@@ -120,6 +121,7 @@ int	remap_fds(int in, int out)
 			ft_error(1, "minishell: dup2: mapping to (stdout)", 1);
 		if (close(out) == -1)
 			ft_error(1, "minishell: close: mapping to (stdout)", 1);
+		debug_log("remap close2 %d\n", out);
 	}
 	return (0);
 }
@@ -130,8 +132,8 @@ void	debug_log(const char *fmt, ...) {
 	va_list	args;
 
 	va_start(args, fmt);
-	write(STDOUT_FILENO, DEBUG_COLOUR, 8);
-	vprintf(fmt, args);
-	write(STDOUT_FILENO, RESET_COLOUR, 5);
+	write(STDERR_FILENO, DEBUG_COLOUR, 8);
+	vfprintf(stderr, fmt, args);
+	write(STDERR_FILENO, RESET_COLOUR, 5);
 	va_end(args);
 }

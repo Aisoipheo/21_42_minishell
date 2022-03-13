@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:07:58 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/10 16:43:15 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 16:41:01 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parser.h"
 #include "utils.h"
 
-int	ft_execsubshell(t_ll_elem *cmd, t_info *info, int fds[2])
+int	ft_execsubshell(t_ll_elem *cmd, t_info *info, t_fd *fd)
 {
 	int		pid;
 
@@ -31,26 +31,27 @@ int	ft_execsubshell(t_ll_elem *cmd, t_info *info, int fds[2])
 		return (-1);
 	if (pid > 0)
 		return (pid);
-	if (remap_fds(fds[0], fds[1]))
+	if (remap_fds(fd->fds[0], fd->fds[1]))
 		return (-1);
+	close(fd->pfd[0]);
 	exit(prs_parse(cmd->key, info));
 }
 
 int	ft_subshell(t_group *cmds, t_info *info)
 {
-	int		fds[2];
+	t_fd	fd;
 	int		pid;
 
-	fds[0] = get_in_fd(cmds->cmds->head->val, cmds->files);
-	if (fds[0] == -1)
+	fd.fds[0] = get_in_fd(cmds->cmds->head->val, cmds->files);
+	if (fd.fds[0] == -1)
 		return (ft_error(-1, "minishell: subshell: get_in_fd", 1));
-	fds[1] = get_out_fd(cmds->cmds->head->val);
-	if (fds[1] == -1)
+	fd.fds[1] = get_out_fd(cmds->cmds->head->val);
+	if (fd.fds[1] == -1)
 		return (ft_error(-1, "minishell: subshell: get_out_fd", 1));
-	pid = ft_execsubshell(cmds->cmds->head, info, fds);
-	if (fds[0] != STDIN_FILENO)
-		close(fds[0]);
-	if (fds[1] != STDOUT_FILENO)
-		close(fds[1]);
+	pid = ft_execsubshell(cmds->cmds->head, info, &fd);
+	if (fd.fds[0] != STDIN_FILENO)
+		close(fd.fds[0]);
+	if (fd.fds[1] != STDOUT_FILENO)
+		close(fd.fds[1]);
 	return (pid);
 }

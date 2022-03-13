@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 18:19:46 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 16:33:29 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_rebuiltenvp(t_info *info)
 	return (0);
 }
 
-int	ft_execve(t_ll_elem *cmd, t_info *info, int fds[2])
+int	ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd)
 {
 	char		*path;
 	char		*filepath;
@@ -40,8 +40,9 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, int fds[2])
 		return (pid);
 	}
 	debug_log("TRY REMAPFDS\n");
-	if (remap_fds(fds[0], fds[1]))
+	if (remap_fds(fd->fds[0], fd->fds[1]))
 		exit(1);
+	close(fd->pfd[0]);
 	debug_log("REMAPFDS OK\n");
 	path = llist_getval(info->envp_list, "PATH");
 	if (ft_acces(cmd, path, &filepath))
@@ -55,7 +56,7 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, int fds[2])
 	return (1);
 }
 
-int	ft_execbuiltin(int idx, t_ll_elem *cmd, t_info *info, int fds[2])
+int	ft_execbuiltin(int idx, t_ll_elem *cmd, t_info *info, t_fd *fd)
 {
 	int		pid;
 
@@ -68,13 +69,14 @@ int	ft_execbuiltin(int idx, t_ll_elem *cmd, t_info *info, int fds[2])
 		return (pid);
 	}
 	debug_log("TRY REMAPFDS\n");
-	if (remap_fds(fds[0], fds[1]))
+	if (remap_fds(fd->fds[0], fd->fds[1]))
 		exit(1);
+	close(fd->pfd[0]);
 	debug_log("REMAPFDS OK\n");
 	exit((*info->f_ptrs[idx])(cmd->key, info));
 }
 
-int	ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2], int mode)
+int	ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode)
 {
 	int	i;
 
@@ -84,11 +86,11 @@ int	ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2], int mode)
 	if (info->envp_f && ft_rebuiltenvp(info) == -1)
 		return (-1);
 	if (i == 7)
-		return (ft_execve(cmd, info, fds));
+		return (ft_execve(cmd, info, fd));
 	if (mode)
-		return (ft_execbuiltin(i, cmd, info, fds));
+		return (ft_execbuiltin(i, cmd, info, fd));
 	debug_log("call from shell\n");
-	return ((*info->f_ptrs[i])(cmd->key, info));
+	return (ft_callbuiltin(i, cmd, info, fd));
 }
 
 pid_t	executor(t_group *cmds, t_info *info)

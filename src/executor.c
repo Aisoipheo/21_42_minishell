@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/12 18:10:38 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 16:39:09 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,21 +117,21 @@ int	create_argv(t_ll_elem *cmd, char ***args, char *path)
 
 int	ft_common(t_group *cmds, t_info *info)
 {
-	int		fds[2];
+	t_fd	fd;
 	int		pid;
 
-	fds[0] = get_in_fd(cmds->cmds->head->val, cmds->files);
-	if (fds[0] == -1)
+	fd.fds[0] = get_in_fd(cmds->cmds->head->val, cmds->files);
+	if (fd.fds[0] == -1)
 		return (ft_error(-1, "minishell: get_in_fd", 1));
-	fds[1] = get_out_fd(cmds->cmds->head->val);
-	if (fds[1] == -1)
+	fd.fds[1] = get_out_fd(cmds->cmds->head->val);
+	if (fd.fds[1] == -1)
 		return (ft_error(-1, "minishell: get_out_fd", 1));
 	debug_log("ft_execve\n");
-	pid = ft_execcommon(cmds->cmds->head, info, fds, 0);
-	if (fds[0] != STDIN_FILENO)
-		close(fds[0]);
-	if (fds[1] != STDOUT_FILENO)
-		close(fds[1]);
+	pid = ft_execcommon(cmds->cmds->head, info, &fd, 0);
+	if (fd.fds[0] != STDIN_FILENO)
+		close(fd.fds[0]);
+	if (fd.fds[1] != STDOUT_FILENO)
+		close(fd.fds[1]);
 	return (pid);
 }
 

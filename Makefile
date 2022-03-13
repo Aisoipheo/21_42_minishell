@@ -25,6 +25,7 @@ C_FILES				= main.c\
 					utils_libft.c\
 					executor.c\
 					executor2.c\
+					executor3.c\
 					pipeline.c\
 					subshell.c\
 					builtin.c\
@@ -37,11 +38,11 @@ SRCS				= $(addprefix $(SRCS_DIR)/, $(C_FILES))
 OBJS				= $(addprefix $(OBJS_DIR)/, $(C_FILES:.c=.o))
 DEPENDENCIES		= $(OBJS:.o=.d)
 
-RL_DIR				= /Users/$(USER)/.brew/Cellar/readline/8.1.2
+RL_DIR				= /Users/$(USER)/.brew/Cellar/readline/8.1.?
 
 CC					= gcc
-CFLAGS				= -g -Wall -Werror -Wextra -I$(HDRS_DIR) -I$(RL_DIR)/include/
-LFLAGS				= $(CFLAGS) -lreadline -L$(RL_DIR)/lib/
+CFLAGS				= -g -Wall -Werror -Wextra -I $(HDRS_DIR) -I $(RL_DIR)/include/
+LFLAGS				= $(CFLAGS) -lreadline -L $(RL_DIR)/lib/
 
 AR					= ar
 ARFLAGS				= rcs

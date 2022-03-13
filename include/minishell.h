@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 18:16:40 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/13 16:26:32 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,12 @@ typedef struct s_group
 	t_llist		*files;
 }	t_group;
 
+typedef struct s_fd
+{
+	int		pfd[2];
+	int		fds[2];
+}	t_fd;
+
 t_group	*ft_group_new(int type);
 void	ft_group_free(void *group);
 
@@ -84,9 +90,10 @@ int		ft_subshell(t_group *cmds, t_info *info);
 int		ft_acces(t_ll_elem *cmd, char *path, char **filepath);
 int		create_argv(t_ll_elem *cmd, char ***args, char *path);
 int		check_if_builtins(t_ll_elem *cmd, t_info *info);
-int		ft_execsubshell(t_ll_elem *cmd, t_info *info, int fds[2]);
-int		ft_execcommon(t_ll_elem *cmd, t_info *info, int fds[2], int mode);
-int		ft_execve(t_ll_elem *cmd, t_info *info, int fds[2]);
+int		ft_callbuiltin(int idx, t_ll_elem *cmd, t_info *info, t_fd *fd);
+int		ft_execsubshell(t_ll_elem *cmd, t_info *info, t_fd *fd);
+int		ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode);
+int		ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd);
 int		create_heredoc(t_cmd_info *c_info, t_llist *files);
 
 int		ft_strncmp(const char *str1, const char *str2, size_t n);
