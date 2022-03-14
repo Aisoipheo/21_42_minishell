@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 16:56:46 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:03:32 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_rebuiltenvp(t_info *info)
 	ft_free_char2dem(info->envp, -1);
 	info->envp = ft_compose_envp(info->envp_list);
 	if (NULL == info->envp)
-		return (ft_error(-1, "minishell: ft_execve: compose_envp", 1));
+		return (ft_error(-1, "minishell: ft_execve: compose_envp", 1, 0));
 	info->envp_f = 0;
 	return (0);
 }
@@ -33,7 +33,7 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd)
 
 	pid = fork();
 	if (pid == -1)
-		ft_error(-1, "minishell: ft_execve: fork", 1);
+		ft_error(-1, "minishell: ft_execve: fork", 1, 0);
 	if (pid > 0)
 	{
 		debug_log("RET PID: %d\n", pid);
@@ -52,7 +52,7 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd)
 	debug_log("execve\n");
 	debug_log("%s\n", filepath);
 	if (execve(filepath, args, info->envp) == -1)
-		exit(ft_error(1, "minishell: execve", 1));
+		exit(ft_error(127, "minishell: execve", 1, 0));
 	return (1);
 }
 
@@ -62,7 +62,7 @@ int	ft_execbuiltin(int idx, t_ll_elem *cmd, t_info *info, t_fd *fd)
 
 	pid = fork();
 	if (pid == -1)
-		ft_error(-1, "minishell: ft_execve: fork", 1);
+		ft_error(-1, "minishell: ft_execve: fork", 1, 0);
 	if (pid > 0)
 	{
 		debug_log("RET PID: %d\n", pid);

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 17:28:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/05 17:37:39 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:08:39 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static	int	read_until_nl(char	**line, t_info *info)
 	*line = NULL;
 	b = llist_new(NULL, NULL, free);
 	if (NULL == b)
-		return (ft_error(1, "minishell: get_line", 1));
+		return (ft_error(1, "minishell: get_line", 1, 0));
 	while (info->c)
 	{
 		if (read(STDIN_FILENO, buff, 256) == -1)
@@ -33,6 +33,6 @@ static	int	read_until_nl(char	**line, t_info *info)
 int	get_line(const char *prompt, char **line, t_info *info)
 {
 	if (write(STDOUT_FILENO, prompt, ft_strlen(prompt)) == -1)
-		return (ft_error(1, "minishell: get_line", 1));
+		return (ft_error(1, "minishell: get_line", 1, 0));
 	return (read_until_nl(line, info));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 16:56:02 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/14 17:40:46 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	debug_log(const char *fmt, ...);
 # define CMD_INSOURCE 0b010
 # define CMD_SUBSHELL 0b100
 
-unsigned char			g_exit;
+int			g_exit;
 
 typedef struct s_info	t_info;
 typedef int				(*t_builtin_ptr)(t_llist *, t_info *);

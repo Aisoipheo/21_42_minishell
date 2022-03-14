@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 20:36:53 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/13 16:38:39 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:15:10 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ static int	ft_fdmanip1(t_fd *fd, t_ll_elem *cmd, t_group *cmds)
 {
 	fd->fds[0] = get_in_fd(cmd->val, cmds->files);
 	if (fd->fds[0] == -1)
-		return (ft_error(-1, "mininshell: pipe: get in fd", 1));
+		return (ft_error(-1, "mininshell: pipe: get in fd", 1, 0));
 	fd->fds[1] = get_out_fd(cmd->val);
 	if (fd->fds[1] == -1)
-		return (ft_error(-1, "minishell: pipe: get out fd", 1));
+		return (ft_error(-1, "minishell: pipe: get out fd", 1, 0));
 	if (cmd != cmds->cmds->head && fd->fds[0] == STDIN_FILENO)
 		fd->fds[0] = fd->pfd[0];
 	return (0);
@@ -68,7 +68,7 @@ pid_t	pipeline(t_group *cmds, t_info *info)
 			return (-1);
 		to_close = fd.pfd[0];
 		if (cmd->next && pipe(fd.pfd) == -1)
-			return (ft_error(-1, "minishell: pipe: pipe", 1));
+			return (ft_error(-1, "minishell: pipe: pipe", 1, 0));
 		if (cmd->next && fd.fds[1] == STDOUT_FILENO)
 			fd.fds[1] = fd.pfd[1];
 		if (((t_cmd_info *)cmd->val)->flags & CMD_SUBSHELL)

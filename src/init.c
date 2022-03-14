@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 17:33:11 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 16:07:57 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:09:29 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	ft_init(t_info *info, char *envp[])
 	info->envp = NULL;
 	info->envp_list = llist_new(llist_str_kcmp, free, free);
 	if (info->envp_list == NULL)
-		return (ft_error(1, "minishell: ft_init", 1));
+		return (ft_error(1, "minishell: ft_init", 1, 0));
 	if (ft_parse_envp(info->envp_list, envp))
 		return (1);
 	_ft_init_builtins(info);

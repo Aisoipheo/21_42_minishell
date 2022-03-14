@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 16:47:43 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:18:46 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	_prs_handle_token2(t_ll_elem **c, t_cmd_info *info)
 			info->flags &= ~CMD_INSOURCE;
 		*c = _prs_next_token(*c);
 		if (NULL == *c || (int)(*c)->key != LX_WORD)
-			return (ft_error(1, "minishell: parse error near token `<' or `<<'", 0));
+			return (ft_error(1, "minishell: parse error near token `<' or `<<'", 0, 258));
 		info->in_file = (*c)->val;
 		return (0);
 	}
@@ -71,7 +71,7 @@ static int	_prs_handle_token2(t_ll_elem **c, t_cmd_info *info)
 			info->flags &= ~CMD_APPEND;
 		*c = _prs_next_token(*c);
 		if (NULL == *c || (int)(*c)->key != LX_WORD)
-			return (ft_error(1, "minishell: parse error near token `>' or `>>'", 0));
+			return (ft_error(1, "minishell: parse error near token `>' or `>>'", 0, 258));
 		info->out_file = (*c)->val;
 		return (0);
 	}
@@ -81,7 +81,7 @@ static int	_prs_handle_token2(t_ll_elem **c, t_cmd_info *info)
 static int	_prs_handle_token(t_ll_elem **c, t_cmd_info *info, t_llist *args)
 {
 	if (NULL == (*c)) //might delete later
-		return (ft_error(1, "ur bad >:(", 0));
+		return (ft_error(1, "ur bad >:(", 0, 999));
 	if ((int)(*c)->key == LX_PARN_L || (int)(*c)->key == LX_PARN_R)
 	{
 		info->_shlvl += ((int)(*c)->key == LX_PARN_L) + (-1) * ((int)(*c)->key == LX_PARN_R);
@@ -95,9 +95,9 @@ static int	_prs_handle_token(t_ll_elem **c, t_cmd_info *info, t_llist *args)
 	if ((int)(*c)->key == LX_SEP)
 		return (0);
 	if ((info->flags & CMD_SUBSHELL) && info->_shlvl == 0 && (int)(*c)->key == LX_WORD)
-		return (ft_error(1, "minishell: unexpected token after `(subshell)'", 0));
+		return (ft_error(1, "minishell: unexpected token after `(subshell)'", 0, 258));
 	if (((int)(*c)->key == LX_WORD || info->_shlvl > 0) && llist_push(args, (*c)->key, (*c)->val))
-		return (ft_error(1, "minishell: _prs_handle_token", 1));
+		return (ft_error(1, "minishell: _prs_handle_token", 1, 0));
 	if (info->_shlvl > 0)
 		return (0);
 	return (_prs_handle_token2(c, info));
@@ -111,7 +111,7 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	info = malloc(sizeof(t_cmd_info));
 	args = llist_new(NULL, NULL, NULL);
 	if (!info || !args)
-		return (ft_error(1, "minishell: _prs_group_cmd", 1));
+		return (ft_error(1, "minishell: _prs_group_cmd", 1, 0));
 	info->in_file = NULL;
 	info->out_file = NULL;
 	info->flags = 0;
@@ -126,11 +126,11 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	}
 	debug_log("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
 	if ((args->size == 0 && info->out_file == NULL && info->in_file == NULL))
-		return (ft_error(1, "minishell: empty cmd", 0));
+		return (ft_error(1, "minishell: syntax error", 0, 258));
 	if (h == NULL || (int)h->key == LX_PIPE)
 	{
 		if (llist_push(cmds, args, info))
-			return (ft_error(1, "minishell: _prs_group_cmd", 1));
+			return (ft_error(1, "minishell: _prs_group_cmd", 1, 0));
 		return (0);
 	}
 	debug_log("[parser3.c] PRS_GROUP_CMD free %p %p\n", args, info);
@@ -151,7 +151,7 @@ int	_prs_group_pipe(t_llist *expanded, t_llist *cmds)
 		while (curr != NULL && (int)curr->key != LX_PIPE)
 			curr = curr->next;
 		if (curr && curr->next == NULL)
-			return (ft_error(1, "minishell: parse error near `|'", 0));
+			return (ft_error(1, "minishell: parse error near `|'", 0, 258));
 		if (curr)
 			curr = curr->next;
 	}

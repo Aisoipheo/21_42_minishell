@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/13 17:30:07 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:01:16 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	ft_iterfps(char	**fps, char	**fp, t_llist *elems)
 		fps[i] = ft_strjoin2(fps[i], elems->head->val, '/', 1);
 		free(to_free);
 		if (!fps[i])
-			return (ft_error(1, "minishell: join path", 1));
+			return (ft_error(1, "minishell: join path", 1, 0));
 		if ((access(fps[i], X_OK)) == 0)
 		{
 			*fp = ft_strcpy(fps[i]);
@@ -83,12 +83,12 @@ int	ft_acces(t_ll_elem *cmd, char *path, char **filepath)
 	}
 	filepaths = ft_strsplit(path, ":");
 	if (!filepaths)
-		ft_error(1, "malloc error for strsplit", 1);
+		ft_error(1, "malloc error for strsplit", 1, 0);
 	if (ft_iterfps(filepaths, filepath, elems) == 0)
 		return (0);
 	ft_free_char2dem(filepaths, -1);
 	*filepath = NULL;
-	return (ft_error(1, "minishell: command not found", 0));
+	return (ft_error(1, "minishell: command not found", 0, 127));
 }
 
 int	create_argv(t_ll_elem *cmd, char ***args, char *path)
@@ -101,7 +101,7 @@ int	create_argv(t_ll_elem *cmd, char ***args, char *path)
 	elems = cmd->key;
 	*args = malloc(sizeof(char *) * (elems->size + 1));
 	if (!(*args))
-		ft_error(1, "minishell: create_argv: malloc argv", 1);
+		ft_error(1, "minishell: create_argv: malloc argv", 1, 0);
 	ptr = elems->head->next;
 	(*args)[i++] = ft_strcpy(path);
 	while (ptr)
@@ -125,10 +125,10 @@ int	ft_common(t_group *cmds, t_info *info)
 	fd.pfd[0] = -1;
 	fd.fds[0] = get_in_fd(cmd->val, cmds->files);
 	if (fd.fds[0] == -1)
-		return (ft_error(-1, "minishell: get_in_fd", 1));
+		return (ft_error(-1, "minishell: get_in_fd", 1, 0));
 	fd.fds[1] = get_out_fd(cmd->val);
 	if (fd.fds[1] == -1)
-		return (ft_error(-1, "minishell: get_out_fd", 1));
+		return (ft_error(-1, "minishell: get_out_fd", 1, 0));
 	debug_log("ft_execve\n");
 	if (((t_cmd_info *)cmd->val)->flags & CMD_SUBSHELL)
 		pid = ft_execsubshell(cmd, info, &fd);

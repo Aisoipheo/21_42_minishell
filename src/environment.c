@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:22:18 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/02 15:08:02 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:08:04 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ int	ft_parse_envp(t_llist *l, char *envp[])
 	while (envp[i])
 	{
 		if (ft_strslice(envp[i], "=", &key, &val))
-			return (ft_error(1, "minishell: ft_parse_envp", 1));
+			return (ft_error(1, "minishell: ft_parse_envp", 1, 0));
 		if (llist_push(l, key, val))
-			return (ft_error(1, "minishell: ft_parse_envp", 1));
+			return (ft_error(1, "minishell: ft_parse_envp", 1, 0));
 		++i;
 	}
 	return (0);

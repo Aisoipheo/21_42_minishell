@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 15:47:21 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:16:53 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "utils.h"
 #include "minishell.h"
 
-int	ft_error(int ret, const char *msg, char liberr)
+int	ft_error(int ret, const char *msg, char liberr, int g_e)
 {
 	static const char	*invcall = "*** THIS SHOULD NOT OCCUR ***";
 
@@ -27,6 +27,7 @@ int	ft_error(int ret, const char *msg, char liberr)
 	{
 		write(STDERR_FILENO, msg, ft_strlen(msg));
 		write(STDERR_FILENO, "\n", 1);
+		g_exit = g_e;
 		return (ret);
 	}
 	if (errno != 0 && liberr)
@@ -110,17 +111,17 @@ int	remap_fds(int in, int out)
 	if (in != STDIN_FILENO)
 	{
 		if (dup2(in, STDIN_FILENO) == -1)
-			ft_error(1, "minishell: dup2: mapping to (stdin)", 1);
+			ft_error(1, "minishell: dup2: mapping to (stdin)", 1, 0);
 		if (close(in) == -1)
-			ft_error(1, "minishell: close: mapping to (stdin)", 1);
+			ft_error(1, "minishell: close: mapping to (stdin)", 1, 0);
 		debug_log("remap close1 %d\n", in);
 	}
 	if (out != STDOUT_FILENO)
 	{
 		if (dup2(out, STDOUT_FILENO) == -1)
-			ft_error(1, "minishell: dup2: mapping to (stdout)", 1);
+			ft_error(1, "minishell: dup2: mapping to (stdout)", 1, 0);
 		if (close(out) == -1)
-			ft_error(1, "minishell: close: mapping to (stdout)", 1);
+			ft_error(1, "minishell: close: mapping to (stdout)", 1, 0);
 		debug_log("remap close2 %d\n", out);
 	}
 	return (0);

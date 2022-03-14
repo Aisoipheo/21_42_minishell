@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/14 16:55:42 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:16:29 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	heredoc_dstr(const char *msg, char *f, char *s, int fd)
 	if (fd != -1)
 		close(fd);
 	if (msg)
-		return (ft_error(1, msg, 1));
+		return (ft_error(1, msg, 1, 0));
 	return (0);
 }
 

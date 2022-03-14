@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 13:58:58 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 16:27:21 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:08:24 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_callbuiltin(int idx, t_ll_elem *cmd, t_info *info, t_fd *fd)
 	{
 		close(stdcopy[0]);
 		close(stdcopy[1]);
-		return (ft_error(1, "minishell: execbuiltin: remap fds", 1));
+		return (ft_error(1, "minishell: execbuiltin: remap fds", 1, 0));
 	}
 	ret =  (*info->f_ptrs[idx])(cmd->key, info);
 	dup2(stdcopy[0], STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:07:58 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/13 17:35:37 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:15:25 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_execsubshell(t_ll_elem *cmd, t_info *info, t_fd *fd)
 		ft_free_char2dem(info->envp, -1);
 		info->envp = ft_compose_envp(info->envp_list);
 		if (NULL == info->envp)
-			return (ft_error(-1, "minishell: ft_execve: compose_envp", 1));
+			return (ft_error(-1, "minishell: ft_execve: compose_envp", 1, 0));
 		info->envp_f = 0;
 	}
 	pid = fork();
@@ -46,10 +46,10 @@ int	ft_subshell(t_group *cmds, t_info *info)
 	fd.pfd[0] = -1;
 	fd.fds[0] = get_in_fd(cmds->cmds->head->val, cmds->files);
 	if (fd.fds[0] == -1)
-		return (ft_error(-1, "minishell: subshell: get_in_fd", 1));
+		return (ft_error(-1, "minishell: subshell: get_in_fd", 1, 0));
 	fd.fds[1] = get_out_fd(cmds->cmds->head->val);
 	if (fd.fds[1] == -1)
-		return (ft_error(-1, "minishell: subshell: get_out_fd", 1));
+		return (ft_error(-1, "minishell: subshell: get_out_fd", 1, 0));
 	pid = ft_execsubshell(cmds->cmds->head, info, &fd);
 	if (fd.fds[0] != STDIN_FILENO)
 		close(fd.fds[0]);

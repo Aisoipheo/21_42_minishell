@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 19:02:12 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/14 16:56:30 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/14 19:37:24 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,6 @@ void	handler(int sig)
 	// g_error = 1;
 }
 
-void	handler_term(t_info *info)
-{
-	(void)info;
-	write(1, "minishell$ exit\n", ft_strlen("minishell$ exit\n"));
-	rl_redisplay();
-	//destroy(cmds, info);
-	exit(EXIT_SUCCESS);
-}
-
 void	handler_in_executor(int sig)
 {
 	if (sig == SIGINT)
@@ -79,7 +70,7 @@ void	handler_in_heredoc(int sig)
 	else if (sig == SIGQUIT)
 	{
 		(void)sig;
-		write(2, "Quit: 3\n", 8);
+		write(2, "Quit: 3\n", 9);
 		// g_var = 131;
 		exit(131);
 	}

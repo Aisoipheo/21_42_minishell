@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 10:34:11 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/01/19 17:43:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:10:48 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ int	_lx_case_metachar(t_llist *tokens, const char *line,
 	*t = _lx_get_type(line, i);
 	if (*t == LX_NCONST)
 		return (ft_error(1,
-				"minishell: lx_case_metachar: error type of metachar", 0));
+				"minishell: lx_case_metachar: error type of metachar", 0, 258));
 	if (llist_push(tokens, (void *)(*t), NULL))
-		return (ft_error(1, "minishell: lx_case_metachar", 1));
+		return (ft_error(1, "minishell: lx_case_metachar", 1, 0));
 	*t = (*t == LX_REDIR_APPEND || *t == LX_REDIR_SOURCE
 			|| *t == LX_IF_AND || *t == LX_IF_OR);
 	return (0);

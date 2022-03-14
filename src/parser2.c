@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 18:42:56 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:14:55 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	_prs_update_g_exit_str(t_info *info)
 	free(info->g_exit_str);
 	info->g_exit_str = ft_itoa(g_exit);
 	if (NULL == info->g_exit_str)
-		return (ft_error(1, "minishell: _prs_update_g_exit_str", 1));
+		return (ft_error(1, "minishell: _prs_update_g_exit_str", 1, 0));
 	return (0);
 }
 
@@ -68,7 +68,7 @@ static int _prs_extract_var(const char *s, t_info *info, char **envpvar_ptr, uns
 	}
 	name = ft_substr(s, 0, i);
 	if (name == NULL)
-		return (ft_error(1, "minishell: _prs_extract_var", 1));
+		return (ft_error(1, "minishell: _prs_extract_var", 1, 0));
 	*envpvar_ptr = llist_getval(info->envp_list, name);
 	*j += i;
 	free(name);
@@ -90,11 +90,11 @@ static int _prs_field_exp_collect_chunks(char *s, t_info *info, t_llist *chunks,
 			*size += (++i || 1);
 		ci = _prs_chunk_info_new(j, i);
 		if (ci == NULL)
-			return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1));
+			return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1, 0));
 		if (llist_push(chunks, ci, s))
 		{
 			free(ci);
-			return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1));
+			return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1, 0));
 		}
 		if (s[i] == '$')
 		{
@@ -106,11 +106,11 @@ static int _prs_field_exp_collect_chunks(char *s, t_info *info, t_llist *chunks,
 			{
 				ci = _prs_chunk_info_new(0, ft_strlen(envpvar_ptr));
 				if (ci == NULL)
-					return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1));
+					return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1, 0));
 				if (llist_push(chunks, ci, envpvar_ptr))
 				{
 					free(ci);
-					return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1));
+					return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1, 0));
 				}
 				*size += (ci->e);
 			}
@@ -134,10 +134,10 @@ static int _prs_field_expansion_prep(t_llist *str, t_info *info, t_llist *chunks
 		{
 			ci = _prs_chunk_info_new(0, ft_strlen((char *)h->val));
 			if (NULL == ci)
-				return (ft_error(1, "minishell: _prs_field_expansion_prep", 1));
+				return (ft_error(1, "minishell: _prs_field_expansion_prep", 1, 0));
 			ei->size += ci->e;
 			if (llist_push(chunks, ci, h->val))
-				return (ft_error(1, "minishell: _prs_field_expansion_prep", 1));
+				return (ft_error(1, "minishell: _prs_field_expansion_prep", 1, 0));
 		}
 		else if (_prs_field_exp_collect_chunks((char *)h->val, info, chunks, &(ei->size)))
 			return (1);
@@ -180,7 +180,7 @@ static int _prs_field_expansion(t_llist *str, t_info *info, char **word, t_expi 
 
 	chunks = llist_new(NULL, free, NULL);
 	if (chunks == NULL)
-		return (ft_error(1, "minishell: _prs_field_expansion", 1));
+		return (ft_error(1, "minishell: _prs_field_expansion", 1, 0));
 	ei->size = 0;
 	*word = NULL;
 	if (_prs_field_expansion_prep(str, info, chunks, ei))
@@ -188,7 +188,7 @@ static int _prs_field_expansion(t_llist *str, t_info *info, char **word, t_expi 
 	debug_log("[parser2.c] _PRS_FILED_EXPANSION PREP OK\n		EXPECTED SIZE: %u\n", ei->size);
 	*word = (char *)malloc(sizeof(char) * (ei->size + 1));
 	if (*word == NULL)
-		return (ft_error(1, "minishell: _prs_field_expansion", 1));
+		return (ft_error(1, "minishell: _prs_field_expansion", 1, 0));
 	(*word)[ei->size] = '\0';
 	if (_prs_field_expansion_copy(chunks, *word))
 		return (_prs_field_expansion_free(chunks, word));
@@ -329,10 +329,10 @@ static int	_prs_expandable(void *key)
 
 static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 {
-	char		*word;
-	t_llist		*words;
-	t_ll_elem	*wptr;
-	t_llist		*str;
+	char				*word;
+	t_llist				*words;
+	t_ll_elem			*wptr;
+	t_llist				*str;
 	static t_expi		ei;
 
 	if ((int)(*ptr)->key == LX_REDIR_SOURCE)

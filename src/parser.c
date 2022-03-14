@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:23:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/12 18:43:16 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 20:11:57 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	_prs_collect_tokens(t_llist *group,
 		(*type) |= (*lvl > 0) << 5;
 		(*type) |= ((int)(*ptr)->key == LX_PIPE && *lvl == 0) << 6;
 		if (llist_push(group, (*ptr)->key, (*ptr)->val))
-			return (ft_error(1, "minishell: _prs_collect_tokens", 1));
+			return (ft_error(1, "minishell: _prs_collect_tokens", 1, 0));
 		*ptr = (*ptr)->next;
 	}
 	return (0);
@@ -60,7 +60,7 @@ static int	_prs_check_syntax(t_llist *groups)
 	{
 		if (expected == 0 && _prs_is_delim_token(ptr->key))
 			return (ft_error(1,
-					"minishell: syntax error near token `||' or `&&'", 0));
+					"minishell: syntax error near token `||' or `&&'", 0, 258));
 		else
 			expected = 1;
 		if (expected == 1 && _prs_is_delim_token(ptr->key))
@@ -72,7 +72,7 @@ static int	_prs_check_syntax(t_llist *groups)
 	}
 	if (expected == 0)
 		return (ft_error(1,
-				"minishell: syntax error near token `||' or `&&'", 0));
+				"minishell: syntax error near token `||' or `&&'", 0, 258));
 	return (0);
 }
 
@@ -112,7 +112,7 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 		debug_log("[parser.c] _PRS_GROUP NEW GROUP\n");
 		group = llist_new(NULL, NULL, NULL);
 		if (NULL == group)
-			return (ft_error(1, "minishell: _prs_group", 1));
+			return (ft_error(1, "minishell: _prs_group", 1, 0));
 		type = PRS_SIMPLE;
 		lvl = 0;
 		if (_prs_collect_tokens(group, &ptr, &type, &lvl))
@@ -127,14 +127,14 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 			debug_log("[parser.c] _PRS_GROUP GROUP IS EMPTY\n");
 		if (lvl)
 			return (ft_error(1,
-					"minishell: syntax error near token `(' or `)'", 0));
+					"minishell: syntax error near token `(' or `)'", 0, 258));
 		if (group->size && llist_push(groups, (void *)type, group))
-			return (ft_error(1, "minishell: _prs_group", 1));
+			return (ft_error(1, "minishell: _prs_group", 1, 0));
 		if (group->size == 0)
 			llist_free(group);
 		if (NULL != ptr && _prs_is_delim_token(ptr->key)
 			&& llist_push(groups, ptr->key, NULL))
-			return (ft_error(1, "minishell: _prs_group", 1));
+			return (ft_error(1, "minishell: _prs_group", 1, 0));
 		if (NULL != ptr)
 			ptr = ptr->next;
 	}
