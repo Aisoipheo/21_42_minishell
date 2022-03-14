@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 18:15:31 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 16:36:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	ft_export(t_llist *args, t_info *info)
 		if (ft_strslice((char *)ptr->val, "=", &a, &b))
 			return (ft_error(-1, "minishell: export: parse", 1));
 		debug_log("<%s>=<%s>\n", a, b);
-		if (*a == '\0' || *b == '\0')
-			write(STDERR_FILENO, "minishell: export: not valid", 29);
+		if (*a == '\0')
+			write(STDERR_FILENO, "minishell: export: not valid\n", 30);
 		else if (llist_set(info->envp_list, a, b))
 			return (ft_error(-1, "minishell: export: set", 1));
 		ptr = ptr->next;
@@ -64,13 +64,20 @@ int	ft_unset(t_llist *args, t_info *info)
 {
 	t_ll_elem	*arg;
 
+	g_exit = 0;
 	arg = args->head;
 	if (arg->next)
 	{
 		arg = arg->next;
 		while (arg)
 		{
-			llist_del(info->envp_list, arg->val);
+			if (ft_is_valid_id(arg->val))
+				llist_del(info->envp_list, arg->val);
+			else
+			{
+				g_exit = 1;
+				write(STDERR_FILENO, "minishell: unset: not valid\n", 29);
+			}
 			arg = arg->next;
 		}
 	}
@@ -80,8 +87,26 @@ int	ft_unset(t_llist *args, t_info *info)
 
 int	ft_exit(t_llist *args, t_info *info)
 {
+	int	ex;
+
 	(void)info;
-	(void)args;
+	g_exit = 0;
+	if (args->size > 2)
+	{
+		write(STDERR_FILENO, "minishell: exit: too many args\n", 32);
+		g_exit = 1;
+		return (0);
+	}
 	info->exit_f = 0;
+	if (args->size == 2)
+	{
+		if (ft_atoi(((t_ll_elem *)args->head->next)->val, &ex))
+		{
+			write(STDERR_FILENO, "minishell: exit: only numeric arg\n", 35);
+			g_exit = 255;
+			return (0);
+		}
+		g_exit = ex;
+	}
 	return (0);
 }

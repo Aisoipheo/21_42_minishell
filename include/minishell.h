@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 18:30:48 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 15:30:55 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@
 
 void	debug_log(const char *fmt, ...);
 
+# define MINIS_PROMPT "(ง •̀_•́)ง "
+
 # define CMD_APPEND 0b001
 # define CMD_INSOURCE 0b010
 # define CMD_SUBSHELL 0b100
 
-int						g_exit;
+unsigned char			g_exit;
 
 typedef struct s_info	t_info;
 typedef int				(*t_builtin_ptr)(t_llist *, t_info *);

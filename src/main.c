@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 16:19:39 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 16:16:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 #include "utils.h"
 #include "lexer.h"
 #include "parser.h"
-
-int	g_exit;
 
 static char	*_ft_readline(const char *prompt)
 {
@@ -68,11 +66,9 @@ int	main(int argc, char *argv[], char *envp[])
 	while(info.exit_f)
 	{
 		signal(SIGINT, handler);
-		debug_log("[main.c:70] EXIT STATUS: %d\n", g_exit);
 		errno = 0;
 		tokens = llist_new(llist_int_kcmp, NULL, free);
-		line = _ft_readline("prompt > ");
-		debug_log("[main.c:74] EXIT STATUS: %d\n", g_exit);
+		line = _ft_readline(MINIS_PROMPT);
 		if (line && *line)
 		{
 			if (lx_lexer(tokens, line) == 0)
@@ -94,5 +90,5 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	ft_destroy(&info);
 	debug_log("PPID: %d PID: %d\n", getppid(), getpid());
-	return (EXIT_SUCCESS);
+	return (g_exit);
 }

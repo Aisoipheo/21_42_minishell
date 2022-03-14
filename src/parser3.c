@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 18:19:33 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 16:47:43 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,20 +200,20 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 			return (-1);
 		debug_log("[parser3.c] GROUP READY\n");
 		pid = executor(cmds, info);
-		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
-		// {
-		// 	t_cmd_info *cmd_info = (t_cmd_info *)h->val;
-		// 	debug_log(" ======c> llist at %p\n", h);
-		// 	// debug_log(" TYPE: %lld\n", convert(type));
-		// 	debug_log(" *** INFO ***\n");
-		// 	// convert((int)cmd_info->flags);
-		// 	debug_log("flags: %.5d\n", cmd_info->flags/* */);
-		// 	debug_log("in: %s\n", cmd_info->in_file);
-		// 	debug_log("out: %s\n", cmd_info->out_file);
-		// 	debug_log("\n *** ARGS ***\n");
-		// 	for (t_ll_elem *arg = ((t_llist *)h->key)->head; arg != NULL; arg = arg->next)
-		// 		debug_log("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
-		// }
+		for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
+		{
+			t_cmd_info *cmd_info = (t_cmd_info *)h->val;
+			debug_log(" ======c> llist at %p\n", h);
+			// debug_log(" TYPE: %lld\n", convert(type));
+			debug_log(" *** INFO ***\n");
+			// convert((int)cmd_info->flags);
+			debug_log("flags: %.5d\n", cmd_info->flags/* */);
+			debug_log("in: %s\n", cmd_info->in_file);
+			debug_log("out: %s\n", cmd_info->out_file);
+			debug_log("\n *** ARGS ***\n");
+			for (t_ll_elem *arg = ((t_llist *)h->key)->head; arg != NULL; arg = arg->next)
+				debug_log("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
+		}
 		debug_log("[parser3.c] PRS_HANDLE_GROUP free %p\n", expanded);
 		llist_free(expanded);
 		ft_group_free(cmds);
@@ -251,8 +251,6 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 						g_exit	= WEXITSTATUS(sig);
 				}
 			}
-			if (pid == 0)
-				g_exit = 0;
 			expect = 1;
 			debug_log("EXIT STATUS: %d\n", g_exit);
 		}
