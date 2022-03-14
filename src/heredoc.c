@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/12 18:42:27 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 16:55:42 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,19 @@ int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 		return (heredoc_dstr("minishell: <<: open", f, s, fd));
 	if (heredoc_fmanip(f, c_info, files))
 		return (heredoc_dstr("minishell: <<: filename manip", f, s, fd));
-	if (heredoc_input(c_info, fd))
-		return (heredoc_dstr("minishell: <<: input", f, s, fd));
+	int pid = fork ();
+	if (pid == 0)
+	{
+		signal(SIGINT, handler_in_heredoc);
+		signal(SIGQUIT, SIG_IGN);
+		if (heredoc_input(c_info, fd))
+			return (heredoc_dstr("minishell: <<: input", f, s, fd));
+	}
+	if (pid != 0)
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	wait(NULL);
 	return (heredoc_dstr(NULL, f, s, fd));
 }

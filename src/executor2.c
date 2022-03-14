@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/13 17:00:17 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/14 16:56:46 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ int	ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode)
 
 pid_t	executor(t_group *cmds, t_info *info)
 {
+	signal(SIGINT, handler_in_executor);
+	signal(SIGQUIT, handler_in_executor);
 	if (PRS_PIPELINE & cmds->type)
 		return (pipeline(cmds, info));
 	if (((t_cmd_info *)cmds->cmds->head->val)->flags & CMD_SUBSHELL)

@@ -6,7 +6,7 @@
 /*   By: gmckinle <gmckinle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 19:02:12 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/02/20 17:13:14 by gmckinle         ###   ########.fr       */
+/*   Updated: 2022/03/14 16:56:30 by gmckinle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,38 +50,37 @@ void	handler_term(t_info *info)
 	exit(EXIT_SUCCESS);
 }
 
+void	handler_in_executor(int sig)
+{
+	if (sig == SIGINT)
+	{
+		(void)sig;
+		write(2, "\n", 1);
+		// g_var = 130;
+	}
+	else if (sig == SIGQUIT)
+	{
+		(void)sig;
+		write(2, "Quit: 3\n", 8);
+		// g_var = 131;
+	}
+}
 
-// void	handler11(int sig)
-// {
-// 	if (sig == SIGINT)
-// 	{
-// 		(void)sig;
-// 		write(2, "\n", 1);
-// 		g_var = 130;
-// 	}
-// 	else if (sig == SIGQUIT)
-// 	{
-// 		(void)sig;
-// 		write(2, "Quit: 3\n", 8);
-// 		g_var = 131;
-// 	}
-// }
 
-
-// void    handler1(int sig)
-// {
-// 	if (sig == SIGINT)
-// 	{
-// 		(void)sig;
-// 		write(2, "\n", 1);
-// 		g_var = 130;
-// 		exit(g_var);
-// 	}
-// 	else if (sig == SIGQUIT)
-// 	{
-// 		(void)sig;
-// 		write(2, "Quit: 3\n", 8);
-// 		g_var = 131;
-// 		exit (g_var);
-// 	}
-// }
+void	handler_in_heredoc(int sig)
+{
+	if (sig == SIGINT)
+	{
+		(void)sig;
+		write(2, "\n", 1);
+		// g_var = 130;
+		exit(130);
+	}
+	else if (sig == SIGQUIT)
+	{
+		(void)sig;
+		write(2, "Quit: 3\n", 8);
+		// g_var = 131;
+		exit(131);
+	}
+}
