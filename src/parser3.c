@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:18:46 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:14:42 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ static int	_prs_handle_token2(t_ll_elem **c, t_cmd_info *info)
 
 static int	_prs_handle_token(t_ll_elem **c, t_cmd_info *info, t_llist *args)
 {
+	debug_log("_prs_handle_token _shlvl == %d\n", info->_shlvl);
 	if (NULL == (*c)) //might delete later
 		return (ft_error(1, "ur bad >:(", 0, 999));
 	if ((int)(*c)->key == LX_PARN_L || (int)(*c)->key == LX_PARN_R)
@@ -90,9 +91,9 @@ static int	_prs_handle_token(t_ll_elem **c, t_cmd_info *info, t_llist *args)
 			|| (info->_shlvl == 0 && (int)(*c)->key == LX_PARN_R))
 			return (0);
 	}
-	//if (info->_shlvl > 0 && llist_push(args, (*c)->key, (*c)->val))
-	//	return (ft_error(1, "minishell: _prs_handle_token", 1)); //malloc err or smth
-	if ((int)(*c)->key == LX_SEP)
+	// if (info->_shlvl > 0 && llist_push(args, (*c)->key, (*c)->val))
+	// 	return (ft_error(1, "minishell: _prs_handle_token", 1, 0)); //malloc err or smth
+	if ((int)(*c)->key == LX_SEP && info->_shlvl == 0)
 		return (0);
 	if ((info->flags & CMD_SUBSHELL) && info->_shlvl == 0 && (int)(*c)->key == LX_WORD)
 		return (ft_error(1, "minishell: unexpected token after `(subshell)'", 0, 258));
@@ -108,6 +109,7 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	t_cmd_info	*info;
 	t_llist		*args;
 
+	debug_log("--------> CMD\n");
 	info = malloc(sizeof(t_cmd_info));
 	args = llist_new(NULL, NULL, NULL);
 	if (!info || !args)
@@ -116,12 +118,12 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	info->out_file = NULL;
 	info->flags = 0;
 	info->_shlvl = 0;
-	while (h && (int)h->key != LX_PIPE)
+	while (h && ((int)h->key != LX_PIPE || info->_shlvl))
 	{
 		debug_log("[parser3.c] PRS_GROUP_CMD TRY HANDLE `%s | %s'\n", _lx_get_name((int)h->key), h->val);
 		if (_prs_handle_token(&h, info, args))
 			break ;
-		h = _prs_next_token(h);
+		h = h->next;
 		debug_log("[parser3.c] PRS_GROUP_CMD NEXT TOKEN IS %p\n", h);
 	}
 	debug_log("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
@@ -143,6 +145,7 @@ int	_prs_group_pipe(t_llist *expanded, t_llist *cmds)
 {
 	t_ll_elem	*curr;
 
+	debug_log("-------> PIPE\n");
 	curr = expanded->head;
 	while (curr != NULL)
 	{
@@ -180,6 +183,22 @@ int	_prs_prepare_group(t_llist *expanded, t_group *cmds)
 //   return bin;
 // }
 
+int	_prs_handle_heredoc(t_group *cmds)
+{
+	t_ll_elem	*cmd;
+	t_cmd_info	*ci;
+
+	cmd = cmds->cmds->head;
+	while(cmd)
+	{
+		ci = (t_cmd_info *)cmd->val;
+		if ((ci->flags & CMD_INSOURCE) && create_heredoc(ci, cmds->files))
+			return (1);
+		cmd = cmd->next;
+	}
+	return (0);
+}
+
 pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 {
 	t_llist	*expanded;
@@ -197,6 +216,8 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		if (NULL == cmds)
 			return (-1);
 		if (_prs_prepare_group(expanded, cmds))
+			return (-1);
+		if (_prs_handle_heredoc(cmds))
 			return (-1);
 		debug_log("[parser3.c] GROUP READY\n");
 		pid = executor(cmds, info);

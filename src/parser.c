@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:23:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:11:57 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:25:23 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,12 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 	return (0);
 }
 
+int	_prs_dstr(t_llist *groups)
+{
+	llist_free(groups);
+	return (1);
+}
+
 //expect envp here
 int	prs_parse(t_llist *tokens, t_info *info)
 {
@@ -151,15 +157,20 @@ int	prs_parse(t_llist *tokens, t_info *info)
 
 	groups = llist_new(NULL, NULL, llist_free_wrapper);
 	if (NULL == groups)
-		return (1); // malloc
+		return (1);
 	if (_prs_group(groups, tokens))
-		return (1); // it brokey :c
+		return (_prs_dstr(groups));
+	if (groups->size == 0)
+	{
+		llist_free(groups);
+		return (0);
+	}
 	debug_log("[parser.c] PRS_GROUP OK\n");
 	if (_prs_check_syntax(groups))
-		return (1); // syntax error obv
+		return (_prs_dstr(groups));
 	debug_log("[parser.c] PRS_CHECK_SYNTAX OK\n");
 	if (_prs_logexec(groups, info))
-		return (1); // it brokey :<
+		return (_prs_dstr(groups));
 	debug_log("[parser.c] PRS_LOGEXEC OK\n");
 	llist_free(groups);
 	return (0);

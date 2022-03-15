@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:16:29 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:18:08 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static int	heredoc_dstr(const char *msg, char *f, char *s, int fd)
 		free(s);
 	if (fd != -1)
 		close(fd);
+	if (msg && msg[0] == '\0')
+		return (1);
 	if (msg)
 		return (ft_error(1, msg, 1, 0));
 	return (0);
@@ -55,6 +57,33 @@ static int	heredoc_input(t_cmd_info *c_info, int fd)
 	return (0);
 }
 
+int	handle_input(t_cmd_info *c_info, int fd)
+{
+	int		pid;
+	int		sig;
+
+	sig = 0;
+	pid = fork();
+	if (pid == -1)
+		return (ft_error(1, "minishell: fork", 1, 0));
+	if (pid != 0)
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+		waitpid(pid, &sig, 0);
+		debug_log("############ %d %d %d\n", pid, sig, WEXITSTATUS(sig));
+	}
+	if (pid == 0)
+	{
+		signal(SIGINT, handler_in_heredoc);
+		signal(SIGQUIT, SIG_IGN);
+		if (heredoc_input(c_info, fd))
+			exit(ft_error(1, "minishell: heredoc", 1, 0));
+		exit(EXIT_SUCCESS);
+	}
+	return (WEXITSTATUS(sig) != 0);
+}
+
 int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 {
 	int		fd;
@@ -77,19 +106,7 @@ int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 		return (heredoc_dstr("minishell: <<: open", f, s, fd));
 	if (heredoc_fmanip(f, c_info, files))
 		return (heredoc_dstr("minishell: <<: filename manip", f, s, fd));
-	int pid = fork ();
-	if (pid == 0)
-	{
-		signal(SIGINT, handler_in_heredoc);
-		signal(SIGQUIT, SIG_IGN);
-		if (heredoc_input(c_info, fd))
-			return (heredoc_dstr("minishell: <<: input", f, s, fd));
-	}
-	if (pid != 0)
-	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
-	}
-	wait(NULL);
+	if (handle_input(c_info, fd))
+		return (heredoc_dstr("", f, s, fd));
 	return (heredoc_dstr(NULL, f, s, fd));
 }

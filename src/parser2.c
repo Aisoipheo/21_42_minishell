@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:14:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:43:37 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,13 +229,31 @@ int	_prs_asterisk_pattern_matches(const char *pattern, const char *str)
 		{
 			if (pattern[i - 1] == '*')
 				dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
+			else if (str[j - 1] == pattern[i - 1])
+				dp[i][j] = dp[i - 1][j - 1];
 			else
-				dp[i][j] = pattern[i - 1] == str[j - 1];
+				dp[i][j] = 0;
 			++j;
 		}
 		++i;
 	}
 	i = dp[ptrl][strl];
+	// debug_log("======= DP MATRIX =======\n");
+	// for (int k = 0; k <= ptrl; ++k)
+	// {
+	// 	if (k != 0)
+	// 		debug_log("%c ", pattern[k - 1]);
+	// 	else
+	// 		debug_log("  ");
+	// 	for (int p = 1; p <= strl; ++p)
+	// 	{
+	// 		if (k == 0)
+	// 			debug_log("%c ", str[p - 1]);
+	// 		else
+	// 			debug_log("%d ", dp[k][p]);
+	// 	}
+	// 	debug_log("\n");
+	// }
 	ft_free_char2dem(dp, ptrl + 1);
 	return (i);
 }

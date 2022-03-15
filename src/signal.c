@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 19:02:12 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/14 19:37:24 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 16:09:57 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,7 @@ void	handler_in_executor(int sig)
 
 void	handler_in_heredoc(int sig)
 {
-	if (sig == SIGINT)
-	{
-		(void)sig;
-		write(2, "\n", 1);
-		// g_var = 130;
-		exit(130);
-	}
-	else if (sig == SIGQUIT)
-	{
-		(void)sig;
-		write(2, "Quit: 3\n", 9);
-		// g_var = 131;
-		exit(131);
-	}
+	(void)sig;
+	write(2, "\n", 1);
+	exit(130);
 }

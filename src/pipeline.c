@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 20:36:53 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:15:10 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:06:57 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 static int	ft_fdmanip1(t_fd *fd, t_ll_elem *cmd, t_group *cmds)
 {
-	fd->fds[0] = get_in_fd(cmd->val, cmds->files);
+	fd->fds[0] = get_in_fd(cmd->val);
 	if (fd->fds[0] == -1)
 		return (ft_error(-1, "mininshell: pipe: get in fd", 1, 0));
 	fd->fds[1] = get_out_fd(cmd->val);

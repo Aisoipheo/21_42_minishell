@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:07:58 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:15:25 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:07:07 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_subshell(t_group *cmds, t_info *info)
 	int		pid;
 
 	fd.pfd[0] = -1;
-	fd.fds[0] = get_in_fd(cmds->cmds->head->val, cmds->files);
+	fd.fds[0] = get_in_fd(cmds->cmds->head->val);
 	if (fd.fds[0] == -1)
 		return (ft_error(-1, "minishell: subshell: get_in_fd", 1, 0));
 	fd.fds[1] = get_out_fd(cmds->cmds->head->val);

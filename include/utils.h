@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 14:54:47 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 19:58:40 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:06:25 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*ft_uitoa(unsigned int n);
 int		ft_abs(int n);
 char	*ft_itoa(int n);
 int		remap_fds(int in, int out);
-int		get_in_fd(t_cmd_info *c_info, t_llist *files);
+int		get_in_fd(t_cmd_info *c_info);
 int		get_out_fd(t_cmd_info *c_info);
 int		ft_atoi(const char *s, int *n);
 int		ft_is_valid_id(const char *s);

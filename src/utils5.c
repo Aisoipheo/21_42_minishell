@@ -6,19 +6,17 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:16:15 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 16:29:20 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:06:03 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 #include "norm_hacks.h"
 
-int	get_in_fd(t_cmd_info *c_info, t_llist *files)
+int	get_in_fd(t_cmd_info *c_info)
 {
 	if (!c_info->in_file)
 		return (STDIN_FILENO);
-	if (c_info->flags & CMD_INSOURCE && create_heredoc(c_info, files))
-		return (-1);
 	return (open(c_info->in_file, O_RDONLY, 0644));
 }
 

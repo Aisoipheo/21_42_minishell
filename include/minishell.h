@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 17:40:46 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:59:51 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,5 @@ int		ft_unset(t_llist *args, t_info *info);
 int		ft_env(t_llist *args, t_info *info);
 int		ft_exit(t_llist *args, t_info *info);
 /* ============ /Built-ins ============ */
-
-int		get_line(const char *prompt, char **line);
 
 #endif

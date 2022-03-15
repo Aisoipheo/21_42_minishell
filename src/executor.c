@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:01:16 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:06:39 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int	ft_common(t_group *cmds, t_info *info)
 
 	cmd = cmds->cmds->head;
 	fd.pfd[0] = -1;
-	fd.fds[0] = get_in_fd(cmd->val, cmds->files);
+	fd.fds[0] = get_in_fd(cmd->val);
 	if (fd.fds[0] == -1)
 		return (ft_error(-1, "minishell: get_in_fd", 1, 0));
 	fd.fds[1] = get_out_fd(cmd->val);
