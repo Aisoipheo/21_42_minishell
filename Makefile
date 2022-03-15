@@ -80,4 +80,12 @@ fclean : clean
 norm :
 	norminette $(SRCS_DIR) $(HDRS_DIR)
 
+val : $(NAME)
+	valgrind --leak-check=full \
+         --show-leak-kinds=all \
+         --track-origins=yes \
+         --verbose \
+         --log-file=valgrind-out.txt \
+         ./$(NAME)
+
 re: fclean all

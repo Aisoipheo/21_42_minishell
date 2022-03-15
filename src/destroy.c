@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 20:26:04 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/05 15:48:59 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:09:43 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int	ft_destroy(t_info *info)
 {
-	free(info->envp);
+	ft_free_char2dem(info->envp, -1);
 	free(info->g_exit_str);
 	llist_free(info->envp_list);
 	rl_clear_history();

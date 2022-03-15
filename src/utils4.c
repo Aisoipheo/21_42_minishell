@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:16:53 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:29:30 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	remap_fds(int in, int out)
 			ft_error(1, "minishell: dup2: mapping to (stdin)", 1, 0);
 		if (close(in) == -1)
 			ft_error(1, "minishell: close: mapping to (stdin)", 1, 0);
-		debug_log("remap close1 %d\n", in);
+		// debug_log("remap close1 %d\n", in);
 	}
 	if (out != STDOUT_FILENO)
 	{
@@ -122,7 +122,7 @@ int	remap_fds(int in, int out)
 			ft_error(1, "minishell: dup2: mapping to (stdout)", 1, 0);
 		if (close(out) == -1)
 			ft_error(1, "minishell: close: mapping to (stdout)", 1, 0);
-		debug_log("remap close2 %d\n", out);
+		// debug_log("remap close2 %d\n", out);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/15 17:18:08 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:29:50 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	heredoc_dstr(const char *msg, char *f, char *s, int fd)
 	if (fd != -1)
 		close(fd);
 	if (msg && msg[0] == '\0')
-		return (1);
+		return (2);
 	if (msg)
 		return (ft_error(1, msg, 1, 0));
 	return (0);
@@ -44,7 +44,7 @@ static int	heredoc_input(t_cmd_info *c_info, int fd)
 	while (1)
 	{
 		str = readline("> ");
-		debug_log("HEREDOC STR: <%s>\n", str);
+		// debug_log("HEREDOC STR: <%s>\n", str);
 		if (str == NULL || ft_strcmp(str, c_info->delim) == 0)
 			break ;
 		if (write(fd, str, ft_strlen(str)) == -1)
@@ -96,7 +96,7 @@ int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 	if (NULL == s)
 		return (heredoc_dstr("minishell: <<: to string conversion", f, s, fd));
 	f = ft_strjoin2("/var/tmp/minishell.tmp.", s, 0, 0);
-	debug_log("HEREDOC tmpfile %s\n", f);
+	// debug_log("HEREDOC tmpfile %s\n", f);
 	if (NULL == f)
 		return (heredoc_dstr("minishell: <<: malloc", f, s, fd));
 	if (access(f, F_OK) == 0 && unlink(f) == -1)

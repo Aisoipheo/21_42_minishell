@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 17:14:42 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:29:36 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static int	_prs_handle_token2(t_ll_elem **c, t_cmd_info *info)
 
 static int	_prs_handle_token(t_ll_elem **c, t_cmd_info *info, t_llist *args)
 {
-	debug_log("_prs_handle_token _shlvl == %d\n", info->_shlvl);
+	// debug_log("_prs_handle_token _shlvl == %d\n", info->_shlvl);
 	if (NULL == (*c)) //might delete later
 		return (ft_error(1, "ur bad >:(", 0, 999));
 	if ((int)(*c)->key == LX_PARN_L || (int)(*c)->key == LX_PARN_R)
@@ -109,7 +109,7 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	t_cmd_info	*info;
 	t_llist		*args;
 
-	debug_log("--------> CMD\n");
+	// debug_log("--------> CMD\n");
 	info = malloc(sizeof(t_cmd_info));
 	args = llist_new(NULL, NULL, NULL);
 	if (!info || !args)
@@ -120,13 +120,13 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	info->_shlvl = 0;
 	while (h && ((int)h->key != LX_PIPE || info->_shlvl))
 	{
-		debug_log("[parser3.c] PRS_GROUP_CMD TRY HANDLE `%s | %s'\n", _lx_get_name((int)h->key), h->val);
+		// debug_log("[parser3.c] PRS_GROUP_CMD TRY HANDLE `%s | %s'\n", _lx_get_name((int)h->key), h->val);
 		if (_prs_handle_token(&h, info, args))
 			break ;
 		h = h->next;
-		debug_log("[parser3.c] PRS_GROUP_CMD NEXT TOKEN IS %p\n", h);
+		// debug_log("[parser3.c] PRS_GROUP_CMD NEXT TOKEN IS %p\n", h);
 	}
-	debug_log("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
+	// debug_log("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
 	if ((args->size == 0 && info->out_file == NULL && info->in_file == NULL))
 		return (ft_error(1, "minishell: syntax error", 0, 258));
 	if (h == NULL || (int)h->key == LX_PIPE)
@@ -135,7 +135,7 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 			return (ft_error(1, "minishell: _prs_group_cmd", 1, 0));
 		return (0);
 	}
-	debug_log("[parser3.c] PRS_GROUP_CMD free %p %p\n", args, info);
+	// debug_log("[parser3.c] PRS_GROUP_CMD free %p %p\n", args, info);
 	llist_free(args);
 	free(info);
 	return (1);
@@ -145,7 +145,7 @@ int	_prs_group_pipe(t_llist *expanded, t_llist *cmds)
 {
 	t_ll_elem	*curr;
 
-	debug_log("-------> PIPE\n");
+	// debug_log("-------> PIPE\n");
 	curr = expanded->head;
 	while (curr != NULL)
 	{
@@ -187,13 +187,17 @@ int	_prs_handle_heredoc(t_group *cmds)
 {
 	t_ll_elem	*cmd;
 	t_cmd_info	*ci;
+	int			ret;
 
 	cmd = cmds->cmds->head;
 	while(cmd)
 	{
 		ci = (t_cmd_info *)cmd->val;
-		if ((ci->flags & CMD_INSOURCE) && create_heredoc(ci, cmds->files))
-			return (1);
+		ret = 0;
+		if (ci->flags & CMD_INSOURCE)
+			ret = create_heredoc(ci, cmds->files);
+		if (ret == 2)
+			g_exit = 1;
 		cmd = cmd->next;
 	}
 	return (0);
@@ -209,9 +213,9 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 	expanded = _prs_expand(group, info);
 	if (expanded)
 	{
-		debug_log("[parser3.c] EXPAND OK\n");
-		for (t_ll_elem *h = expanded->head; h != NULL; h = h->next)
-			debug_log("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
+		// debug_log("[parser3.c] EXPAND OK\n");
+		// for (t_ll_elem *h = expanded->head; h != NULL; h = h->next)
+		// 	debug_log("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
 		cmds = ft_group_new(type);
 		if (NULL == cmds)
 			return (-1);
@@ -219,23 +223,23 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 			return (-1);
 		if (_prs_handle_heredoc(cmds))
 			return (-1);
-		debug_log("[parser3.c] GROUP READY\n");
+		// debug_log("[parser3.c] GROUP READY\n");
 		pid = executor(cmds, info);
-		for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
-		{
-			t_cmd_info *cmd_info = (t_cmd_info *)h->val;
-			debug_log(" ======c> llist at %p\n", h);
-			// debug_log(" TYPE: %lld\n", convert(type));
-			debug_log(" *** INFO ***\n");
-			// convert((int)cmd_info->flags);
-			debug_log("flags: %.5d\n", cmd_info->flags/* */);
-			debug_log("in: %s\n", cmd_info->in_file);
-			debug_log("out: %s\n", cmd_info->out_file);
-			debug_log("\n *** ARGS ***\n");
-			for (t_ll_elem *arg = ((t_llist *)h->key)->head; arg != NULL; arg = arg->next)
-				debug_log("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
-		}
-		debug_log("[parser3.c] PRS_HANDLE_GROUP free %p\n", expanded);
+		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
+		// {
+		// 	t_cmd_info *cmd_info = (t_cmd_info *)h->val;
+		// 	debug_log(" ======c> llist at %p\n", h);
+		// 	// debug_log(" TYPE: %lld\n", convert(type));
+		// 	debug_log(" *** INFO ***\n");
+		// 	// convert((int)cmd_info->flags);
+		// 	debug_log("flags: %.5d\n", cmd_info->flags/* */);
+		// 	debug_log("in: %s\n", cmd_info->in_file);
+		// 	debug_log("out: %s\n", cmd_info->out_file);
+		// 	debug_log("\n *** ARGS ***\n");
+		// 	for (t_ll_elem *arg = ((t_llist *)h->key)->head; arg != NULL; arg = arg->next)
+		// 		debug_log("  + %10s | %s\n", _lx_get_name((int)arg->key), arg->val);
+		// }
+		// debug_log("[parser3.c] PRS_HANDLE_GROUP free %p\n", expanded);
 		llist_free(expanded);
 		ft_group_free(cmds);
 	}
@@ -254,12 +258,12 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 	ptr = groups->head;
 	while(NULL != ptr)
 	{
-		debug_log("[parser3.c] PRS_LOGEXEC EXPECT %d\n", expect);
+		// debug_log("[parser3.c] PRS_LOGEXEC EXPECT %d\n", expect);
 		if (expect == 0)
 		{
 			pid = _prs_handle_group((int)ptr->key, ptr->val, info);
 			debug_log("REC PID: %d\n", pid);
-			debug_log("[parser3.c] PRS_LOGEXEC HANDLE GROUP OK\n");
+			// debug_log("[parser3.c] PRS_LOGEXEC HANDLE GROUP OK\n");
 			if (pid < 0)
 				return (1);
 			if (pid > 0)

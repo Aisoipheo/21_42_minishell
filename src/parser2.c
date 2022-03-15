@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 15:43:37 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:29:42 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ static int _prs_field_expansion_prep(t_llist *str, t_info *info, t_llist *chunks
 	h = str->head;
 	while(h != NULL)
 	{
-		debug_log("TOKEN <%s> STATUS %d\n", h->val, ei->f);
+		// debug_log("TOKEN <%s> STATUS %d\n", h->val, ei->f);
 		if ((int)h->key == LX_FIELD || ei->f)
 		{
 			ci = _prs_chunk_info_new(0, ft_strlen((char *)h->val));
@@ -156,7 +156,7 @@ static int _prs_field_expansion_copy(t_llist *chunks, char *word)
 	i = 0;
 	while (h != NULL)
 	{
-		debug_log("[parser2.c] _PRS_FIELD_EXPANSION_COPY NEW CHUNK\n	SOURCE: <%s>\n	S: %u E: %u\n", (char *)h->val, ((t_chunk_info *)h->key)->s, ((t_chunk_info *)h->key)->e);
+		// debug_log("[parser2.c] _PRS_FIELD_EXPANSION_COPY NEW CHUNK\n	SOURCE: <%s>\n	S: %u E: %u\n", (char *)h->val, ((t_chunk_info *)h->key)->s, ((t_chunk_info *)h->key)->e);
 		_i = ((t_chunk_info *)h->key)->s;
 		while (_i < ((t_chunk_info *)h->key)->e)
 			word[i++] = ((char *)h->val)[_i++];
@@ -185,14 +185,14 @@ static int _prs_field_expansion(t_llist *str, t_info *info, char **word, t_expi 
 	*word = NULL;
 	if (_prs_field_expansion_prep(str, info, chunks, ei))
 		return (_prs_field_expansion_free(chunks, word));
-	debug_log("[parser2.c] _PRS_FILED_EXPANSION PREP OK\n		EXPECTED SIZE: %u\n", ei->size);
+	// debug_log("[parser2.c] _PRS_FILED_EXPANSION PREP OK\n		EXPECTED SIZE: %u\n", ei->size);
 	*word = (char *)malloc(sizeof(char) * (ei->size + 1));
 	if (*word == NULL)
 		return (ft_error(1, "minishell: _prs_field_expansion", 1, 0));
 	(*word)[ei->size] = '\0';
 	if (_prs_field_expansion_copy(chunks, *word))
 		return (_prs_field_expansion_free(chunks, word));
-	debug_log("[parser2.c] _PRS_FILED_EXPANSION COPY OK\n");
+	// debug_log("[parser2.c] _PRS_FILED_EXPANSION COPY OK\n");
 	llist_free(chunks);
 	return (0);
 }
@@ -271,16 +271,16 @@ t_llist *_prs_asterisk_expansion_pwd(const char *word)
 	words = llist_new(llist_int_kcmp, NULL, NULL);
 	if (NULL == dir || NULL == words)
 	{
-		debug_log("[parser2.c] ASTERISK_EXPANSION_PWD FAILED\n");
+		// debug_log("[parser2.c] ASTERISK_EXPANSION_PWD FAILED\n");
 		return (NULL);
 	}
 	dirf = readdir(dir);
 	while (NULL != dirf)
 	{
-		debug_log("[parser2.c] ASTERISK_EXPANSION_PWD TRY <%s>\n", dirf->d_name);
+		// debug_log("[parser2.c] ASTERISK_EXPANSION_PWD TRY <%s>\n", dirf->d_name);
 		if (((word[0] == '.' && dirf->d_name[0] == '.') || (word[0] != '.' && dirf->d_name[0] != '.')) && _prs_asterisk_pattern_matches(word, dirf->d_name))
 		{
-			debug_log("[parser2.c] ASTERISK_EXPANSION_PWD WORD MATCHED\n");
+			// debug_log("[parser2.c] ASTERISK_EXPANSION_PWD WORD MATCHED\n");
 			llist_push(words, (void *)LX_WORD, ft_strcpy(dirf->d_name));
 		}
 		dirf = readdir(dir);

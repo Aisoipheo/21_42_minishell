@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:23:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 17:25:23 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:29:45 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 	ptr = tokens->head;
 	while (NULL != ptr)
 	{
-		debug_log("[parser.c] _PRS_GROUP NEW GROUP\n");
+		// debug_log("[parser.c] _PRS_GROUP NEW GROUP\n");
 		group = llist_new(NULL, NULL, NULL);
 		if (NULL == group)
 			return (ft_error(1, "minishell: _prs_group", 1, 0));
@@ -117,14 +117,14 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 		lvl = 0;
 		if (_prs_collect_tokens(group, &ptr, &type, &lvl))
 			return (1);
-		if (group->size)
-		{
-			debug_log("[parser.c] _PRS_GROUP COLLECTED TOKENS:\n");
-			for (t_ll_elem *h = group->head; h != NULL; h = h->next)
-				debug_log("%10d | %s\n", (int)h->key , h->val);
-		}
-		else
-			debug_log("[parser.c] _PRS_GROUP GROUP IS EMPTY\n");
+		// if (group->size)
+		// {
+		// 	debug_log("[parser.c] _PRS_GROUP COLLECTED TOKENS:\n");
+		// 	for (t_ll_elem *h = group->head; h != NULL; h = h->next)
+		// 		debug_log("%10d | %s\n", (int)h->key , h->val);
+		// }
+		// else
+		// 	debug_log("[parser.c] _PRS_GROUP GROUP IS EMPTY\n");
 		if (lvl)
 			return (ft_error(1,
 					"minishell: syntax error near token `(' or `)'", 0, 258));
@@ -138,9 +138,9 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 		if (NULL != ptr)
 			ptr = ptr->next;
 	}
-	debug_log("[parser.c] _PRS_GROUP GROUPS:\n");
-	for (t_ll_elem *h = groups->head; h != NULL; h = h->next)
-		debug_log("%0.10lld | %p\n", convert((int)h->key), h->val);
+	// debug_log("[parser.c] _PRS_GROUP GROUPS:\n");
+	// for (t_ll_elem *h = groups->head; h != NULL; h = h->next)
+	// 	debug_log("%0.10lld | %p\n", convert((int)h->key), h->val);
 	return (0);
 }
 
@@ -165,13 +165,13 @@ int	prs_parse(t_llist *tokens, t_info *info)
 		llist_free(groups);
 		return (0);
 	}
-	debug_log("[parser.c] PRS_GROUP OK\n");
+	// debug_log("[parser.c] PRS_GROUP OK\n");
 	if (_prs_check_syntax(groups))
 		return (_prs_dstr(groups));
-	debug_log("[parser.c] PRS_CHECK_SYNTAX OK\n");
+	// debug_log("[parser.c] PRS_CHECK_SYNTAX OK\n");
 	if (_prs_logexec(groups, info))
 		return (_prs_dstr(groups));
-	debug_log("[parser.c] PRS_LOGEXEC OK\n");
+	// debug_log("[parser.c] PRS_LOGEXEC OK\n");
 	llist_free(groups);
 	return (0);
 }

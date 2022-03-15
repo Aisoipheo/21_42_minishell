@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 17:42:14 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:29:53 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parser.h"
 #include "utils.h"
 
-int	ft_rebuiltenvp(t_info *info)
+int	ft_rebuildenvp(t_info *info)
 {
 	ft_free_char2dem(info->envp, -1);
 	info->envp = ft_compose_envp(info->envp_list);
@@ -39,18 +39,18 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd)
 		debug_log("RET PID: %d\n", pid);
 		return (pid);
 	}
-	debug_log("TRY REMAPFDS\n");
+	// debug_log("TRY REMAPFDS\n");
 	if (remap_fds(fd->fds[0], fd->fds[1]))
 		exit(1);
 	close(fd->pfd[0]);
-	debug_log("REMAPFDS OK\n");
+	// debug_log("REMAPFDS OK\n");
 	path = llist_getval(info->envp_list, "PATH");
 	if (ft_acces(cmd, path, &filepath))
 		exit(g_exit);
 	if (create_argv(cmd, &args, filepath))
 		exit(g_exit);
-	debug_log("execve\n");
-	debug_log("%s\n", filepath);
+	// debug_log("execve\n");
+	// debug_log("%s\n", filepath);
 	if (execve(filepath, args, info->envp) == -1)
 		exit(ft_error(127, "minishell: execve", 1, 0));
 	return (1);
@@ -68,11 +68,11 @@ int	ft_execbuiltin(int idx, t_ll_elem *cmd, t_info *info, t_fd *fd)
 		debug_log("RET PID: %d\n", pid);
 		return (pid);
 	}
-	debug_log("TRY REMAPFDS\n");
+	// debug_log("TRY REMAPFDS\n");
 	if (remap_fds(fd->fds[0], fd->fds[1]))
 		exit(1);
 	close(fd->pfd[0]);
-	debug_log("REMAPFDS OK\n");
+	// debug_log("REMAPFDS OK\n");
 	exit((*info->f_ptrs[idx])(cmd->key, info));
 }
 
@@ -85,14 +85,14 @@ int	ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode)
 	else
 		return (0);
 	i = check_if_builtins(cmd, info);
-	debug_log("------[%d]------\n", i);
-	if (info->envp_f && ft_rebuiltenvp(info) == -1)
+	// debug_log("------[%d]------\n", i);
+	if (info->envp_f && ft_rebuildenvp(info) == -1)
 		return (-1);
 	if (i == 7)
 		return (ft_execve(cmd, info, fd));
 	if (mode)
 		return (ft_execbuiltin(i, cmd, info, fd));
-	debug_log("call from shell\n");
+	// debug_log("call from shell\n");
 	return (ft_callbuiltin(i, cmd, info, fd));
 }
 
