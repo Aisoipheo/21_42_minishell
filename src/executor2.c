@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:03:32 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:42:14 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ int	ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd)
 	debug_log("REMAPFDS OK\n");
 	path = llist_getval(info->envp_list, "PATH");
 	if (ft_acces(cmd, path, &filepath))
-		exit(1);
+		exit(g_exit);
 	if (create_argv(cmd, &args, filepath))
-		exit(1);
+		exit(g_exit);
 	debug_log("execve\n");
 	debug_log("%s\n", filepath);
 	if (execve(filepath, args, info->envp) == -1)

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/15 17:06:39 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/15 18:11:18 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,10 @@ static int	ft_iterfps(char	**fps, char	**fp, t_llist *elems)
 {
 	int		i;
 	char	*to_free;
+	char	*prev;
 
 	i = 0;
+	prev = NULL;
 	while (fps[i] != NULL)
 	{
 		to_free = fps[i];
@@ -59,7 +61,9 @@ static int	ft_iterfps(char	**fps, char	**fp, t_llist *elems)
 		free(to_free);
 		if (!fps[i])
 			return (ft_error(1, "minishell: join path", 1, 0));
-		if ((access(fps[i], X_OK)) == 0)
+		if (access(fps[i], F_OK) == 0)
+			prev = fps[i];
+		if (access(fps[i], X_OK) == 0)
 		{
 			*fp = ft_strcpy(fps[i]);
 			ft_free_char2dem(fps, -1);
@@ -67,27 +71,34 @@ static int	ft_iterfps(char	**fps, char	**fp, t_llist *elems)
 		}
 		i++;
 	}
-	return (1);
+	debug_log("prev: %s\n", prev);
+	return (1 + (prev != NULL));
 }
 
 int	ft_acces(t_ll_elem *cmd, char *path, char **filepath)
 {
 	char		**filepaths;
 	t_llist		*elems;
+	int			ret;
 
 	elems = cmd->key;
 	if (ft_strcontains(elems->head->val, '/') || NULL == path)
 	{
 		*filepath = ft_strcpy(elems->head->val);
+		if (access(*filepath, F_OK) == 0 && access(*filepath, X_OK) == -1)
+			return (ft_error(1, "minishell: permission denied", 0, 126));
 		return (0);
 	}
 	filepaths = ft_strsplit(path, ":");
 	if (!filepaths)
 		ft_error(1, "malloc error for strsplit", 1, 0);
-	if (ft_iterfps(filepaths, filepath, elems) == 0)
+	ret = ft_iterfps(filepaths, filepath, elems);
+	if (ret == 0)
 		return (0);
 	ft_free_char2dem(filepaths, -1);
 	*filepath = NULL;
+	if (ret == 2)
+		return (ft_error(1, "minishell: permission denied", 0, 126));
 	return (ft_error(1, "minishell: command not found", 0, 127));
 }
 
@@ -107,6 +118,8 @@ int	create_argv(t_ll_elem *cmd, char ***args, char *path)
 	while (ptr)
 	{
 		(*args)[i] = ft_strcpy(ptr->val);
+		if ((*args)[i] == NULL && ft_free_char2dem(*args, i) == NULL)
+			ft_error(1, "minishell: malloc", 1, 0);
 		debug_log("--- args[i] = [%s]\n", (*args)[i]);
 		ptr = ptr->next;
 		i++;
