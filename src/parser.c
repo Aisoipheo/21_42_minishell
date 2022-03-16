@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 11:23:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 19:29:45 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:13:58 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "parser.h"
 #include "utils.h"
 
-static int	_prs_is_delim_token(void *tok_key)
+int	_prs_is_delim_token(void *tok_key)
 {
 	const int	k = (int)tok_key;
 
@@ -76,25 +76,6 @@ static int	_prs_check_syntax(t_llist *groups)
 	return (0);
 }
 
-// debug only
-long long	convert(int n)
-{
-	long long	bin;
-	int			rem;
-	int			i;
-
-	i = 1;
-	bin = 0;
-	while (n != 0)
-	{
-		rem = n % 2;
-		n /= 2;
-		bin += rem * i;
-		i *= 10;
-	}
-	return (bin);
-}
-
 // GROUP TYPES
 //  001	| builtin or binary
 //  x11	| subshell
@@ -109,7 +90,6 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 	ptr = tokens->head;
 	while (NULL != ptr)
 	{
-		// debug_log("[parser.c] _PRS_GROUP NEW GROUP\n");
 		group = llist_new(NULL, NULL, NULL);
 		if (NULL == group)
 			return (ft_error(1, "minishell: _prs_group", 1, 0));
@@ -117,37 +97,15 @@ static int	_prs_group(t_llist *groups, t_llist *tokens)
 		lvl = 0;
 		if (_prs_collect_tokens(group, &ptr, &type, &lvl))
 			return (1);
-		// if (group->size)
-		// {
-		// 	debug_log("[parser.c] _PRS_GROUP COLLECTED TOKENS:\n");
-		// 	for (t_ll_elem *h = group->head; h != NULL; h = h->next)
-		// 		debug_log("%10d | %s\n", (int)h->key , h->val);
-		// }
-		// else
-		// 	debug_log("[parser.c] _PRS_GROUP GROUP IS EMPTY\n");
-		if (lvl)
+		if (lvl && _prs_handle_group1(group))
 			return (ft_error(1,
 					"minishell: syntax error near token `(' or `)'", 0, 258));
-		if (group->size && llist_push(groups, (void *)type, group))
-			return (ft_error(1, "minishell: _prs_group", 1, 0));
-		if (group->size == 0)
-			llist_free(group);
-		if (NULL != ptr && _prs_is_delim_token(ptr->key)
-			&& llist_push(groups, ptr->key, NULL))
-			return (ft_error(1, "minishell: _prs_group", 1, 0));
+		if (_prs_handle_group0(groups, group, ptr, type))
+			return (1);
 		if (NULL != ptr)
 			ptr = ptr->next;
 	}
-	// debug_log("[parser.c] _PRS_GROUP GROUPS:\n");
-	// for (t_ll_elem *h = groups->head; h != NULL; h = h->next)
-	// 	debug_log("%0.10lld | %p\n", convert((int)h->key), h->val);
 	return (0);
-}
-
-int	_prs_dstr(t_llist *groups)
-{
-	llist_free(groups);
-	return (1);
 }
 
 //expect envp here
@@ -165,13 +123,10 @@ int	prs_parse(t_llist *tokens, t_info *info)
 		llist_free(groups);
 		return (0);
 	}
-	// debug_log("[parser.c] PRS_GROUP OK\n");
 	if (_prs_check_syntax(groups))
 		return (_prs_dstr(groups));
-	// debug_log("[parser.c] PRS_CHECK_SYNTAX OK\n");
 	if (_prs_logexec(groups, info))
 		return (_prs_dstr(groups));
-	// debug_log("[parser.c] PRS_LOGEXEC OK\n");
 	llist_free(groups);
 	return (0);
 }

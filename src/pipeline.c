@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 20:36:53 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/15 19:29:39 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 16:34:22 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,13 @@ static int	ft_fdmanip1(t_fd *fd, t_ll_elem *cmd, t_group *cmds)
 static void	ft_fdmanip2(t_fd *fd, t_ll_elem *cmd, int tc)
 {
 	if (tc != -1)
-	{
 		close(tc);
-		// debug_log("close1 %d\n", tc);
-	}
 	if (cmd->next)
-	{
 		close(fd->pfd[1]);
-		// debug_log("close2 %d\n", fd->pfd[1]);
-	}
 	if (fd->fds[0] != fd->pfd[0] && fd->fds[0] != STDIN_FILENO)
-	{
 		close(fd->fds[0]);
-		// debug_log("close3 %d\n", fd->fds[0]);
-	}
 	if (fd->fds[1] != fd->pfd[1] && fd->fds[1] != STDOUT_FILENO)
-	{
 		close(fd->fds[1]);
-		// debug_log("close4 %d\n", fd->fds[1]);
-	}
 }
 
 //cmd->val == t_cmd_info	| Информация о команде

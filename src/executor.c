@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/16 14:55:45 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:00:59 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,7 @@ int	check_if_builtins(t_ll_elem *cmd, t_info *info)
 	while (i < 7)
 	{
 		if (ft_strcmp(elems->head->val, info->reserved_words[i]) == 0)
-		{
-			// debug_log("BUILTIN [%s]\n", elems->head->val);
-			// debug_log("RESERVED [%s]\n", info->reserved_words[i]);
-			// debug_log("ok builtin\n");
 			return (i);
-		}
 		i++;
 	}
 	return (i);
@@ -119,7 +114,6 @@ int	create_argv(t_ll_elem *cmd, char ***args, char *path)
 		(*args)[i] = ft_strcpy(ptr->val);
 		if ((*args)[i] == NULL && ft_free_char2dem(*args, i) == NULL)
 			ft_error(1, "minishell: malloc", 1, 0);
-		// debug_log("--- args[i] = [%s]\n", (*args)[i]);
 		ptr = ptr->next;
 		i++;
 	}
@@ -144,7 +138,6 @@ int	ft_common(t_group *cmds, t_info *info)
 		close(fd.fds[0]);
 		return (ft_error(-1, "minishell: get_out_fd", 1, 0));
 	}
-	// debug_log("ft_execve\n");
 	if (((t_cmd_info *)cmd->val)->flags & CMD_SUBSHELL)
 		pid = ft_execsubshell(cmd, info, &fd);
 	else

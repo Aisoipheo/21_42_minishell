@@ -20,6 +20,13 @@ C_FILES				= main.c\
 					parser.c\
 					parser2.c\
 					parser3.c\
+					parser4.c\
+					parser5.c\
+					parser6.c\
+					parser7.c\
+					parser8.c\
+					parser9.c\
+					parser10.c\
 					group.c\
 					signal.c\
 					utils_libft.c\

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:16:15 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 17:06:03 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 16:32:40 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ int	ft_atoi(const char *s, int *n)
 		if (s[i] >= '0' && s[i] <= '9')
 		{
 			op = 0;
-			nb = nb * 10 + (s[i++] - '0') * (int)nh_trop(*s == '-', (void *)-1, (void *)1);
+			nb = nb * 10 + (s[i++] - '0')
+				* (int)nh_trop(*s == '-', (void *)-1, (void *)1);
 		}
 		else
 			return (1);

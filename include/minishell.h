@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 15:59:51 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 17:15:49 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,46 +80,46 @@ typedef struct s_expi
 	int				f;
 }	t_expi;
 
-t_group	*ft_group_new(int type);
-void	ft_group_free(void *group);
+t_group			*ft_group_new(int type);
+void			ft_group_free(void *group);
 
 /* ============ Environment ============ */
-int		ft_parse_envp(t_llist *list, char *envp[]);
-char	**ft_compose_envp(t_llist *list);
+int				ft_parse_envp(t_llist *list, char *envp[]);
+char			**ft_compose_envp(t_llist *list);
 /* ============ /Environqment ============ */
 
-void	handler(int sig);
-void	handler_term(t_info *info);
-void	handler_in_executor(int sig);
-void	handler_in_heredoc(int sig);
+void			handler(int sig);
+void			handler_term(t_info *info);
+void			handler_in_executor(int sig);
+void			handler_in_heredoc(int sig);
 
-pid_t	executor(t_group *cmds, t_info *info);
-pid_t	pipeline(t_group *cmds, t_info *info);
-int		ft_common(t_group *cmds, t_info *info);
-int		ft_subshell(t_group *cmds, t_info *info);
-int		ft_acces(t_ll_elem *cmd, char *path, char **filepath);
-int		create_argv(t_ll_elem *cmd, char ***args, char *path);
-int		check_if_builtins(t_ll_elem *cmd, t_info *info);
-int		ft_callbuiltin(int idx, t_ll_elem *cmd, t_info *info, t_fd *fd);
-int		ft_execsubshell(t_ll_elem *cmd, t_info *info, t_fd *fd);
-int		ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode);
-int		ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd);
-int		create_heredoc(t_cmd_info *c_info, t_llist *files);
+pid_t			executor(t_group *cmds, t_info *info);
+pid_t			pipeline(t_group *cmds, t_info *info);
+int				ft_common(t_group *cmds, t_info *info);
+int				ft_subshell(t_group *cmds, t_info *info);
+int				ft_acces(t_ll_elem *cmd, char *path, char **filepath);
+int				create_argv(t_ll_elem *cmd, char ***args, char *path);
+int				check_if_builtins(t_ll_elem *cmd, t_info *info);
+int				ft_callbuiltin(int idx, t_ll_elem *cmd, t_info *info, t_fd *fd);
+int				ft_execsubshell(t_ll_elem *cmd, t_info *info, t_fd *fd);
+int				ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode);
+int				ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd);
+int				create_heredoc(t_cmd_info *c_info, t_llist *files);
 
-int		ft_strncmp(const char *str1, const char *str2, size_t n);
-char	*ft_strjoin(char const *s1, char const *s2);
+int				ft_strncmp(const char *str1, const char *str2, size_t n);
+char			*ft_strjoin(char const *s1, char const *s2);
 
-int		ft_init(t_info *info, char *envp[]);
-int		ft_destroy(t_info *info);
+int				ft_init(t_info *info, char *envp[]);
+int				ft_destroy(t_info *info);
 
 /* ============ Built-ins ============ */
-int		ft_echo(t_llist *args, t_info *info);
-int		ft_cd(t_llist *args, t_info *info);
-int		ft_pwd(t_llist *args, t_info *info);
-int		ft_export(t_llist *args, t_info *info);
-int		ft_unset(t_llist *args, t_info *info);
-int		ft_env(t_llist *args, t_info *info);
-int		ft_exit(t_llist *args, t_info *info);
+int				ft_echo(t_llist *args, t_info *info);
+int				ft_cd(t_llist *args, t_info *info);
+int				ft_pwd(t_llist *args, t_info *info);
+int				ft_export(t_llist *args, t_info *info);
+int				ft_unset(t_llist *args, t_info *info);
+int				ft_env(t_llist *args, t_info *info);
+int				ft_exit(t_llist *args, t_info *info);
 /* ============ /Built-ins ============ */
 
 #endif

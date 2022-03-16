@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 19:29:47 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 16:38:33 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,26 +32,26 @@ static char	*_ft_readline(const char *prompt)
 }
 
 //debug only
-const char	*_lx_get_name(int type)
-{
-	static const char *names[LX_NCONST] =
-	{
-		[LX_SEP] = "SEP",
-		[LX_WORD] = "WORD",
-		[LX_IF_AND] = "&&",
-		[LX_IF_OR] = "||",
-		[LX_REDIR_APPEND] = ">>",
-		[LX_REDIR_IN] = "<",
-		[LX_REDIR_OUT] = ">",
-		[LX_REDIR_SOURCE] = "<<",
-		[LX_EXP_FIELD] = "QUOTES \"",
-		[LX_FIELD] = "QUOTES \'",
-		[LX_PARN_L] = "(",
-		[LX_PARN_R] = ")",
-		[LX_PIPE] = "PIPE"
-	};
-	return (names[type]);
-}
+// const char	*_lx_get_name(int type)
+// {
+// 	static const char *names[LX_NCONST] =
+// 	{
+// 		[LX_SEP] = "SEP",
+// 		[LX_WORD] = "WORD",
+// 		[LX_IF_AND] = "&&",
+// 		[LX_IF_OR] = "||",
+// 		[LX_REDIR_APPEND] = ">>",
+// 		[LX_REDIR_IN] = "<",
+// 		[LX_REDIR_OUT] = ">",
+// 		[LX_REDIR_SOURCE] = "<<",
+// 		[LX_EXP_FIELD] = "QUOTES \"",
+// 		[LX_FIELD] = "QUOTES \'",
+// 		[LX_PARN_L] = "(",
+// 		[LX_PARN_R] = ")",
+// 		[LX_PIPE] = "PIPE"
+// 	};
+// 	return (names[type]);
+// }
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -63,7 +63,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	if (ft_init(&info, envp))
 		return (EXIT_FAILURE);
-	while(info.exit_f)
+	while (info.exit_f)
 	{
 		signal(SIGINT, handler);
 		errno = 0;
@@ -73,16 +73,12 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			if (lx_lexer(tokens, line) == 0)
 			{
-				// debug_log("[main.c] TOKENS OK\n");
-				// debug_log("[main.c:80] EXIT STATUS: %d\n", g_exit);
-				// for (t_ll_elem *h = tokens->head; h != NULL; h = h->next)
-				// 	debug_log("%10s | %s\n", _lx_get_name((int)h->key) , h->val);
 				prs_parse(tokens, &info);
 				debug_log("[main.c:84]EXIT STATUS: %d\n", g_exit);
 			}
 			free(line);
-			debug_log("[main.c] *** END OF WORK ***\n");
-		} else if (line == NULL) {
+		} else if (line == NULL)
+		{
 			info.exit_f = 0;
 			write(STDOUT_FILENO, "exit\n", 5);
 		}

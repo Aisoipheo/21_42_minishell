@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/16 14:42:48 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 16:46:41 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ static int	heredoc_input(t_cmd_info *c_info, int fd)
 	while (1)
 	{
 		str = readline("> ");
-		// debug_log("HEREDOC STR: <%s>\n", str);
 		if (str == NULL || ft_strcmp(str, c_info->delim) == 0)
 			break ;
 		if (write(fd, str, ft_strlen(str)) == -1)
@@ -69,7 +68,6 @@ int	handle_input(t_cmd_info *c_info, int fd)
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		waitpid(pid, &sig, 0);
-		debug_log("############ %d %d %d\n", pid, sig, WEXITSTATUS(sig));
 	}
 	if (pid == 0)
 	{
@@ -88,13 +86,11 @@ int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 	char	*f;
 	char	*s;
 
-	f = NULL;
 	s = ft_uitoa(files->size);
 	fd = -1;
 	if (NULL == s)
-		return (heredoc_dstr("minishell: <<: to string conversion", f, s, fd));
+		return (heredoc_dstr("minishell: <<: uitoa", NULL, s, fd));
 	f = ft_strjoin2("/var/tmp/minishell.tmp.", s, 0, 0);
-	// debug_log("HEREDOC tmpfile %s\n", f);
 	if (NULL == f)
 		return (heredoc_dstr("minishell: <<: malloc", f, s, fd));
 	if (access(f, F_OK) == 0 && unlink(f) == -1)

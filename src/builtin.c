@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:54:25 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/14 20:07:03 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 16:50:10 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,18 @@ int	ft_cd(t_llist *args, t_info *info)
 	char		*pwdcopy;
 
 	arg = args->head;
+	path = (char *)llist_getval(info->envp_list, "HOME");
 	if (arg->next)
 		path = (char *)((t_ll_elem *)(arg->next))->val;
-	else
-		path = (char *)llist_getval(info->envp_list, "HOME");
 	if (chdir(path) == -1)
 		return (ft_error(-1, "minishell: cd: chdir", 1, 0));
 	pathcopy = ft_strcpy(path);
 	path = (char *)llist_getval(info->envp_list, "PWD");
 	pwdcopy = ft_strcpy(path);
-	if (pathcopy == NULL || (path && pwdcopy == NULL))
+	if (pathcopy == NULL || pwdcopy == NULL)
 	{
 		free(pathcopy);
+		free(pwdcopy);
 		return (ft_error(-1, "minishell: cd: malloc", 1, 0));
 	}
 	if (path && (llist_set(info->envp_list, "OLDPWD", pwdcopy)
@@ -79,14 +79,15 @@ int	ft_pwd(t_llist *args, t_info *info)
 
 	(void)info;
 	(void)args;
-	getcwd(pwd, PATH_MAX);
+	if (getcwd(pwd, PATH_MAX) == NULL)
+		return (ft_error(-1, "minishell: pwd: getcwd", 1, 0));
 	i = 0;
 	while (i < PATH_MAX && pwd[i])
 		++i;
 	if (i < PATH_MAX)
 		pwd[i++] = '\n';
 	if (write(STDOUT_FILENO, pwd, i) == -1)
-		return (ft_error(-1, "minishell: pwd: getcwd", 1, 0));
+		return (ft_error(-1, "minishell: pwd: write", 1, 0));
 	return (0);
 }
 

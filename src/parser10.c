@@ -1,38 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   parser10.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/06 19:02:12 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/16 16:50:40 by rdrizzle         ###   ########.fr       */
+/*   Created: 2022/03/16 19:21:24 by rdrizzle          #+#    #+#             */
+/*   Updated: 2022/03/16 19:31:11 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "parser.h"
 #include "utils.h"
 
-void	handler(int sig)
+int _prs_group_cmd_ret1(t_cmd_info *info, t_llist *args)
 {
-	(void)sig;
-	rl_on_new_line();
-	rl_redisplay();
-	write(1, "  \b\b\n", 5);
-	rl_on_new_line();
-	rl_replace_line("", 1);
-	rl_redisplay();
+	llist_free(args);
+	free(info);
+	return (1);
 }
 
-void	handler_in_executor(int sig)
+int _prs_group_cmd_ret2(t_cmd_info *info, t_llist *args)
 {
-	(void)sig;
-	write(2, "Quit: 3\n", 8);
+	llist_free(args);
+	free(info);
+	return (ft_error(1, "minishell: syntax error", 0, 258));
 }
 
-void	handler_in_heredoc(int sig)
+int _prs_group_cmd_ret3(t_cmd_info *info, t_llist *args)
 {
-	(void)sig;
-	write(2, "\n", 1);
-	exit(130);
+	llist_free(args);
+	free(info);
+	return (ft_error(1, "minishell: _prs_group_cmd", 1, 0));
 }

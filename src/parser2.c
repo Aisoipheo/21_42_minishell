@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 19:29:42 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 19:02:47 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,162 +19,8 @@
 
 #include <stdio.h>
 
-t_chunk_info	*_prs_chunk_info_new(unsigned int s, unsigned int e)
-{
-	t_chunk_info	*ci;
-
-	ci = (t_chunk_info *)malloc(sizeof(t_chunk_info));
-	if (ci == NULL)
-		return (NULL);
-	ci->e = e;
-	ci->s = s;
-	return (ci);
-}
-
-int	_prs_update_g_exit_str(t_info *info)
-{
-	free(info->g_exit_str);
-	info->g_exit_str = ft_itoa(g_exit);
-	if (NULL == info->g_exit_str)
-		return (ft_error(1, "minishell: _prs_update_g_exit_str", 1, 0));
-	return (0);
-}
-
-static int _prs_extract_var(const char *s, t_info *info, char **envpvar_ptr, unsigned int *j)
-{
-	unsigned int	i;
-	char			*name;
-
-	i = 0;
-	if (s[i] == '\0')
-	{
-		*envpvar_ptr = NULL;
-		return (0);
-	}
-	if (s[i] == '?')
-	{
-		if (_prs_update_g_exit_str(info))
-			return (1);
-		*envpvar_ptr = info->g_exit_str;
-		*j += 1;
-		return (0);
-	}
-	while (ft_isalnum(s[i]) || s[i] == '_')
-		++i;
-	if (i == 0)
-	{
-		*envpvar_ptr = NULL;
-		return (0);
-	}
-	name = ft_substr(s, 0, i);
-	if (name == NULL)
-		return (ft_error(1, "minishell: _prs_extract_var", 1, 0));
-	*envpvar_ptr = llist_getval(info->envp_list, name);
-	*j += i;
-	free(name);
-	return (0);
-}
-
-static int _prs_field_exp_collect_chunks(char *s, t_info *info, t_llist *chunks, unsigned int *size)
-{
-	t_chunk_info	*ci;
-	char			*envpvar_ptr;
-	unsigned int	i;
-	unsigned int	j;
-
-	i = 0;
-	j = 0;
-	while (s[i])
-	{
-		while(s[i] && s[i] != '$')
-			*size += (++i || 1);
-		ci = _prs_chunk_info_new(j, i);
-		if (ci == NULL)
-			return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1, 0));
-		if (llist_push(chunks, ci, s))
-		{
-			free(ci);
-			return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1, 0));
-		}
-		if (s[i] == '$')
-		{
-			if (_prs_extract_var(s + i + 1, info, &envpvar_ptr, &i))
-				return (1);
-			if (envpvar_ptr == NULL && s[i] == '$')
-				*size += (++(ci->e) || 1);
-			if (envpvar_ptr != NULL)
-			{
-				ci = _prs_chunk_info_new(0, ft_strlen(envpvar_ptr));
-				if (ci == NULL)
-					return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1, 0));
-				if (llist_push(chunks, ci, envpvar_ptr))
-				{
-					free(ci);
-					return (ft_error(1, "minishell: _prs_field_exp_collect_chunks", 1, 0));
-				}
-				*size += (ci->e);
-			}
-			++i;
-		}
-		j = i;
-	}
-	return (0);
-}
-
-static int _prs_field_expansion_prep(t_llist *str, t_info *info, t_llist *chunks, t_expi *ei)
-{
-	t_chunk_info	*ci;
-	t_ll_elem		*h;
-
-	h = str->head;
-	while(h != NULL)
-	{
-		// debug_log("TOKEN <%s> STATUS %d\n", h->val, ei->f);
-		if ((int)h->key == LX_FIELD || ei->f)
-		{
-			ci = _prs_chunk_info_new(0, ft_strlen((char *)h->val));
-			if (NULL == ci)
-				return (ft_error(1, "minishell: _prs_field_expansion_prep", 1, 0));
-			ei->size += ci->e;
-			if (llist_push(chunks, ci, h->val))
-				return (ft_error(1, "minishell: _prs_field_expansion_prep", 1, 0));
-		}
-		else if (_prs_field_exp_collect_chunks((char *)h->val, info, chunks, &(ei->size)))
-			return (1);
-		h = h->next;
-	}
-	ei->f = 0;
-	return (0);
-}
-static int _prs_field_expansion_copy(t_llist *chunks, char *word)
-{
-	t_ll_elem		*h;
-	unsigned int	i;
-	unsigned int	_i;
-
-	h = chunks->head;
-	i = 0;
-	while (h != NULL)
-	{
-		// debug_log("[parser2.c] _PRS_FIELD_EXPANSION_COPY NEW CHUNK\n	SOURCE: <%s>\n	S: %u E: %u\n", (char *)h->val, ((t_chunk_info *)h->key)->s, ((t_chunk_info *)h->key)->e);
-		_i = ((t_chunk_info *)h->key)->s;
-		while (_i < ((t_chunk_info *)h->key)->e)
-			word[i++] = ((char *)h->val)[_i++];
-		h = h->next;
-	}
-	return (0);
-}
-
-static int _prs_field_expansion_free(t_llist *chunks, char **word)
-{
-	if (chunks)
-		llist_free(chunks);
-	if (*word)
-		free(*word);
-	return (1);
-}
-
-static int _prs_field_expansion(t_llist *str, t_info *info, char **word, t_expi *ei)
+static int	_prs_field_expansion(t_llist *str,
+		t_info *info, char **word, t_expi *ei)
 {
 	t_llist	*chunks;
 
@@ -185,26 +31,20 @@ static int _prs_field_expansion(t_llist *str, t_info *info, char **word, t_expi 
 	*word = NULL;
 	if (_prs_field_expansion_prep(str, info, chunks, ei))
 		return (_prs_field_expansion_free(chunks, word));
-	// debug_log("[parser2.c] _PRS_FILED_EXPANSION PREP OK\n		EXPECTED SIZE: %u\n", ei->size);
 	*word = (char *)malloc(sizeof(char) * (ei->size + 1));
 	if (*word == NULL)
-		return (ft_error(1, "minishell: _prs_field_expansion", 1, 0));
+		return (_prs_field_expansion_free(chunks, NULL));
 	(*word)[ei->size] = '\0';
 	if (_prs_field_expansion_copy(chunks, *word))
 		return (_prs_field_expansion_free(chunks, word));
-	// debug_log("[parser2.c] _PRS_FILED_EXPANSION COPY OK\n");
 	llist_free(chunks);
 	return (0);
 }
-
-#include <sys/types.h>
-#include <dirent.h>
 
 int	_prs_asterisk_pattern_matches(const char *pattern, const char *str)
 {
 	char	**dp;
 	int		i;
-	int		j;
 	int		strl;
 	int		ptrl;
 
@@ -221,44 +61,13 @@ int	_prs_asterisk_pattern_matches(const char *pattern, const char *str)
 			dp[i][0] = dp[i - 1][0];
 		++i;
 	}
-	i = 1;
-	while (i < ptrl + 1)
-	{
-		j = 1;
-		while (j < strl + 1)
-		{
-			if (pattern[i - 1] == '*')
-				dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
-			else if (str[j - 1] == pattern[i - 1])
-				dp[i][j] = dp[i - 1][j - 1];
-			else
-				dp[i][j] = 0;
-			++j;
-		}
-		++i;
-	}
+	_prs_pattern_match_while(pattern, str, dp);
 	i = dp[ptrl][strl];
-	// debug_log("======= DP MATRIX =======\n");
-	// for (int k = 0; k <= ptrl; ++k)
-	// {
-	// 	if (k != 0)
-	// 		debug_log("%c ", pattern[k - 1]);
-	// 	else
-	// 		debug_log("  ");
-	// 	for (int p = 1; p <= strl; ++p)
-	// 	{
-	// 		if (k == 0)
-	// 			debug_log("%c ", str[p - 1]);
-	// 		else
-	// 			debug_log("%d ", dp[k][p]);
-	// 	}
-	// 	debug_log("\n");
-	// }
 	ft_free_char2dem(dp, ptrl + 1);
 	return (i);
 }
 
-t_llist *_prs_asterisk_expansion_pwd(const char *word)
+t_llist	*_prs_asterisk_expansion_pwd(const char *word)
 {
 	DIR				*dir;
 	struct dirent	*dirf;
@@ -270,19 +79,12 @@ t_llist *_prs_asterisk_expansion_pwd(const char *word)
 	dir = opendir(pwd);
 	words = llist_new(llist_int_kcmp, NULL, NULL);
 	if (NULL == dir || NULL == words)
-	{
-		// debug_log("[parser2.c] ASTERISK_EXPANSION_PWD FAILED\n");
 		return (NULL);
-	}
 	dirf = readdir(dir);
 	while (NULL != dirf)
 	{
-		// debug_log("[parser2.c] ASTERISK_EXPANSION_PWD TRY <%s>\n", dirf->d_name);
-		if (((word[0] == '.' && dirf->d_name[0] == '.') || (word[0] != '.' && dirf->d_name[0] != '.')) && _prs_asterisk_pattern_matches(word, dirf->d_name))
-		{
-			// debug_log("[parser2.c] ASTERISK_EXPANSION_PWD WORD MATCHED\n");
+		if (_prs_aep_bool(dirf, word))
 			llist_push(words, (void *)LX_WORD, ft_strcpy(dirf->d_name));
-		}
 		dirf = readdir(dir);
 	}
 	closedir(dir);
@@ -294,110 +96,29 @@ t_llist *_prs_asterisk_expansion_pwd(const char *word)
 	return (words);
 }
 
-// t_llist *_prs_asterisk_expansion_path(const char *word)
-// {
-// 	DIR				*dir;
-// 	struct dirent	*dirf;
-// 	t_llist			*words;
-// 	char			*fullpath;
-
-// 	dir = opendir(word);
-// 	words = llist_new(llist_int_kcmp, NULL, NULL);
-// 	if (NULL == dir || NULL == words)
-// 	{
-// 		//error
-// 		return (NULL);
-// 	}
-// 	dirf = readdir(dir);
-// 	while (NULL != dirf)
-// 	{
-// 		fullpath = ft_strjoin2();
-// 		if (_prs_asterisk_pattern_matches(word, dirf->d_name))
-// 			llist_push(words, LX_WORD, ft_strcpy(dirf->d_name));
-// 		dirf = readdir(dir);
-// 		free(fullpath);
-// 	}
-// 	if (words->size == 0)
-// 	{
-// 		llist_free(words);
-// 		words = NULL;
-// 	}
-// 	closedir(dir);
-// 	return (words);
-// }
-
-t_llist *_prs_asterisk_expansion(const char *word)
-{
-	if (!ft_strcontains(word, '*'))
-		return (NULL);
-	if (ft_strcontains(word, '/'))
-		return (NULL);
-	// 	return (_prs_asterisk_expansion_path(word));
-	return (_prs_asterisk_expansion_pwd(word));
-}
-
-static int	_prs_expandable(void *key)
-{
-	int	k;
-
-	k = (int)key;
-	return (k == LX_WORD || k == LX_EXP_FIELD
-			|| k == LX_FIELD);
-}
-
 static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 {
 	char				*word;
 	t_llist				*words;
-	t_ll_elem			*wptr;
 	t_llist				*str;
 	static t_expi		ei;
 
 	if ((int)(*ptr)->key == LX_REDIR_SOURCE)
 		ei.f = 1;
-	debug_log("_PRS_HANDLE_TOKEN %d STATUS %d\n", (int)(*ptr)->key, ei.f);
 	if (_prs_expandable((*ptr)->key))
 	{
-		debug_log("[parser2.c] PRS_HANDLE_TOKEN TRY EXPAND TOKEN <%s>\n", (char *)(*ptr)->val);
-		str = llist_new(llist_int_kcmp, NULL, NULL); //danger malloc zone
-		llist_push(str, (*ptr)->key, (*ptr)->val); //danger malloc zone
-		while((*ptr)->next && _prs_expandable(((t_ll_elem *)(*ptr)->next)->key))
-		{
-			(*ptr) = (*ptr)->next;
-			llist_push(str, (*ptr)->key, (*ptr)->val); //danger malloc zone
-		}
+		_prs_token_handle_loop1(&str, ptr);
 		_prs_field_expansion(str, info, &word, &ei);
-		// word = _prs_field_expansion(str, info); // danger malloc zone
-		debug_log("[parser2.c] PRS_HANDLE_TOKEN EXPANDED WORD <%s>\n", word);
 		words = _prs_asterisk_expansion(word);
 		if (NULL == words)
-			llist_push(expanded, (void *)LX_WORD, word); //danger malloc zone
+			llist_push(expanded, (void *)LX_WORD, word);
 		else
-		{
-			free(word);
-			wptr = words->head;
-			while(NULL != wptr)
-			{
-				debug_log("[parser2.c] PRS_HANDLE_TOKEN PUSH WORD <%s>\n", (char *)wptr->val);
-				llist_push(expanded, (void *)LX_WORD, wptr->val);
-				if (wptr->next)
-					llist_push(expanded, (void *)LX_SEP, NULL);
-				wptr = wptr->next;
-			}
-			llist_free(words);
-		}
+			_prs_token_handle_loop2(expanded, word, words);
 		llist_free(str);
 	}
 	else
 		llist_push(expanded, (*ptr)->key, NULL);
 	return (0);
-}
-
-static int	_prs_handle_subsh_token(t_ll_elem *ptr, t_llist *expanded)
-{
-	if (_prs_expandable(ptr->key))
-		return (llist_push(expanded, ptr->key, ft_strcpy((char *)ptr->val)));
-	return (llist_push(expanded, ptr->key, ptr->val));
 }
 
 t_llist	*_prs_expand(t_llist *group, t_info *info)
@@ -409,14 +130,16 @@ t_llist	*_prs_expand(t_llist *group, t_info *info)
 	ptr = group->head;
 	expanded = llist_new(llist_int_kcmp, NULL, free);
 	_shlvl = 0;
-	while(NULL != expanded && NULL != ptr)
+	while (NULL != expanded && NULL != ptr)
 	{
-		_shlvl += ((int)ptr->key == LX_PARN_L) + (-1) * ((int)ptr->key == LX_PARN_R);
+		_shlvl += ((int)ptr->key == LX_PARN_L)
+			+ (-1) * ((int)ptr->key == LX_PARN_R);
 		if (_shlvl > 0 && _prs_handle_subsh_token(ptr, expanded))
 		{
 			llist_free(expanded);
 			return (NULL);
-		} else if (_shlvl == 0 && _prs_handle_token(&ptr, expanded, info))
+		}
+		else if (_shlvl == 0 && _prs_handle_token(&ptr, expanded, info))
 		{
 			llist_free(expanded);
 			return (NULL);
