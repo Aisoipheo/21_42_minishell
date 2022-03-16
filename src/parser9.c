@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 19:03:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 22:47:50 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 23:01:42 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,16 @@ void	_prs_waitall(int pid, int *sig)
 	while (pid2 > 0)
 	{
 		pid2 = waitpid(0, sig, 0);
-		if (pid == pid2 && g_exit == 0)
+		if (pid == pid2)
+		{
 			g_exit = WEXITSTATUS(*sig);
+			if (WIFSIGNALED(*sig))
+			{
+				g_exit = WTERMSIG(*sig);
+				if (g_exit != 131)
+					g_exit += 128;
+			}
+		}
 	}
 }
 

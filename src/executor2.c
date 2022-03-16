@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 22:47:40 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:52:40 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ pid_t	executor(t_group *cmds, t_info *info)
 {
 	signal(SIGQUIT, handler_in_executor);
 	signal(SIGINT, handler_in_executor);
-	g_exit = 0;
 	if (PRS_PIPELINE & cmds->type)
 		return (pipeline(cmds, info));
 	if (((t_cmd_info *)cmds->cmds->head->val)->flags & CMD_SUBSHELL)
