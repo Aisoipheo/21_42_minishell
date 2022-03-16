@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 21:00:08 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:22:59 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ int	ft_exit(t_llist *args, t_info *info)
 	int	ex;
 
 	(void)info;
-	g_exit = 0;
 	if (args->size > 2)
 	{
 		write(STDERR_FILENO, "minishell: exit: too many args\n", 32);
