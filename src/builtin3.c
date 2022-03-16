@@ -1,38 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   builtin3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/06 19:02:12 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/16 19:56:22 by rdrizzle         ###   ########.fr       */
+/*   Created: 2022/03/16 19:49:45 by rdrizzle          #+#    #+#             */
+/*   Updated: 2022/03/16 20:00:06 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "utils.h"
 
-void	handler(int sig)
+void	not_valid_handler(char *a, char *b)
 {
-	(void)sig;
-	rl_on_new_line();
-	rl_redisplay();
-	write(1, "  \b\b\n", 5);
-	rl_on_new_line();
-	rl_replace_line("", 1);
-	rl_redisplay();
+	g_exit = 1;
+	free(a);
+	free(b);
+	write(STDERR_FILENO, "minishell: export: not valid\n", 30);
 }
 
-void	handler_in_executor(int sig)
+int	builtin_handler1(char *pwdcopy, char *pathcopy)
 {
-	(void)sig;
-	write(2, "Quit: 3\n", 8);
-}
-
-void	handler_in_heredoc(int sig)
-{
-	(void)sig;
-	write(2, "\n", 1);
-	exit(130);
+	free(pathcopy);
+	free(pwdcopy);
+	return (ft_error(-1, "minishell: cd: malloc", 1, 0));
 }

@@ -37,6 +37,7 @@ C_FILES				= main.c\
 					subshell.c\
 					builtin.c\
 					builtin2.c\
+					builtin3.c\
 					destroy.c\
 					init.c\
 					heredoc.c

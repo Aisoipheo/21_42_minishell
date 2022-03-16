@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 17:48:30 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 18:30:06 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 20:43:20 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 int	_prs_alloc_ci(t_chunk_info **ci, unsigned int i, unsigned int j)
 {
-	*ci = _prs_chunk_info_new(j, i);
+	*ci = _prs_chunk_info_new(i, j);
 	if (*ci == NULL)
 		return (ft_error(1,
 				"minishell: alloc chunk info", 1, 0));

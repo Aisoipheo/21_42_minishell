@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 16:38:33 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 19:54:51 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	main(int argc, char *argv[], char *envp[])
 			write(STDOUT_FILENO, "exit\n", 5);
 		}
 		llist_free(tokens);
+		signal(SIGQUIT, SIG_IGN);
 	}
 	ft_destroy(&info);
 	debug_log("PPID: %d PID: %d\n", getppid(), getpid());

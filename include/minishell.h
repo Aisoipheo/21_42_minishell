@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 17:15:49 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 20:55:34 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,10 @@ void			handler_term(t_info *info);
 void			handler_in_executor(int sig);
 void			handler_in_heredoc(int sig);
 
+int				_prs_exp_field_ret2(t_llist *str);
+int				_prs_exp_field_ret(t_llist *str);
+int				builtin_handler1(char *pwdcopy, char *pathcopy);
+void			not_valid_handler(char *a, char *b);
 pid_t			executor(t_group *cmds, t_info *info);
 pid_t			pipeline(t_group *cmds, t_info *info);
 int				ft_common(t_group *cmds, t_info *info);

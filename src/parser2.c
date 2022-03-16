@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 19:02:47 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 20:56:02 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,10 @@ static int	_prs_handle_token(t_ll_elem **ptr, t_llist *expanded, t_info *info)
 	if (_prs_expandable((*ptr)->key))
 	{
 		_prs_token_handle_loop1(&str, ptr);
-		_prs_field_expansion(str, info, &word, &ei);
+		if (_prs_field_expansion(str, info, &word, &ei) == 1)
+			return (_prs_exp_field_ret(str));
+		if (word == NULL || word[0] == '\0')
+			return (_prs_exp_field_ret2(str));
 		words = _prs_asterisk_expansion(word);
 		if (NULL == words)
 			llist_push(expanded, (void *)LX_WORD, word);

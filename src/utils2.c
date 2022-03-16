@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 16:03:06 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/02 15:05:58 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 20:15:11 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,10 @@ int	ft_strslice(const char *s, const char *delim, char **a, char **b)
 	while (i--)
 		(*a)[i] = s[i];
 	(*a)[j] = '\0';
-	s += j + 1;
-	*b = ft_strcpy(s);
+	if (s[j] == '\0')
+		*b = NULL;
+	else
+		*b = ft_strcpy(s + j + 1);
 	if (b)
 		return (0);
 	free(*a);

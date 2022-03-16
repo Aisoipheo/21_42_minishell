@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 17:13:25 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 18:25:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 20:43:46 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static int	_prs_fexcc_handle_env(char *s,
 		*(fp->size) += (++(fp->ci->e) || 1);
 	if (envpvar_ptr != NULL)
 	{
+		debug_log("`%s`\n", envpvar_ptr);
 		if (_prs_alloc_ci(&(fp->ci), 0, ft_strlen(envpvar_ptr)))
 			return (1);
 		if (llist_push(chunks, fp->ci, envpvar_ptr))
@@ -98,7 +99,7 @@ int	_prs_field_exp_collect_chunks(char *s, t_info *info,
 	{
 		while (s[i] && s[i] != '$')
 			*size += (++i || 1);
-		if (_prs_alloc_ci(&ci, i, j))
+		if (_prs_alloc_ci(&ci, j, i))
 			return (1);
 		if (llist_push(chunks, ci, s))
 			return (_prs_fecc_return(ci));
