@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:32:20 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 22:14:28 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:31:34 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,10 @@ int	main(int argc, char *argv[], char *envp[])
 			free(line);
 		}
 		else if (line == NULL)
-		{
 			info.exit_f = 0;
-			write(STDOUT_FILENO, "exit\n", 5);
-		}
 		_main_post(tokens);
 	}
+	write(STDOUT_FILENO, "exit\n", 5);
 	ft_destroy(&info);
 	return (g_exit);
 }
