@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 13:23:43 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 19:29:36 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:52:29 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,17 +122,29 @@ int	_prs_group_cmd(t_ll_elem *h, t_llist *cmds)
 	{
 		// debug_log("[parser3.c] PRS_GROUP_CMD TRY HANDLE `%s | %s'\n", _lx_get_name((int)h->key), h->val);
 		if (_prs_handle_token(&h, info, args))
-			break ;
+		{
+			llist_free(args);
+			free(info);
+			return (1);
+		}
 		h = h->next;
 		// debug_log("[parser3.c] PRS_GROUP_CMD NEXT TOKEN IS %p\n", h);
 	}
 	// debug_log("[parser3.c] PRS_GROUP_CMD TRY PUSH\n");
 	if ((args->size == 0 && info->out_file == NULL && info->in_file == NULL))
+	{
+		llist_free(args);
+		free(info);
 		return (ft_error(1, "minishell: syntax error", 0, 258));
+	}
 	if (h == NULL || (int)h->key == LX_PIPE)
 	{
 		if (llist_push(cmds, args, info))
+		{
+			llist_free(args);
+			free(info);
 			return (ft_error(1, "minishell: _prs_group_cmd", 1, 0));
+		}
 		return (0);
 	}
 	// debug_log("[parser3.c] PRS_GROUP_CMD free %p %p\n", args, info);
@@ -196,11 +208,22 @@ int	_prs_handle_heredoc(t_group *cmds)
 		ret = 0;
 		if (ci->flags & CMD_INSOURCE)
 			ret = create_heredoc(ci, cmds->files);
+		debug_log("heredoc exit: %d\n", ret);
 		if (ret == 2)
+		{
 			g_exit = 1;
+			return (1);
+		}
 		cmd = cmd->next;
 	}
 	return (0);
+}
+
+int	_prs_handle_dstr(t_group *group, t_llist *expanded)
+{
+	ft_group_free(group);
+	llist_free(expanded);
+	return (-1);
 }
 
 pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
@@ -220,9 +243,9 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 		if (NULL == cmds)
 			return (-1);
 		if (_prs_prepare_group(expanded, cmds))
-			return (-1);
+			return (_prs_handle_dstr(cmds, expanded));
 		if (_prs_handle_heredoc(cmds))
-			return (-1);
+			return (_prs_handle_dstr(cmds, expanded));
 		// debug_log("[parser3.c] GROUP READY\n");
 		pid = executor(cmds, info);
 		// for (t_ll_elem *h = cmds->cmds->head; h != NULL; h = h->next)
@@ -246,12 +269,24 @@ pid_t	_prs_handle_group(int type, t_llist *group, t_info *info)
 	return (pid);
 }
 
+void	_prs_waitall(int pid, int *sig)
+{
+	int		pid2;
+
+	pid2 = 1;
+	while (pid2 > 0)
+	{
+		pid2 = waitpid(0, sig, 0);
+		if (pid == pid2)
+			g_exit	= WEXITSTATUS(*sig);
+	}
+}
+
 int	_prs_logexec(t_llist *groups, t_info *info)
 {
 	t_ll_elem	*ptr;
 	int			expect;
 	int			sig;
-	int			pid2;
 	pid_t		pid;
 
 	expect = 0;
@@ -267,15 +302,7 @@ int	_prs_logexec(t_llist *groups, t_info *info)
 			if (pid < 0)
 				return (1);
 			if (pid > 0)
-			{
-				pid2 = 1;
-				while (pid2 > 0)
-				{
-					pid2 = waitpid(0, &sig, 0);
-					if (pid == pid2)
-						g_exit	= WEXITSTATUS(sig);
-				}
-			}
+				_prs_waitall(pid, &sig);
 			expect = 1;
 			debug_log("EXIT STATUS: %d\n", g_exit);
 		}

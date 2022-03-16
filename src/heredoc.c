@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 21:34:21 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/15 19:29:50 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 14:42:48 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ static int	heredoc_dstr(const char *msg, char *f, char *s, int fd)
 		free(s);
 	if (fd != -1)
 		close(fd);
-	if (msg && msg[0] == '\0')
-		return (2);
 	if (msg)
 		return (ft_error(1, msg, 1, 0));
 	return (0);
@@ -107,6 +105,10 @@ int	create_heredoc(t_cmd_info *c_info, t_llist *files)
 	if (heredoc_fmanip(f, c_info, files))
 		return (heredoc_dstr("minishell: <<: filename manip", f, s, fd));
 	if (handle_input(c_info, fd))
-		return (heredoc_dstr("", f, s, fd));
+	{
+		close(fd);
+		free(s);
+		return (2);
+	}
 	return (heredoc_dstr(NULL, f, s, fd));
 }

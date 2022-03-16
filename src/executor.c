@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 19:59:22 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/15 19:29:55 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 14:55:45 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ static int	ft_iterfps(char	**fps, char	**fp, t_llist *elems)
 		}
 		i++;
 	}
-	// debug_log("prev: %s\n", prev);
 	return (1 + (prev != NULL));
 }
 
@@ -141,7 +140,10 @@ int	ft_common(t_group *cmds, t_info *info)
 		return (ft_error(-1, "minishell: get_in_fd", 1, 0));
 	fd.fds[1] = get_out_fd(cmd->val);
 	if (fd.fds[1] == -1)
+	{
+		close(fd.fds[0]);
 		return (ft_error(-1, "minishell: get_out_fd", 1, 0));
+	}
 	// debug_log("ft_execve\n");
 	if (((t_cmd_info *)cmd->val)->flags & CMD_SUBSHELL)
 		pid = ft_execsubshell(cmd, info, &fd);

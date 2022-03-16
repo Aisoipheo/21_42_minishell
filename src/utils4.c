@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/15 19:29:30 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:51:47 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_error(int ret, const char *msg, char liberr, int g_e)
 			perror(msg);
 		else
 			perror("minishell: ");
-		g_exit = errno;
+		g_exit = 1;
 	}
 	else if (errno != 0)
 		perror(invcall);
