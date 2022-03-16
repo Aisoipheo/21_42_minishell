@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:43:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 20:02:43 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 21:00:08 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static int	ft_export_print(t_info *info)
 		{
 			if (write(STDOUT_FILENO, "=\"", 2) == -1)
 				return (ft_error(-1, "minishell: export: write", 1, 0));
-			if (write(STDOUT_FILENO, ptr->val, ft_strlen((char *)ptr->val)) == -1)
+			if (write(STDOUT_FILENO, ptr->val,
+					ft_strlen((char *)ptr->val)) == -1)
 				return (ft_error(-1, "minishell: export: write", 1, 0));
 			if (write(STDOUT_FILENO, "\"", 2) == -1)
 				return (ft_error(-1, "minishell: export: write", 1, 0));

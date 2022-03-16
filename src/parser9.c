@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 19:03:41 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 19:20:23 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 21:02:09 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 int	_prs_prepare_group(t_llist *expanded, t_group *cmds)
 {
 	if (cmds->type & PRS_PIPELINE)
-		return _prs_group_pipe(expanded, cmds->cmds);
+		return (_prs_group_pipe(expanded, cmds->cmds));
 	return (_prs_group_cmd(expanded->head, cmds->cmds));
 }
 
@@ -50,14 +50,14 @@ void	_prs_waitall(int pid, int *sig)
 	{
 		pid2 = waitpid(0, sig, 0);
 		if (pid == pid2)
-			g_exit	= WEXITSTATUS(*sig);
+			g_exit = WEXITSTATUS(*sig);
 	}
 }
 
 int	_prs_logexec_bonus(t_ll_elem *ptr, int *expect)
 {
 	if ((g_exit == 0 && ((int)ptr->key == LX_IF_OR))
-	|| (g_exit != 0 && ((int)ptr->key == LX_IF_AND)))
+		|| (g_exit != 0 && ((int)ptr->key == LX_IF_AND)))
 		return (1);
 	*expect = 0;
 	return (0);

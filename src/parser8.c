@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 18:56:11 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 19:10:59 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 21:00:35 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_ll_elem	*_prs_next_token(t_ll_elem *curr)
 	if (NULL == curr)
 		return (NULL);
 	curr = curr->next;
-	while(curr && curr->key == LX_SEP)
+	while (curr && curr->key == LX_SEP)
 		curr = curr->next;
 	return (curr);
 }
@@ -67,7 +67,7 @@ int	_prs_handle_heredoc(t_group *cmds)
 	int			ret;
 
 	cmd = cmds->cmds->head;
-	while(cmd)
+	while (cmd)
 	{
 		ci = (t_cmd_info *)cmd->val;
 		ret = 0;
