@@ -1,0 +1,10 @@
+Makefile
+README.md
+buggyshell
+file
+include
+minishell
+minishell.dSYM
+obj
+src
+valgrind-out.txt

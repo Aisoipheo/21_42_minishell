@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 11:25:45 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 21:20:43 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 21:48:35 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static int	_prs_field_expansion(t_llist *str,
 	(*word)[ei->size] = '\0';
 	if (_prs_field_expansion_copy(chunks, *word))
 		return (_prs_field_expansion_free(chunks, word));
+	_prs_only_empty_var(str, word, ei);
 	llist_free(chunks);
 	return (0);
 }

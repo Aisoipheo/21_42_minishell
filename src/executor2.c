@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 16:14:34 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 19:53:38 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:13:01 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,7 @@ int	ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode)
 {
 	int	i;
 
-	if (((t_llist *)cmd->key)->size != 0)
-		debug_log("CMD: %s\n", ((t_llist *)cmd->key)->head->val);
-	else
+	if (((t_llist *)cmd->key)->size == 0)
 		return (0);
 	i = check_if_builtins(cmd, info);
 	if (info->envp_f && ft_rebuildenvp(info) == -1)
@@ -85,6 +83,7 @@ int	ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode)
 pid_t	executor(t_group *cmds, t_info *info)
 {
 	signal(SIGQUIT, handler_in_executor);
+	signal(SIGINT, handler_in_executor);
 	if (PRS_PIPELINE & cmds->type)
 		return (pipeline(cmds, info));
 	if (((t_cmd_info *)cmds->cmds->head->val)->flags & CMD_SUBSHELL)

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 13:02:40 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 16:34:20 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:05:28 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,14 +125,14 @@ int	remap_fds(int in, int out)
 	return (0);
 }
 
-// DEBUG
-#include <stdarg.h>
-void	debug_log(const char *fmt, ...) {
-	va_list	args;
+// // DEBUG
+// #include <stdarg.h>
+// void	debug_log(const char *fmt, ...) {
+// 	va_list	args;
 
-	va_start(args, fmt);
-	write(STDERR_FILENO, DEBUG_COLOUR, 8);
-	vfprintf(stderr, fmt, args);
-	write(STDERR_FILENO, RESET_COLOUR, 5);
-	va_end(args);
-}
+// 	va_start(args, fmt);
+// 	write(STDERR_FILENO, DEBUG_COLOUR, 8);
+// 	vfprintf(stderr, fmt, args);
+// 	write(STDERR_FILENO, RESET_COLOUR, 5);
+// 	va_end(args);
+// }

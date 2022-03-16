@@ -27,6 +27,7 @@ C_FILES				= main.c\
 					parser8.c\
 					parser9.c\
 					parser10.c\
+					parser11.c\
 					group.c\
 					signal.c\
 					utils_libft.c\

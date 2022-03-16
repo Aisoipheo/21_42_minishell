@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 12:30:22 by rdrizzle          #+#    #+#             */
-/*   Updated: 2022/03/16 20:55:34 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:05:55 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 
-// DEBUG
-# define DEBUG_COLOUR "\033[1;30m"
-# define RESET_COLOUR "\033[0m"
+// // DEBUG
+// # define DEBUG_COLOUR "\033[1;30m"
+// # define RESET_COLOUR "\033[0m"
 
-void	debug_log(const char *fmt, ...);
+// void	debug_log(const char *fmt, ...);
 
 # define MINIS_PROMPT "(ง •̀_•́)ง "
 
@@ -36,7 +36,7 @@ void	debug_log(const char *fmt, ...);
 # define CMD_INSOURCE 0b010
 # define CMD_SUBSHELL 0b100
 
-int			g_exit;
+int						g_exit;
 
 typedef struct s_info	t_info;
 typedef int				(*t_builtin_ptr)(t_llist *, t_info *);
@@ -109,6 +109,7 @@ int				ft_execsubshell(t_ll_elem *cmd, t_info *info, t_fd *fd);
 int				ft_execcommon(t_ll_elem *cmd, t_info *info, t_fd *fd, int mode);
 int				ft_execve(t_ll_elem *cmd, t_info *info, t_fd *fd);
 int				create_heredoc(t_cmd_info *c_info, t_llist *files);
+void			_prs_only_empty_var(t_llist *str, char **word, t_expi *ei);
 
 int				ft_strncmp(const char *str1, const char *str2, size_t n);
 char			*ft_strjoin(char const *s1, char const *s2);

@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/19 20:36:53 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/16 16:34:22 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:02:56 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,21 @@ pid_t	pipeline(t_group *cmds, t_info *info)
 	int			pid;
 	int			to_close;
 	t_ll_elem	*cmd;
+	int			ret;
 
 	cmd = cmds->cmds->head;
 	fd.pfd[0] = -1;
 	while (cmd)
 	{
-		if (ft_fdmanip1(&fd, cmd, cmds) == -1)
-			return (-1);
+		ret = ft_fdmanip1(&fd, cmd, cmds);
 		to_close = fd.pfd[0];
 		if (cmd->next && pipe(fd.pfd) == -1)
 			return (ft_error(-1, "minishell: pipe: pipe", 1, 0));
 		if (cmd->next && fd.fds[1] == STDOUT_FILENO)
 			fd.fds[1] = fd.pfd[1];
-		if (((t_cmd_info *)cmd->val)->flags & CMD_SUBSHELL)
+		if (((t_cmd_info *)cmd->val)->flags & CMD_SUBSHELL && ret == 0)
 			pid = ft_execsubshell(cmd, info, &fd);
-		else
+		else if (ret == 0)
 			pid = ft_execcommon(cmd, info, &fd, 1);
 		ft_fdmanip2(&fd, cmd, to_close);
 		cmd = cmd->next;
