@@ -6,7 +6,7 @@
 /*   By: rdrizzle <rdrizzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 17:07:58 by gmckinle          #+#    #+#             */
-/*   Updated: 2022/03/16 16:34:17 by rdrizzle         ###   ########.fr       */
+/*   Updated: 2022/03/19 14:23:46 by rdrizzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ int	ft_execsubshell(t_ll_elem *cmd, t_info *info, t_fd *fd)
 	if (remap_fds(fd->fds[0], fd->fds[1]))
 		return (-1);
 	close(fd->pfd[0]);
-	exit(prs_parse(cmd->key, info));
+	prs_parse(cmd->key, info);
+	exit(g_exit);
 }
 
 int	ft_subshell(t_group *cmds, t_info *info)
